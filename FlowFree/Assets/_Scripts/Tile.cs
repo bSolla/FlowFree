@@ -13,8 +13,8 @@ public class Tile : MonoBehaviour
 {
     #region variables
     [SerializeField]
-    [Tooltip("Child component that stores the ice floor sprite")]
-    private GameObject _iceFloor;
+    [Tooltip("Child component that stores the grid background sprite")]
+    private GameObject _gridBackground;
     [SerializeField]
     [Tooltip("Child component that stores the top wall sprite")]
     private GameObject _wallTop;
@@ -48,21 +48,15 @@ public class Tile : MonoBehaviour
     [SerializeField]
     [Tooltip("Child component that stores the west hint")]
     private GameObject _hintWest;
-
-    /// <summary>
-    /// Stores the number of times the player has gone over the tile.
-    /// Access with (int)TrailType
-    /// </summary>
-    int[] _trailCounter = { 0, 0, 0, 0 };
     #endregion //variables
 
     #region methods
     private void Start()
     {
 #if UNITY_EDITOR
-        if (_iceFloor == null)
+        if (_gridBackground == null)
         {
-            Debug.LogError("iceFloor is null. Can't start without the ice floor sprite");
+            Debug.LogError("gridBackground is null. Can't start without the grid background sprite");
             gameObject.SetActive(false);
             return;
         }
@@ -98,14 +92,14 @@ public class Tile : MonoBehaviour
     // -----------------------------------------------
 
     /// <summary> Enables the ice sprite </summary>
-    public void EnableIce()
+    public void EnableGridBackground()
     {
-        _iceFloor.SetActive(true);
+        _gridBackground.SetActive(true);
     }
     /// <summary> Disables the ice sprite </summary>
-    public void DisableIce()
+    public void DisableGridBackground()
     {
-        _iceFloor.SetActive(false);
+        _gridBackground.SetActive(false);
     }
 
     public void SetColor(Color c)
@@ -114,6 +108,12 @@ public class Tile : MonoBehaviour
         _trailWest.GetComponent<SpriteRenderer>().color = c;
         _trailNorth.GetComponent<SpriteRenderer>().color = c;
         _trailSouth.GetComponent<SpriteRenderer>().color = c;
+
+        _hintEast.GetComponent<SpriteRenderer>().color = c;
+        _hintWest.GetComponent<SpriteRenderer>().color = c;
+        _hintNorth.GetComponent<SpriteRenderer>().color = c;
+        _hintSouth.GetComponent<SpriteRenderer>().color = c;
+
         _goal.GetComponent<SpriteRenderer>().color = c;
     } // SetTrailColor
 
@@ -243,18 +243,14 @@ public class Tile : MonoBehaviour
         return _wallLeft.active;
     }
 
-    public int getTrailCount(TrailType tt)
-    {
-        return _trailCounter[(int)tt];
-    }
     public bool IsGoal()
     {
         return _goal.active;
     }
 
-    public bool IsIce()
+    public bool IsGridBackground()
     {
-        return _iceFloor.active;
+        return _gridBackground.active;
     }
 
     public bool IsNorthTrail()
@@ -276,31 +272,6 @@ public class Tile : MonoBehaviour
     {
         return _trailEast.active;
     }
-
-    public void IncrementTrailCounter(TrailType tt)
-    {
-        if (_trailCounter[(int)tt] == 0)
-        {
-            EnableTrail(tt);
-        }
-        _trailCounter[(int)tt]++;
-    }
-
-    public void DecreaseTrailCounter(TrailType tt)
-    {
-        ref int ttCounter = ref _trailCounter[(int)tt];
-        if (ttCounter > 0)
-        {
-            ttCounter--;
-
-            if (ttCounter == 0)
-            {
-                DisableTrail(tt);
-            }
-        }
-
-    }
-
 
     #endregion //methods
 }

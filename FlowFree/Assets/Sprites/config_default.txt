@@ -1,0 +1,79 @@
+[
+    {
+        "name": "default",
+        "config":
+        {
+            "BootAdRound": -1,
+            "BootAdPercent": 0,
+            "BootCrossPromo": "",
+            
+            "FullScreenNewUserAdCap": 4,
+            "FullScreenNewUserAdLoad": 180,
+            "FullScreenNewUserMinAdLoad": 90,
+            "FullScreenNewUserAdRefresh": 120,
+            "FullScreenNewUserMinAdRefresh": 60,
+            "FullScreenAdCap": 999,
+            "FullScreenAdLoad": 60,
+            "FullScreenMinAdLoad": 30,
+            "FullScreenAdRefresh": 120,
+            "FullScreenMinAdRefresh": 60,
+            "FullScreenAdDecayRate": 0,
+            
+            "MainMenuPromo": "",
+            "MainMenuPromoTotalLimit": 24,
+            "MoreGamesAds": 0,
+            "MoreGamesCount": 0,
+            "MoreGamesAppId": "",
+            "MoreGamesUrl": "",
+            
+            "MaxFullScreenPromos": -1,
+            "MinStreakForNotification": 2,
+            "MinWeeklyLevelsForNotification": 10,
+            "MinWeeklyWeeksForNotification": 0,
+            
+            "RewardedHintsTotal": 999,
+            "RewardedHintsInterval": 14400,
+            "RewardedHintsLevelCompleteLoad": 0,
+            "RewardedHintsLevelCompleteRefresh": 60,
+            
+            "AutoConnectPath": 1,
+            "RequestReviewAfterLevel": 1,
+            "RequestReviewNewUI": 1,
+            "RequestReviewLevelThresholds": "[50, 200, 500]",
+            
+            "ShowExperimentalPacks": 0,
+            "AutonavigateToFirstLevel": 0,
+            "BackConfirmationDialog": 0,
+            "RewardedDialogHintStore": 1,
+            "RemoveAdsModal": 1,
+            "RemoveAdsIAP": 0,
+            "NewUI": 1,
+            "NewDialogs": 1,
+            "NewDialogsHighlight": 0,
+            "NewStore": 1,
+            "NewGamePage": 0,
+            "NewGamePageDockedButtons": 0,
+            "Weeklies": 1,
+            "UnlockAllProduct": "5",
+            "HintStoreProducts": ["q5", "q20", "q100"],
+            "HintStoreNewBulbs": false,
+            "MainMenuStore": 0,
+            
+            "AttRequest": 0,
+            "AttRequestPaid": 0,
+            "AttRequestAfterLevel": 0,
+            "AttRequestForce": 0,
+            "AttPreScreen": 0,
+            "AttPreScreenTitle": "",
+            "AttPreScreenMessage": "",
+            "AttPreScreenButton": "",
+            
+            "Experiment1": "",
+            "Experiment2": "",
+            "Experiment3": "",
+            "Experiment4": "",
+            "Experiment5": "",
+            "Experiment6": ""
+        }
+    }
+]

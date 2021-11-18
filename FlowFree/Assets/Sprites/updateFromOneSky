@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Assume localized strings are downloaded from OneSky
+# to the default Downloads directory, and unzipped.
+#
+sourcePath="${HOME}/Downloads/Flow Free"
+
+# Compile tool
+#
+javac "$(dirname $0)/tools/SortAndConvert.java"
+javaCommand="java -cp $(dirname $0)/tools SortAndConvert"
+
+destPath="$(dirname $0)"
+file="Localizable.strings"
+
+echo "Updating localized string resources..."
+echo
+
+# Run tool for each language
+#
+${javaCommand} "${sourcePath}/en/${file}"      "${destPath}/en.lproj/${file}"
+${javaCommand} "${sourcePath}/de/${file}"      "${destPath}/de.lproj/${file}"
+${javaCommand} "${sourcePath}/es-419/${file}"  "${destPath}/es.lproj/${file}"
+${javaCommand} "${sourcePath}/fr/${file}"      "${destPath}/fr.lproj/${file}"
+${javaCommand} "${sourcePath}/it/${file}"      "${destPath}/it.lproj/${file}"
+${javaCommand} "${sourcePath}/ja/${file}"      "${destPath}/ja.lproj/${file}"
+${javaCommand} "${sourcePath}/ko/${file}"      "${destPath}/ko.lproj/${file}"
+${javaCommand} "${sourcePath}/pt-BR/${file}"   "${destPath}/pt.lproj/${file}"
+${javaCommand} "${sourcePath}/ru/${file}"      "${destPath}/ru.lproj/${file}"
+${javaCommand} "${sourcePath}/zh-Hans/${file}" "${destPath}/zh-Hans.lproj/${file}"
+${javaCommand} "${sourcePath}/zh-Hant/${file}" "${destPath}/zh-Hant.lproj/${file}"
+
+echo
+echo "Done."
+echo

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Compile tool
+#
+javac "$(dirname $0)/tools/SortAndConvert.java"
+javaCommand="java -cp $(dirname $0)/tools SortAndConvert"
+
+echo "Updating English string resources..."
+echo
+
+destPath="$(dirname $0)"
+file="Localizable.strings"
+
+# Run genstrings
+#
+echo "Generating English strings from source code..."
+
+rm "${destPath}/en.lproj/${file}" 2>/dev/null
+genstrings -o "${destPath}/en.lproj" $(dirname $0)/../Flow/*.mm
+
+echo
+
+# Run tool for English in place
+#
+echo "Processing English strings..."
+${javaCommand} "${destPath}/en.lproj/${file}" "${destPath}/en.lproj/${file}"
+
+echo
+echo "Done."
+echo

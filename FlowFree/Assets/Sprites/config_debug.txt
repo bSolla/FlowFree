@@ -1,0 +1,90 @@
+[
+    {
+        "name": "debug",
+        "config":
+        {
+            "BootCrossPromo":
+            {
+                "id": "54",
+                "Title": "New Flow game!",
+                "Message": "We've just released a new game:\nFlow Fit: Sudoku!\nA unique Sudoku logic puzzle! Get it now!",
+                
+                "Button1": {
+                    "Title": "No thanks",
+                    "Action": "none",
+                    "URL": ""
+                },
+                "Button2": {
+                    "Title": "Get it!",
+                    "Action": "url",
+                    "URL": null,
+                    "AppStoreId": "1475678781"
+                },
+                "Paid": "1"
+            },
+            
+            "MainMenuPromo": "sudoku",
+            "MainMenuPromoTotalLimit": 24,
+            
+            "ShowExperimentalPacks": 0,
+            "AutonavigateToFirstLevel": 0,
+            "BackConfirmationDialog": 0,
+            "RewardedDialogHintStore": 1,
+            "RemoveAdsModal": 1,
+            "NewUI": 1,
+            "NewDialogs": 1,
+            "NewDialogsHighlight": 0,
+            "NewStore": 1,
+            "NewGamePage": 1,
+            "Weeklies": 1,
+            "HintStoreProducts": ["q5", "q20", "q100", "q225"],
+            "HintStoreNewBulbs": 1,
+            "MainMenuStore": 1
+        }
+    },
+    
+    {
+        "name": "att-test",
+        "filters":
+        {
+            "featureVersionMin": 22
+        },
+        "config":
+        {
+            "AttRequest": 1,
+            "AttRequestAfterLevel": 0,
+            "AttRequestForce": 1
+        }
+    },
+    
+    {
+        "name": "att-prescreen-english",
+        "filters":
+        {
+            "featureVersionMin": 22,
+            "language": "en"
+        },
+        "config":
+        {
+            "AttPreScreen": 1,
+            "AttPreScreenTitle": "Thanks for being a fan of our app!",
+            "AttPreScreenMessage": "To keep supporting us, please click \"Allow\" on the next step so we can bring you personalized advertising",
+            "AttPreScreenButton": "Okay"
+        }
+    },
+    
+    {
+        "name": "att-existing-paid",
+        "filters":
+        {
+            "featureVersionMin": 22,
+            "adsRemoved": 1,
+            "runMin": 2
+        },
+        "config":
+        {
+            "AttRequestAfterLevel": 2,
+            "AttRequestPaid": 1
+        }
+    }
+]

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>soundEnabled</key>
+	<true/>
+	<key>soundVolume</key>
+	<integer>8</integer>
+	<key>appRunCount</key>
+	<integer>0</integer>
+	<key>appReviewed</key>
+	<false/>
+	<key>appReviewPrompt</key>
+	<true/>
+	<key>showFlowLabels</key>
+	<false/>
+	<key>animationsEnabled</key>
+	<true/>
+</dict>
+</plist>

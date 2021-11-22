@@ -120,32 +120,7 @@ public class Reader : MonoBehaviour
                     table[col, fil]._color = i;
                 }
             }
-            for (int y = 0; y < _y; y++)
-            {
-                for (int x = 0; x < _x; x++)
-                {
-                    if (table[x, y].n) Console.WriteLine("---");
-                    else Console.WriteLine("   ");
-                }
-                Debug.Log('\n');
-                for (int x = 0; x < _x; x++)
-                {
-                    if (table[x, y].w) Debug.Log("|");
-                    else Debug.Log(" ");
-                    if (table[x, y]._type == Typito.init) Debug.Log("%");
-                    else if(table[x, y]._type == Typito.empty) Debug.Log(" ");
-                    else Debug.Log(table[x, y]._color);
-                    if (table[x, y].e) Debug.Log("|");
-                    else Debug.Log(" ");
-                }
-                Debug.Log('\n');
-                for (int x = 0; x < _x; x++)
-                {
-                    if (table[x, y].s) Debug.Log("---");
-                    else Debug.Log("   ");
-                }
-                Debug.Log('\n');
-            }
+
         }
         catch (Exception e)
         {

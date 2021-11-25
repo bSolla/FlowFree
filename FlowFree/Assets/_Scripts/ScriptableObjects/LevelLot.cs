@@ -6,11 +6,10 @@ using UnityEngine;
 /// package. 
 /// 
 /// </summary>
-[CreateAssetMenu(fileName = "LevelData", menuName = "LevelPackage")]
-public class LevelPackage : ScriptableObject
+[CreateAssetMenu(fileName = "LevelData", menuName = "LevelLot")]
+public class LevelLot : ScriptableObject
 {
     // whatever is in the level
     public string _name;
-    public LevelLot[] _levels;
-    public Color _packageColor;
+    public TextAsset _level;
 } // LevelPackage

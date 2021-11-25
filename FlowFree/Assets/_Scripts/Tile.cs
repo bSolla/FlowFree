@@ -22,9 +22,6 @@ public class Tile : MonoBehaviour
     [Tooltip("Child component that stores the left wall sprite")]
     private GameObject _wallLeft;
     [SerializeField]
-    [Tooltip("Child component that stores the goal sprite")]
-    private GameObject _goal;
-    [SerializeField]
     [Tooltip("Child component that stores the north trail")]
     private GameObject _trailNorth;
     [SerializeField]
@@ -48,6 +45,9 @@ public class Tile : MonoBehaviour
     [SerializeField]
     [Tooltip("Child component that stores the west hint")]
     private GameObject _hintWest;
+    [SerializeField]
+    [Tooltip("Child component that stores the ball")]
+    private GameObject _ball;
     #endregion //variables
 
     #region methods
@@ -72,9 +72,9 @@ public class Tile : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
-        if (_goal == null)
+        if (_ball == null)
         {
-            Debug.LogError("goal is null. Can't start without the goal sprite");
+            Debug.LogError("ball is null. Can't start without the goal sprite");
             gameObject.SetActive(false);
             return;
         }
@@ -114,7 +114,7 @@ public class Tile : MonoBehaviour
         _hintNorth.GetComponent<SpriteRenderer>().color = c;
         _hintSouth.GetComponent<SpriteRenderer>().color = c;
 
-        _goal.GetComponent<SpriteRenderer>().color = c;
+        _ball.GetComponent<SpriteRenderer>().color = c;
     } // SetTrailColor
 
     /// <summary> Enables the given wall sprites </summary>
@@ -132,14 +132,14 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary> Enables the goal sprite </summary>
-    public void EnableGoal()
+    public void EnableBall()
     {
-        _goal.SetActive(true);
+        _ball.SetActive(true);
     }
     /// <summary> Disables the goal sprite </summary>
     public void DisableGoal()
     {
-        _goal.SetActive(false);
+        _ball.SetActive(false);
     }
 
     /// <summary> Enables the specified trail sprite </summary>
@@ -243,9 +243,9 @@ public class Tile : MonoBehaviour
         return _wallLeft.active;
     }
 
-    public bool IsGoal()
+    public bool IsBall()
     {
-        return _goal.active;
+        return _ball.active;
     }
 
     public bool IsGridBackground()

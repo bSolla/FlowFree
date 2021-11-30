@@ -178,4 +178,109 @@ public class GameManager : MonoBehaviour
         GetInstance()._mainMenu = mg;
     } // SetMainMenuManager
     #endregion
+
+    #region getters
+    /// <summary>
+    /// 
+    /// Gives access to the scalator instance.
+    /// 
+    /// </summary>
+    /// <returns> (Scaling) Scaling instance stored in GM instance. </returns>
+    public Scaling GetScaling()
+    {
+        return GetInstance()._scalator;
+    } // GetScaling
+
+    /// <summary>
+    /// 
+    /// Gives access to the canvas stored in instance.
+    /// 
+    /// </summary>
+    /// <returns> (Canvas) Canvas access. </returns>
+    public Canvas GetCanvas()
+    {
+        return GetInstance()._cnv;
+    } // GetCanvas
+
+    /// <summary>
+    /// 
+    /// Returns the height of the top panel.
+    /// 
+    /// </summary>
+    /// <returns> (float) Panel height. </returns>
+    public float GetTopPanelHeight()
+    {
+        return GetInstance()._topPanel.rect.height;
+    } // GetTopPanelHeight
+
+    /// <summary>
+    /// 
+    /// Returns the height of the bottom panel in pixels.
+    /// 
+    /// </summary>
+    /// <returns> (float) Height of panel </returns>
+    public float GetBottomPanelHeight()
+    {
+        return GetInstance()._bottomPanel.rect.height;
+    } // GetTopPanelHeight
+
+    /// <summary>
+    /// 
+    /// Gives the reference resolution used when scaling things for later use. 
+    /// 
+    /// </summary>
+    /// <returns> (Vector2) Reference resolution. </returns>
+    public Vector2 GetReferenceResolution()
+    {
+        return GetInstance()._scalingReferenceResolution;
+    } // GetReferenceResolution
+
+
+    /// <summary>
+    /// 
+    /// Gives the number of packages registered in the game.
+    /// 
+    /// </summary>
+    /// <returns> (int) Number of packages. </returns>
+    public int GetNumPackages()
+    {
+        return GetInstance()._levels.Length;
+    } // GetNumPackages
+
+    /// <summary>
+    /// 
+    /// Get the name of the current package selected.
+    /// 
+    /// </summary>
+    /// <returns> (string) Package name.</returns>
+    public string GetPackageName()
+    {
+        return GetInstance()._package;
+    } // GetPackageName
+
+    /// <summary>
+    /// 
+    /// Gives access to a level package selected
+    /// by number, necessary for button instantiation.
+    /// 
+    /// </summary>
+    /// <param name="i"> (int) Package to access. </param>
+    /// <returns> (LevelPackage) Package with data. </returns>
+    public LevelPackage GetLevelPackage(int i)
+    {
+        return GetInstance()._levels[i];
+    } // GetPackage
+
+    /// <summary>
+    /// 
+    /// Gives access to the actual level selected.
+    /// 
+    /// </summary>
+    /// <returns> (int) Current level. </returns>
+    public int GetLevel()
+    {
+        return GetInstance()._level;
+    } // GetLevel
+
+    #endregion getters
 }

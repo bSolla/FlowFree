@@ -73,7 +73,7 @@ public class Map : MonoBehaviour
     /// Access with tileInfoMatrix[x,y]
     /// </summary>
     public TileInfo[,] tileInfoMatrix;
-
+    public int X, Y;
     public Map(/*lotMap*/)
     {
         // make tile matrix

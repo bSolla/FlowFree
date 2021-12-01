@@ -98,9 +98,9 @@ public class BoardManager : MonoBehaviour
     {
         // set walls
         WallType infoWalls;
-        infoWalls.left = info.wallLeft;
+        infoWalls.left = info.wallEast;
         infoWalls.top = info.wallTop;
-        if (info.wallLeft || info.wallTop) tile.EnableWalls(infoWalls);
+        if (info.wallEast || info.wallTop) tile.EnableWalls(infoWalls);
 
         // keep setting and unsetting tile objects for example ball/flow starts or ends
         // InfoBall infoBall; 

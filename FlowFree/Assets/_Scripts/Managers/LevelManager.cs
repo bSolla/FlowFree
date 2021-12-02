@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     public RectTransform _topPanel;               // Top panel of canvas
     public RectTransform _botPanel;               // Bottom panel of canvas
 
+    private bool _paused = false;                 // Pause flag for Input control
 
     // ----------------------------------------------
     // --------------- UNITY METHODS ----------------
@@ -69,4 +70,18 @@ public class LevelManager : MonoBehaviour
         //_boardManager.EmptyBoard();
         _boardManager.SetMap(null/*created map*/);
     }
+
+    /// <summary>
+    /// 
+    /// Receive new Input and process it. 
+    /// 
+    /// </summary>
+    /// <param name="it"> (InputType) Type of new input. </param>
+    public void ReceiveInput(InputManager.InputType it, Vector2 pos)
+    {
+        if (!_paused)
+        {
+            _boardManager.ReceiveInput(it, pos);
+        } // if
+    } // ReceiveInput
 }

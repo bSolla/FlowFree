@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public struct WallType
 {
@@ -229,10 +230,23 @@ public class Tile : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the pointer object is over the image
+    /// </summary>
+    /// <param name="pointerPosition">(Vector3) current pointer position</param>
+    /// <returns>(bool) Wether or not the pointer is inside the image</returns>
+    public bool IsPointed(Vector3 pointerPosition)
+    {
+        RectTransform rectTransform = gameObject.GetComponent<Image>().rectTransform;
+
+        return rectTransform.rect.Contains(rectTransform.InverseTransformPoint(pointerPosition));
+    }
+
+
+    #region setter/getters
     // -----------------------------------------------
     // -----           setters/getters           -----
     // -----------------------------------------------
-
     public bool IsTopWall()
     {
         return _wallTop.active;
@@ -272,6 +286,8 @@ public class Tile : MonoBehaviour
     {
         return _trailEast.active;
     }
+
+    #endregion
 
     #endregion //methods
 }

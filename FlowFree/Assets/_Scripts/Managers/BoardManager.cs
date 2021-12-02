@@ -15,6 +15,7 @@ public class BoardManager : MonoBehaviour
     private float _bottomPanel;                 // Bottom panel in canvas
 
     private Tile[,] _tiles;                     // Map
+    private Tile _lastTile = null;
 
     private LevelManager _levelManager;         // LevelManager
 
@@ -84,6 +85,56 @@ public class BoardManager : MonoBehaviour
         //_board.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 1) / 2.0f) * factor) - 1));
     }
 
+
+    /// <summary>
+    /// 
+    /// Receives the input and processes it.
+    /// 
+    /// </summary>
+    /// <param name="it"> (InputType) Type of the input. </param>
+    public void ReceiveInput(InputManager.InputType it, Vector2 pos)
+    {
+        if (it == InputManager.InputType.NONE)
+        {
+            _lastTile = null;
+        }
+        if (it == InputManager.InputType.MOVEMENT)
+        {
+            if (_lastTile == null)
+            {
+                // delete all forward flows 
+            }
+
+            //TODO: DRAW FLOW
+            foreach (Tile tile in _tiles)
+            {
+                if (tile.IsPointed(pos) && tile != _lastTile)
+                {
+                    //...
+                    // check directions
+
+                    // if (tile.isFlow)  --------------- DELETION OF FLOWS
+                    //      tile.deleteNextFlow()
+                    //                  -> if last tile in flow is an end and connected,
+                    //                     do flowCount--
+
+                    // else if (right)          -------- MOVEMENT AND LINK
+                    //      if(last != null)
+                    //          last.trailR.Active()
+                    //      tile.trailL.Active()
+                    //      tile.connect(_lastTile)
+
+                    // left, down, up...
+
+                    // if (flowEnd)
+                    //      flowCount++
+
+                    _lastTile = tile;
+                    break;
+                }
+            }
+        } // if
+    } // ReceiveInput
 
     // ------------------ PRIVATE -------------------
 

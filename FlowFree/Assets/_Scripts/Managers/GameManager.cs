@@ -118,6 +118,10 @@ public class GameManager : MonoBehaviour
         } // foreach
     } // ReloadPanels
 
+    public void ReceiveInput(InputManager.InputType it, Vector2 pos)
+    {
+        _levelManager.ReceiveInput(it, pos);
+    }
 
     #region Setters
 

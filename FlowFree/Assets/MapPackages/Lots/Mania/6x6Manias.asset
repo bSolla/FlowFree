@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: 6x6Manias
   m_EditorClassIdentifier: 
-  _name: 6x6
+  _name: 6x6 Manias
   _level: {fileID: 4900000, guid: dc54947d119c5a74bba0c538fb550d62, type: 3}

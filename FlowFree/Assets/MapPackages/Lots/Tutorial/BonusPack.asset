@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: BonusPack
   m_EditorClassIdentifier: 
-  _name: BonusPack
+  _name: Bonus Pack
   _level: {fileID: 4900000, guid: 1d3f75b69eb8c794f98f55d9d1996201, type: 3}

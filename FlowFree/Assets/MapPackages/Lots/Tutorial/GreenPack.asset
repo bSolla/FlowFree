@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: GreenPack
   m_EditorClassIdentifier: 
-  _name: GreenPack
+  _name: Green Pack
   _level: {fileID: 4900000, guid: 4a8aa2b23ab318243a97990393134a50, type: 3}

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: ClassicPack
   m_EditorClassIdentifier: 
-  _name: ClassicPack
+  _name: Classic Pack
   _level: {fileID: 4900000, guid: ea2ab4e050f77f04f8e1b21521501d81, type: 3}

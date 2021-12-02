@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: RectanglePack
   m_EditorClassIdentifier: 
-  _name: 
-  _level: {fileID: 0}
+  _name: Rectangle Pack
+  _level: {fileID: 4900000, guid: fe0dfec563a65de49a880bb0e6d3b28a, type: 3}

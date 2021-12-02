@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8deb88e476a064cb454ec06e87ec02, type: 3}
   m_Name: Manias
   m_EditorClassIdentifier: 
-  _name: 
-  _levels: []
-  _packageColor: {r: 0, g: 0, b: 0, a: 0}
+  _name: Manias
+  _levels:
+  - {fileID: 11400000, guid: 1a80c3ceb55dea342988d37a9932c0e5, type: 2}
+  - {fileID: 11400000, guid: 22e2817c82017a44e9fe3ad40d8a154c, type: 2}
+  - {fileID: 11400000, guid: d79820b1f11fa59449289e8cbaa16461, type: 2}
+  - {fileID: 11400000, guid: 1a7236819cc785e4085451ce55656a7e, type: 2}
+  - {fileID: 11400000, guid: 8b6143e8f00fe314cbdbd5cee933138a, type: 2}
+  _packageColor: {r: 1, g: 0, b: 0, a: 0}

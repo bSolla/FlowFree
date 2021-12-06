@@ -117,8 +117,6 @@ public class Tile : MonoBehaviour
         _trailWest.GetComponent<SpriteRenderer>().color = c;
         _trailNorth.GetComponent<SpriteRenderer>().color = c;
         _trailSouth.GetComponent<SpriteRenderer>().color = c;
-        _smothAngle01.GetComponent<SpriteRenderer>().color = c;
-        _smothAngle02.GetComponent<SpriteRenderer>().color = c;
 
         //_hintEast.GetComponent<SpriteRenderer>().color = c;
         //_hintWest.GetComponent<SpriteRenderer>().color = c;

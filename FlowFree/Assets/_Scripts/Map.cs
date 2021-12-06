@@ -126,12 +126,12 @@ public class Map : MonoBehaviour
         colores[3] = Color.yellow;
         colores[4] = Color.cyan;
         colores[5] = Color.gray;
-        colores[6] = Color.red;
-        colores[7] = Color.green;
-        colores[8] = Color.blue;
+        colores[6] = Color.magenta;
+        colores[7] = Color.white;
+        colores[8] = Color.cyan;
         colores[9] = Color.yellow;
-        colores[10] = Color.cyan;
-        colores[11] = Color.gray;
+        colores[10] = Color.green;
+        colores[11] = Color.red;
         for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
         {
             tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
@@ -175,7 +175,7 @@ public class Map : MonoBehaviour
         // parsing ..................
         // adapt from Reader
         string[] lines = path._level.text.Split(Environment.NewLine.ToCharArray());
-        String[] levelInfo = lines[level].Split(';');
+        String[] levelInfo = lines[level*2].Split(';');
 
         String[] basicInfo = levelInfo[0].Split(',');
         LotMap readenMap = new LotMap();

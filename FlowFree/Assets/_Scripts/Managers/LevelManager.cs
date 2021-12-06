@@ -66,7 +66,7 @@ public class LevelManager : MonoBehaviour
         int level = GameManager.GetInstance().GetLevel();
         Map map = Map.FromLot(lp._levels[2], level);
 
-        //_boardManager.EmptyBoard();
+        _boardManager.EmptyBoard();
         _boardManager.SetMap(map);
     }
 

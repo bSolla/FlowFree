@@ -57,7 +57,11 @@ public class BoardManager : MonoBehaviour
         // Calculate space available for board
         CalculateSpace();
 
+        // Get size in pixels of tile (using background sprite as reference because it fills one tile completely) and resize
+        SpriteRenderer background = _tilePrefab.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        Vector2 tam = CalculateSize(background);
 
+        // Instantiate tiles
         for (int x = 0; x < map.X; x++)
         {
             for (int y = 0; y < map.Y; y++)
@@ -143,16 +147,30 @@ public class BoardManager : MonoBehaviour
 
 
         // Scale tiles and Board
-        //Vector2 oScale = _tilePrefab.transform.localScale;
-        //Vector2 nScale = GameManager.GetInstance().GetScaling().ResizeObjectScale(iceFloor.bounds.size * GameManager.GetInstance().GetScaling().TransformationFactor(), tam, oScale);
-        //gameObject.transform.localScale = nScale;
-        //_board.transform.localScale = nScale;
+        Vector2 oScale = _tilePrefab.transform.localScale;
+        Vector2 nScale = GameManager.GetInstance().GetScaling().ResizeObjectScale(background.bounds.size * GameManager.GetInstance().GetScaling().TransformationFactor(), tam, oScale);
+        gameObject.transform.localScale = nScale;
+        _board.transform.localScale = nScale;
+        float factor = nScale.x / oScale.x;
 
         // Relocate board
-        //gameObject.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 1) / 2.0f) * factor) - 2));
-        //_board.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 1) / 2.0f) * factor) - 1));
+        _board.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 1) / 2.0f) * factor)));
     }
 
+
+    /// <summary>
+    /// 
+    /// Cleans the board to use it again. 
+    /// 
+    /// </summary>
+    public void EmptyBoard()
+    {
+        DestroyImmediate(_board);
+        _board = new GameObject("Board");
+
+        gameObject.transform.position = new Vector3(0, 0, 0);
+        _board.transform.position = new Vector3(0, 0, 0);
+    } // EmptyBoard
 
 
     /// <summary>

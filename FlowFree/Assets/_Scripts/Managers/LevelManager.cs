@@ -62,13 +62,12 @@ public class LevelManager : MonoBehaviour
         // ... ad manager, pause, etc
 
         // Prepare board
-        //LevelPackage lp = GameManager.GetInstance().GetLevelPackage();
-        //int level = GameManager.GetInstance().GetLevel();
-
-        //Map map = Map.FromLot(""/*lp.levels[level].ToString()*/);
+        LevelPackage lp = GameManager.GetInstance().GetLevelPackage(2);
+        int level = GameManager.GetInstance().GetLevel();
+        Map map = Map.FromLot(lp._levels[level], level);
 
         //_boardManager.EmptyBoard();
-        _boardManager.SetMap(null/*created map*/);
+        _boardManager.SetMap(map);
     }
 
     /// <summary>

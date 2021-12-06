@@ -20,17 +20,13 @@ public class Reader : MonoBehaviour
     {
         public int _color;
         public Typito _type;
-        public bool n;
         public bool s;
-        public bool w;
         public bool e;
         public void init()
         {
             _color = 0;
             _type = Typito.normal;
-            n = false;
             s = false;
-            w = false;
             e = false;
         }
     }
@@ -85,9 +81,7 @@ public class Reader : MonoBehaviour
                             fil = int.Parse(muroInfo[0]) / _x;
                             col = int.Parse(muroInfo[0]) - (_x * fil);
                             int first = int.Parse(muroInfo[0]), second = int.Parse(muroInfo[1]);
-                            table[col, fil].n = first > second && first - 1 != second;
                             table[col, fil].s = first < second && first + 1 != second;
-                            table[col, fil].w = first - 1 == second;
                             table[col, fil].e = first + 1 == second;
                         }
                     }

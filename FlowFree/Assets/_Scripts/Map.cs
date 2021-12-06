@@ -21,9 +21,7 @@ public struct PointDouble
 public struct Wall
 {
     public Point pos;
-    public bool n;
     public bool s;
-    public bool w;
     public bool e;
 }
 
@@ -61,11 +59,10 @@ public class LotMap
 //}
 
 // used for board creation in play scene
+
 public class TileInfo
 {
-    public bool wallTop = false,
-                wallDown = false,
-                wallWest = false,
+    public bool wallDown = false,
                 wallEast = false;
     public bool uroboros = false;
     public bool empty = false;
@@ -83,15 +80,25 @@ public class Map : MonoBehaviour
     public TileInfo[,] tileInfoMatrix;
     public int X, Y;
     private Point[,] solutions;
+
+    public Point[,] getFlowSolution()
+    {
+        return solutions;
+    }
+
+    public int flowNumber()
+    {
+        return solutions.GetLength(0);
+    }
     public Map(int c, int r, Wall[] w, Point[] e, Point[,] s/*, Point[,] iAe*/)
     {
         // make tile matrix
         
-        X = c + 1; Y = r + 1;
+        X = c; Y = r;
         tileInfoMatrix = new TileInfo[X, Y]; //one extra col & row to draw the bottom and right walls of the map
-        for (int col = 0; col <= c; ++col)
+        for (int col = 0; col < c; ++col)
         {
-            for (int row = 0; row <= r; ++row)
+            for (int row = 0; row < r; ++row)
             {
                 tileInfoMatrix[col, row] = new TileInfo();
             } // for
@@ -108,26 +115,43 @@ public class Map : MonoBehaviour
         */
         // hint info
         solutions = s;
-        int flowNumber = 0;
+        //------------------------------------------------DEBUG------------------------------------------------
+        int flowed = 0;
         Point sol;
-        for (int row = 0; row < solutions.GetLength(1); row++)
+
+        Color[] colores = new Color[12];
+        colores[0] = Color.red;
+        colores[1] = Color.green;
+        colores[2] = Color.blue;
+        colores[3] = Color.yellow;
+        colores[4] = Color.cyan;
+        colores[5] = Color.gray;
+        colores[6] = Color.red;
+        colores[7] = Color.green;
+        colores[8] = Color.blue;
+        colores[9] = Color.yellow;
+        colores[10] = Color.cyan;
+        colores[11] = Color.gray;
+        for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
         {
-            tileInfoMatrix[solutions[flowNumber, row].x, solutions[flowNumber, row].y].uroboros = true;
-            while (solutions[flowNumber + 1, row].x == -1) {
-                sol = solutions[flowNumber, row];
-                tileInfoMatrix[sol.x, sol.y].next.x = solutions[flowNumber + 1, row].x;
-                tileInfoMatrix[sol.x, sol.y].next.y = solutions[flowNumber + 1, row].y;
-                flowNumber++;
+            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
+            while (solutions[flowNumber, flowed + 1].x != -1) {
+                sol = solutions[flowNumber, flowed];
+                tileInfoMatrix[sol.x, sol.y].next.x = solutions[flowNumber, flowed + 1].x;
+                tileInfoMatrix[sol.x, sol.y].next.y = solutions[flowNumber, flowed + 1].y;
+                tileInfoMatrix[sol.x, sol.y].ballColor = colores[flowNumber];
+                flowed++;
+
             }
-            tileInfoMatrix[solutions[flowNumber, row].x, solutions[flowNumber, row].y].uroboros = true;
+            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
+            flowed = 0;
         }
+        //------------------------------------------------DEBUG------------------------------------------------
         // wall info
-        foreach(Wall wall in w)
+        foreach (Wall wall in w)
         {
             tileInfoMatrix[wall.pos.x, wall.pos.y].wallDown = wall.s;
-            tileInfoMatrix[wall.pos.x, wall.pos.y].wallTop = wall.n;
             tileInfoMatrix[wall.pos.x, wall.pos.y].wallEast = wall.e;
-            tileInfoMatrix[wall.pos.x, wall.pos.y].wallWest = wall.w;
         }
         // other info (bridges and other stuff)
         foreach (Point empty in e) tileInfoMatrix[empty.x, empty.y].empty = true; 
@@ -137,7 +161,7 @@ public class Map : MonoBehaviour
     /// </summary>
     /// <param name="path">Path to the json file</param>
     /// <returns>An completed instance of the Map class</returns>
-    public static Map FromLot(string path, int level)
+    public static Map FromLot(LevelLot path, int level)
     {
         LotMap lotMap = ParseLot(path, level);
 
@@ -146,16 +170,16 @@ public class Map : MonoBehaviour
         return map;
     } // FromJson
 
-    private static LotMap ParseLot(string path, int level)
+    private static LotMap ParseLot(LevelLot path, int level)
     {
         // parsing ..................
         // adapt from Reader
-        System.IO.StreamReader reader = new System.IO.StreamReader(path);
-        for (int i = 1; i < level; i++) reader.ReadLine();
-        String[] levelInfo = reader.ReadLine().Split(';');
+        string[] lines = path._level.text.Split(Environment.NewLine.ToCharArray());
+        String[] levelInfo = lines[level].Split(';');
+
         String[] basicInfo = levelInfo[0].Split(',');
         LotMap readenMap = new LotMap();
-        reader.Close();
+
         //Nos saltamos el nivel dentro del paquete y el 0 reservado
         int jump = 3;
         String[] posInfo;
@@ -181,7 +205,7 @@ public class Map : MonoBehaviour
                 //Muros
                 if (basicInfo[i].Contains("|"))
                 {
-                    readenMap.walls = new Wall[basicInfo.Length];
+                    readenMap.walls = new Wall[posInfo.Length];
                     readenMap.empties = new Point[0];
                     for (int z = 0; z < posInfo.Length; z++)
                     {
@@ -191,9 +215,7 @@ public class Map : MonoBehaviour
                         int first = int.Parse(muroInfo[0]), second = int.Parse(muroInfo[1]);
                         readenMap.walls[z].pos.x = col;
                         readenMap.walls[z].pos.y = fil;
-                        readenMap.walls[z].n = first > second && first - 1 != second;
                         readenMap.walls[z].s = first < second && first + 1 != second;
-                        readenMap.walls[z].w = first - 1 == second;
                         readenMap.walls[z].e = first + 1 == second;
                     }
                 }
@@ -201,7 +223,7 @@ public class Map : MonoBehaviour
                 else if (basicInfo[i].Contains(":"))
                 {
                     readenMap.walls = new Wall[0];
-                    readenMap.empties = new Point[basicInfo.Length];
+                    readenMap.empties = new Point[posInfo.Length];
                     for (int z = 0; z < posInfo.Length; z++)
                     {
                         fil = int.Parse(posInfo[z]) / readenMap.width;
@@ -223,12 +245,12 @@ public class Map : MonoBehaviour
             //readenMap.initANDend[i - 1, 0].x = col;
             //readenMap.initANDend[i - 1, 0].y = fil;
 
-            for (int z = 1; z < posInfo.Length; z++)
+            for (int z = 0; z < posInfo.Length; z++)
             {
                 fil = int.Parse(posInfo[z]) / readenMap.width;
                 col = int.Parse(posInfo[z]) - (readenMap.width * fil);
-                readenMap.solutions[i - 1, z - 1].x = col;
-                readenMap.solutions[i - 1, z - 1].y = fil;
+                readenMap.solutions[i - 1, z].x = col;
+                readenMap.solutions[i - 1, z].y = fil;
             }
             readenMap.solutions[i - 1, posInfo.Length].x = -1;
             readenMap.solutions[i - 1, posInfo.Length].y = -1;

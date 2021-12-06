@@ -51,28 +51,61 @@ public class BoardManager : MonoBehaviour
     public void SetMap(Map map)
     {
         // Init board sizes and variables
-        //_tiles = new Tile[map.X, map.Y];
+        _tiles = new Tile[map.X, map.Y];
         //_hintArray = map.hintArray; _tilesHint = Mathf.CeilToInt(_hintArray.Length / 3.0f);
 
         // Calculate space available for board
-        //CalculateSpace();
+        CalculateSpace();
 
-        // Set ball colors
-        // ...
 
-        // Get size in pixels of tile (using ice sprite as reference because it fills one tile completely) and resize
-        //SpriteRenderer iceFloor = _tilePrefab.transform.GetChild(0).GetComponent<SpriteRenderer>();
-        //Vector2 tam = CalculateSize(iceFloor);
+        for (int x = 0; x < map.X; x++)
+        {
+            for (int y = 0; y < map.Y; y++)
+            {
+                _tiles[x, y] = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, _board.transform);
+                SetTile(map.tileInfoMatrix[x, y], _tiles[x, y], x, y);
+            }
+        }
 
-        // Instantiate tiles ------------------------------------------------------------------ !!
-        //for (int y = 0; y < map.Y; ++y)
-        //{
-        //    for (int x = 0; x < map.X; ++x)
-        //    {
-        //        _tiles[x, y] = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, _board.transform);
-        //        SetTile(map.tileInfoMatrix[x, y], _tiles[x, y]);
-        //    }
-        //}
+
+        //-----------------------------------------DEBUG-----------------------------------------
+        Point lastPos = new Point();
+        for (int flow = 0; flow < map.flowNumber(); flow++)
+        {
+            Point[,] solutions = map.getFlowSolution();
+            int x = solutions[flow, 0].x, y =solutions[flow, 0].y,
+                xNext = map.tileInfoMatrix[x, y].next.x, yNext = map.tileInfoMatrix[x, y].next.y,
+                xLast = 0, yLast = 0;
+            lastPos = map.tileInfoMatrix[x, y].next;
+            if      (x + 1 == xNext) _tiles[x, y].EnableTrail(TrailType.EAST);
+            else if (x - 1 == xNext) _tiles[x, y].EnableTrail(TrailType.WEST);
+            else if (y + 1 == yNext) _tiles[x, y].EnableTrail(TrailType.SOUTH);
+            else if (y - 1 == yNext) _tiles[x, y].EnableTrail(TrailType.NORTH);
+            for (int tl = 1; tl < solutions.GetLength(1); tl++)
+            {
+                y = solutions[flow, tl].y;
+                x = solutions[flow, tl].x;
+
+                xLast = lastPos.x;
+                yLast = lastPos.y;
+                if (xLast + 1 == x) _tiles[x, y].EnableTrail(TrailType.EAST);
+                else if (xLast - 1 == x) _tiles[x, y].EnableTrail(TrailType.WEST);
+                else if (yLast + 1 == y) _tiles[x, y].EnableTrail(TrailType.SOUTH);
+                else if (yLast - 1 == y) _tiles[x, y].EnableTrail(TrailType.NORTH);
+
+                xNext = map.tileInfoMatrix[x, y].next.x;
+                yNext = map.tileInfoMatrix[x, y].next.y;
+                lastPos = map.tileInfoMatrix[x, y].next;
+                if (x + 1 == xNext) _tiles[x, y].EnableTrail(TrailType.EAST);
+                else if (x - 1 == xNext) _tiles[x, y].EnableTrail(TrailType.WEST);
+                else if (y + 1 == yNext) _tiles[x, y].EnableTrail(TrailType.SOUTH);
+                else if (y - 1 == yNext) _tiles[x, y].EnableTrail(TrailType.NORTH);
+
+                lastPos = map.tileInfoMatrix[x, y].next;
+            }
+        }
+        //-----------------------------------------DEBUG-----------------------------------------
+
 
         // Scale tiles and Board
         //Vector2 oScale = _tilePrefab.transform.localScale;
@@ -84,6 +117,7 @@ public class BoardManager : MonoBehaviour
         //gameObject.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 1) / 2.0f) * factor) - 2));
         //_board.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 1) / 2.0f) * factor) - 1));
     }
+
 
 
     /// <summary>
@@ -145,14 +179,18 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     /// <param name="info"> (TileInfo) Info of the tile. </param>
     /// <param name="tile"> (Tile) Tile to set. </param>
-    private void SetTile(TileInfo info, Tile tile)
+    private void SetTile(TileInfo info, Tile tile, int x, int y)
     {
         // set walls
         WallType infoWalls;
         infoWalls.left = info.wallEast;
-        infoWalls.top = info.wallTop;
-        if (info.wallEast || info.wallTop) tile.EnableWalls(infoWalls);
+        infoWalls.top = info.wallDown;
+        if (info.wallEast || info.wallDown) tile.EnableWalls(infoWalls);
+        tile.gameObject.SetActive(!info.empty);
+        tile.SetColor(info.ballColor);
+        if(info.uroboros)tile.EnableBall();
 
+        
         // keep setting and unsetting tile objects for example ball/flow starts or ends
         // InfoBall infoBall; 
         // if(ball) set ball; tile.EnableBall(infoBall)

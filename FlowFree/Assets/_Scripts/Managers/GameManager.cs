@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
     [Header("Debugging")]
     public bool _debugging = false;               // Sets if debug mode is on, for avoiding some changes
 
-    private string _package = "Classic";          // Sets game style
-    private int _level = 10;                      // Sets the level to be loaded
+    private string _package = "Rectangle";          // Sets game style
+    private int _level = 2;                      // Sets the level to be loaded
 
     // SCALING DATA
     private Vector2 _scalingReferenceResolution;  // Reference resolution for scaling

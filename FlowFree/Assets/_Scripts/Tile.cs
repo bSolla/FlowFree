@@ -18,10 +18,10 @@ public class Tile : MonoBehaviour
     private GameObject _gridBackground;
     [SerializeField]
     [Tooltip("Child component that stores the top wall sprite")]
-    private GameObject _wallTop;
+    private GameObject _wallEast;
     [SerializeField]
     [Tooltip("Child component that stores the left wall sprite")]
-    private GameObject _wallLeft;
+    private GameObject _wallBottom;
     [SerializeField]
     [Tooltip("Child component that stores the north trail")]
     private GameObject _trailNorth;
@@ -35,6 +35,13 @@ public class Tile : MonoBehaviour
     [Tooltip("Child component that stores the west trail")]
     private GameObject _trailWest;
     [SerializeField]
+    [Tooltip("Child component that stores the south trail")]
+    private GameObject _smothAngle01;
+    [SerializeField]
+    [Tooltip("Child component that stores the west trail")]
+    private GameObject _smothAngle02;
+    /*
+    [SerializeField]
     [Tooltip("Child component that stores the north hint")]
     private GameObject _hintNorth;
     [SerializeField]
@@ -46,6 +53,7 @@ public class Tile : MonoBehaviour
     [SerializeField]
     [Tooltip("Child component that stores the west hint")]
     private GameObject _hintWest;
+    */
     [SerializeField]
     [Tooltip("Child component that stores the ball")]
     private GameObject _ball;
@@ -61,13 +69,13 @@ public class Tile : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
-        if (_wallTop == null)
+        if (_wallBottom == null)
         {
             Debug.LogError("wallTop is null. Can't start without the wall top sprite");
             gameObject.SetActive(false);
             return;
         }
-        if (_wallLeft == null)
+        if (_wallEast == null)
         {
             Debug.LogError("wallLeft is null. Can't start without the wall left sprite");
             gameObject.SetActive(false);
@@ -109,11 +117,13 @@ public class Tile : MonoBehaviour
         _trailWest.GetComponent<SpriteRenderer>().color = c;
         _trailNorth.GetComponent<SpriteRenderer>().color = c;
         _trailSouth.GetComponent<SpriteRenderer>().color = c;
+        _smothAngle01.GetComponent<SpriteRenderer>().color = c;
+        _smothAngle02.GetComponent<SpriteRenderer>().color = c;
 
-        _hintEast.GetComponent<SpriteRenderer>().color = c;
-        _hintWest.GetComponent<SpriteRenderer>().color = c;
-        _hintNorth.GetComponent<SpriteRenderer>().color = c;
-        _hintSouth.GetComponent<SpriteRenderer>().color = c;
+        //_hintEast.GetComponent<SpriteRenderer>().color = c;
+        //_hintWest.GetComponent<SpriteRenderer>().color = c;
+        //_hintNorth.GetComponent<SpriteRenderer>().color = c;
+        //_hintSouth.GetComponent<SpriteRenderer>().color = c;
 
         _ball.GetComponent<SpriteRenderer>().color = c;
     } // SetTrailColor
@@ -121,15 +131,15 @@ public class Tile : MonoBehaviour
     /// <summary> Enables the given wall sprites </summary>
     public void EnableWalls(WallType walls)
     {
-        if (walls.top) _wallTop.SetActive(true);
-        if (walls.left) _wallLeft.SetActive(true);
+        if (walls.top) _wallBottom.SetActive(true);
+        if (walls.left) _wallEast.SetActive(true);
 
     }
     /// <summary> Disables the given wall sprites </summary>
     public void DisableWalls(WallType walls)
     {
-        if (walls.top) _wallTop.SetActive(false);
-        if (walls.left) _wallLeft.SetActive(false);
+        if (walls.top) _wallBottom.SetActive(false);
+        if (walls.left) _wallEast.SetActive(false);
     }
 
     /// <summary> Enables the goal sprite </summary>
@@ -189,45 +199,45 @@ public class Tile : MonoBehaviour
 
     public void EnableHint(TrailType dir)
     {
-        switch (dir)
-        {
-            case TrailType.NORTH:
-                _hintNorth.SetActive(true);
-                break;
-            case TrailType.SOUTH:
-                _hintSouth.SetActive(true);
-                break;
-            case TrailType.EAST:
-                _hintEast.SetActive(true);
-                break;
-            case TrailType.WEST:
-                _hintWest.SetActive(true);
-                break;
-            default:
-                break;
-        }
+        //switch (dir)
+        //{
+        //    case TrailType.NORTH:
+        //        _hintNorth.SetActive(true);
+        //        break;
+        //    case TrailType.SOUTH:
+        //        _hintSouth.SetActive(true);
+        //        break;
+        //    case TrailType.EAST:
+        //        _hintEast.SetActive(true);
+        //        break;
+        //    case TrailType.WEST:
+        //        _hintWest.SetActive(true);
+        //        break;
+        //    default:
+        //        break;
+        //}
     }
 
 
     public void DisableHint(TrailType dir)
     {
-        switch (dir)
-        {
-            case TrailType.NORTH:
-                _hintNorth.SetActive(false);
-                break;
-            case TrailType.SOUTH:
-                _hintSouth.SetActive(false);
-                break;
-            case TrailType.EAST:
-                _hintEast.SetActive(false);
-                break;
-            case TrailType.WEST:
-                _hintWest.SetActive(false);
-                break;
-            default:
-                break;
-        }
+        //switch (dir)
+        //{
+        //    case TrailType.NORTH:
+        //        _hintNorth.SetActive(false);
+        //        break;
+        //    case TrailType.SOUTH:
+        //        _hintSouth.SetActive(false);
+        //        break;
+        //    case TrailType.EAST:
+        //        _hintEast.SetActive(false);
+        //        break;
+        //    case TrailType.WEST:
+        //        _hintWest.SetActive(false);
+        //        break;
+        //    default:
+        //        break;
+        //}
     }
 
     /// <summary>
@@ -249,12 +259,12 @@ public class Tile : MonoBehaviour
     // -----------------------------------------------
     public bool IsTopWall()
     {
-        return _wallTop.active;
+        return _wallBottom.active;
     }
 
     public bool IsLeftWall()
     {
-        return _wallLeft.active;
+        return _wallEast.active;
     }
 
     public bool IsBall()

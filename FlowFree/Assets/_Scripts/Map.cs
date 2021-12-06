@@ -141,9 +141,9 @@ public class Map : MonoBehaviour
                 tileInfoMatrix[sol.x, sol.y].next.y = solutions[flowNumber, flowed + 1].y;
                 tileInfoMatrix[sol.x, sol.y].ballColor = colores[flowNumber];
                 flowed++;
-
             }
             tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
+            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].ballColor = colores[flowNumber];
             flowed = 0;
         }
         //------------------------------------------------DEBUG------------------------------------------------

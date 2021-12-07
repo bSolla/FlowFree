@@ -16,8 +16,9 @@ public class GameManager : MonoBehaviour
     [Header("Debugging")]
     public bool _debugging = false;               // Sets if debug mode is on, for avoiding some changes
 
-    private string _package = "Rectangle";          // Sets game style
-    private int _level = 14;                      // Sets the level to be loaded
+    private string _package = "Rectangles";       // Sets game style
+    private string _lot = "HourglassPack";        // Sets lot to use
+    private int _level = 5;                       // Sets the level to be loaded
 
     // SCALING DATA
     private Vector2 _scalingReferenceResolution;  // Reference resolution for scaling
@@ -161,6 +162,15 @@ public class GameManager : MonoBehaviour
     } // SetPackage
 
     /// <summary>
+    /// Sets the lot selected by the player
+    /// </summary>
+    /// <param name="l"> (string) Lot selected </param>
+    public void SetLot(string l)
+    {
+        GetInstance()._lot = l;
+    }
+
+    /// <summary>
     /// 
     /// Sets the Level selected by the player.
     /// 
@@ -275,6 +285,48 @@ public class GameManager : MonoBehaviour
         return GetInstance()._levels[i];
     } // GetPackage
 
+    /// <summary>
+    /// 
+    /// Returns the package of the level selected. Searches in
+    /// the LevelPackage's list and compares the names of the 
+    /// objects. When object is found, returns it. 
+    /// 
+    /// If LevelPackage is not found, return null. 
+    /// 
+    /// </summary>
+    /// <returns> (LevelPackage) Selected LevelPackage. </returns>
+    public LevelPackage GetLevelPackage()
+    {
+        for (int i = 0; i < GetInstance()._levels.Length; i++)
+        {
+            if (GetInstance()._levels[i].name == _package)
+            {
+                return GetInstance()._levels[i];
+            } // if
+        } // for
+
+        return null;
+    } // getLevelPackage
+
+
+    /// <summary>
+    /// Given a level package, looks for the lot that is stored in 
+    /// the game manager. If it can't find it, returns null
+    /// </summary>
+    /// <returns>(LevelLot) Selected Lot</returns>
+    public LevelLot GetLevelLot()
+    {
+        LevelPackage pack = GetInstance().GetLevelPackage();
+        for (int i = 0; i < pack._levels.Length; i++)
+        {
+            if (pack._levels[i].name == _lot)
+            {
+                return pack._levels[i];
+            } // if
+        } // for
+
+        return null;
+    }
     /// <summary>
     /// 
     /// Gives access to the actual level selected.

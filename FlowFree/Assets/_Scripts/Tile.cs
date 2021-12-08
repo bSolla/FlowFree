@@ -294,6 +294,10 @@ public class Tile : MonoBehaviour
     {
         return _trailEast.active;
     }
+    public bool IsTrail()
+    {
+        return _trailNorth.active || _trailSouth.active || _trailWest.active || _trailEast.active;
+    }
 
     #endregion
 

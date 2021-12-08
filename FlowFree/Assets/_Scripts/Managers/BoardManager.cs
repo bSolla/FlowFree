@@ -199,20 +199,64 @@ public class BoardManager : MonoBehaviour
                 {
                     //...
                     // check directions
+                    // It isn't a ball with different color
+                    if (!(tile.IsBall() /*&& tile.color != _lastTile.color*/))
+                    {
+                        // go right
+                        if (tile.transform.position.x - _lastTile.transform.position.x == 1.0f &&
+                            tile.transform.position.y == _lastTile.transform.position.y)
+                        {
+                            if (tile.IsTrail())
+                            {
+                                //      tile.deleteNextFlow()
+                                //                  -> if last tile in flow is an end and connected,
+                                //                     do flowCount--
+                            }
+                            tile.EnableTrail(TrailType.WEST);
+                            _lastTile.EnableTrail(TrailType.EAST);
 
-                    // if (tile.isFlow)  --------------- DELETION OF FLOWS
-                    //      tile.deleteNextFlow()
-                    //                  -> if last tile in flow is an end and connected,
-                    //                     do flowCount--
-
-                    // else if (right)          -------- MOVEMENT AND LINK
-                    //      if(last != null)
-                    //          last.trailR.Active()
-                    //      tile.trailL.Active()
-                    //      tile.connect(_lastTile)
-
-                    // left, down, up...
-
+                        }
+                        // go left
+                        else if (tile.transform.position.x - _lastTile.transform.position.x == -1.0f &&
+                            tile.transform.position.y == _lastTile.transform.position.y)
+                        {
+                            if (tile.IsTrail())
+                            {
+                                //      tile.deleteNextFlow()
+                                //                  -> if last tile in flow is an end and connected,
+                                //                     do flowCount--
+                            }
+                            tile.EnableTrail(TrailType.EAST);
+                            _lastTile.EnableTrail(TrailType.WEST);
+                        }
+                        // go down
+                        else if (tile.transform.position.y - _lastTile.transform.position.y == 1.0f &&
+                            tile.transform.position.x == _lastTile.transform.position.x)
+                        {
+                            if (tile.IsTrail())
+                            {
+                                //      tile.deleteNextFlow()
+                                //                  -> if last tile in flow is an end and connected,
+                                //                     do flowCount--
+                            }
+                            tile.EnableTrail(TrailType.NORTH);
+                            _lastTile.EnableTrail(TrailType.SOUTH);
+                        }
+                        // go up
+                        else if (tile.transform.position.y - _lastTile.transform.position.y == -1.0f &&
+                            tile.transform.position.x == _lastTile.transform.position.x)
+                        {
+                            if (tile.IsTrail())
+                            {
+                                //      tile.deleteNextFlow()
+                                //                  -> if last tile in flow is an end and connected,
+                                //                     do flowCount--
+                            }
+                            tile.EnableTrail(TrailType.SOUTH);
+                            _lastTile.EnableTrail(TrailType.NORTH);
+                        }
+                        //tile.SetColor(_lastTile.color);
+                    }
                     // if (flowEnd)
                     //      flowCount++
 

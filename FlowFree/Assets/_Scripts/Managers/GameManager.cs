@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -118,6 +117,22 @@ public class GameManager : MonoBehaviour
             } // if
         } // foreach
     } // ReloadPanels
+
+    /// <summary>
+    /// 
+    /// Function called when a rewarded ad ended successfully.
+    /// 
+    /// </summary>
+    public void AdEnded()
+    {
+        GetInstance()._player._hints++;
+
+        // MainMenu
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            _mainMenu.AdCompleted();
+        } // if
+    }
 
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)
     {
@@ -338,5 +353,17 @@ public class GameManager : MonoBehaviour
         return GetInstance()._level;
     } // GetLevel
 
+
+    /// <summary>
+    /// 
+    /// Gives access to the player data and all the completed level 
+    /// and etc.
+    /// 
+    /// </summary>
+    /// <returns> (PlayerData) Actual player data loaded. </returns>
+    public PlayerData GetPlayerData()
+    {
+        return GetInstance()._player;
+    } // GetPlayerData
     #endregion getters
 }

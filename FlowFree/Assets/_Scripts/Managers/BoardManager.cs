@@ -80,32 +80,35 @@ public class BoardManager : MonoBehaviour
         for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
         {
             sol = solutions[flowNumber, flowed];
-            if      (sol.x + 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-            else if (sol.x - 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-            else if (sol.y - 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-            else if (sol.y + 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
-            lastNext = sol;
+            //if (sol.x + 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
+            //else if (sol.x - 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
+            //else if (sol.y - 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
+            //else if (sol.y + 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
+            _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
+           lastNext = sol;
             flowed++;
             while (solutions[flowNumber, flowed + 1].x != -1)
             {
                 sol = solutions[flowNumber, flowed];
-                if      (sol.x + 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-                else if (sol.x - 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-                else if (sol.y - 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-                else if (sol.y + 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
+                //if      (sol.x + 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
+                //else if (sol.x - 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
+                //else if (sol.y - 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
+                //else if (sol.y + 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
 
-                if      (lastNext.x - 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-                else if (lastNext.x + 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-                else if (lastNext.y + 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-                else if (lastNext.y - 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
+                _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
+
+                //if      (lastNext.x - 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
+                //else if (lastNext.x + 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
+                //else if (lastNext.y + 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
+                //else if (lastNext.y - 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
                 flowed++;
                 lastNext = sol;
             }
-            sol = solutions[flowNumber, flowed];
-            if      (lastNext.x - 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-            else if (lastNext.x + 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-            else if (lastNext.y + 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-            else if (lastNext.y - 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
+            //sol = solutions[flowNumber, flowed];
+            //if      (lastNext.x - 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
+            //else if (lastNext.x + 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
+            //else if (lastNext.y + 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
+            //else if (lastNext.y - 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
             flowed = 0;
         }
 
@@ -200,62 +203,14 @@ public class BoardManager : MonoBehaviour
                     //...
                     // check directions
                     // It isn't a ball with different color
-                    if (!(tile.IsBall() /*&& tile.color != _lastTile.color*/))
+                    if (!(tile.IsBall() && tile.getColor() != _lastTile.getColor()))
                     {
-                        // go right
-                        if (tile.transform.position.x - _lastTile.transform.position.x == 1.0f &&
-                            tile.transform.position.y == _lastTile.transform.position.y)
+                        if (tile.IsTrail())
                         {
-                            if (tile.IsTrail())
-                            {
-                                //      tile.deleteNextFlow()
-                                //                  -> if last tile in flow is an end and connected,
-                                //                     do flowCount--
-                            }
-                            tile.EnableTrail(TrailType.WEST);
-                            _lastTile.EnableTrail(TrailType.EAST);
+                            deleteTrails(tile);
+                        }
 
-                        }
-                        // go left
-                        else if (tile.transform.position.x - _lastTile.transform.position.x == -1.0f &&
-                            tile.transform.position.y == _lastTile.transform.position.y)
-                        {
-                            if (tile.IsTrail())
-                            {
-                                //      tile.deleteNextFlow()
-                                //                  -> if last tile in flow is an end and connected,
-                                //                     do flowCount--
-                            }
-                            tile.EnableTrail(TrailType.EAST);
-                            _lastTile.EnableTrail(TrailType.WEST);
-                        }
-                        // go down
-                        else if (tile.transform.position.y - _lastTile.transform.position.y == 1.0f &&
-                            tile.transform.position.x == _lastTile.transform.position.x)
-                        {
-                            if (tile.IsTrail())
-                            {
-                                //      tile.deleteNextFlow()
-                                //                  -> if last tile in flow is an end and connected,
-                                //                     do flowCount--
-                            }
-                            tile.EnableTrail(TrailType.NORTH);
-                            _lastTile.EnableTrail(TrailType.SOUTH);
-                        }
-                        // go up
-                        else if (tile.transform.position.y - _lastTile.transform.position.y == -1.0f &&
-                            tile.transform.position.x == _lastTile.transform.position.x)
-                        {
-                            if (tile.IsTrail())
-                            {
-                                //      tile.deleteNextFlow()
-                                //                  -> if last tile in flow is an end and connected,
-                                //                     do flowCount--
-                            }
-                            tile.EnableTrail(TrailType.SOUTH);
-                            _lastTile.EnableTrail(TrailType.NORTH);
-                        }
-                        //tile.SetColor(_lastTile.color);
+                        _lastTile.SetNextTile(tile);
                     }
                     // if (flowEnd)
                     //      flowCount++
@@ -266,6 +221,15 @@ public class BoardManager : MonoBehaviour
             }
         } // if
     } // ReceiveInput
+
+    private void deleteTrails(Tile tile)
+    {
+        List<Tile> tileList = new List<Tile>();
+        tile.TrailDeletion(ref tileList, _lastTile.TrailFordward() > _lastTile.TrailBackward());
+        //      tile.deleteNextFlow()
+        //                  -> if last tile in flow is an end and connected,
+        //                     do flowCount--
+    }
 
     // ------------------ PRIVATE -------------------
 
@@ -287,6 +251,7 @@ public class BoardManager : MonoBehaviour
         tile.SetColor(info.ballColor);
         if(info.uroboros)tile.EnableBall();
 
+        tile.SetPosition(x, y);
         
         // keep setting and unsetting tile objects for example ball/flow starts or ends
         // InfoBall infoBall; 

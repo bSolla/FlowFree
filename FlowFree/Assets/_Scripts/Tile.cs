@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public struct WallType
 {
     public bool top, left;
@@ -57,6 +58,10 @@ public class Tile : MonoBehaviour
     [SerializeField]
     [Tooltip("Child component that stores the ball")]
     private GameObject _ball;
+    private Color _color;
+    public Tile _next;
+    public Tile _back;
+    private Point _pos;
     #endregion //variables
 
     #region methods
@@ -99,7 +104,61 @@ public class Tile : MonoBehaviour
     // -----------------------------------------------
     // ----- methods that turn components on/off -----
     // -----------------------------------------------
+    public void SetPosition(int x, int y)
+    {
+        _pos.x = x;
+        _pos.y = y;
+    }
+    public Point GetPosition()
+    {
+        return _pos;
+    }
 
+    /// <summary> Set the next tile </summary>
+    public void SetNextTile(Tile t)
+    {
+        _next = t;
+        if      (_pos.x + 1 == t.GetPosition().x) EnableTrail(TrailType.EAST);
+        else if (_pos.x - 1 == t.GetPosition().x) EnableTrail(TrailType.WEST);
+        else if (_pos.y - 1 == t.GetPosition().y) EnableTrail(TrailType.SOUTH);
+        else if (_pos.y + 1 == t.GetPosition().y) EnableTrail(TrailType.NORTH);
+        
+        t.SetBackTile(this);
+    }
+
+    /// <summary> Set the back tile </summary>
+    public void SetBackTile(Tile t)
+    {
+        _back = t;
+        if      (t.GetPosition().x - 1 == _pos.x) EnableTrail(TrailType.EAST);
+        else if (t.GetPosition().x + 1 == _pos.x) EnableTrail(TrailType.WEST);
+        else if (t.GetPosition().y + 1 == _pos.y) EnableTrail(TrailType.SOUTH);
+        else if (t.GetPosition().y - 1 == _pos.y) EnableTrail(TrailType.NORTH);
+    }
+
+    public int TrailBackward()
+    {
+        return (_back != null) ? 1 + TrailBackward() : 0;
+    }
+    public int TrailFordward()
+    {
+        return (_next != null) ? 1 + TrailFordward() : 0;
+    }
+    public void TrailDeletion(ref List<Tile> list, bool condition)
+    {
+        list.Add(this);
+        _trailNorth.SetActive(false);
+        _trailSouth.SetActive(false);
+        _trailEast.SetActive(false);
+        _trailWest.SetActive(false);
+        if(condition)
+            if (_next != null)
+                TrailDeletion(ref list, condition);
+        else if (_back != null)
+                TrailDeletion(ref list, condition);
+
+
+    }
     /// <summary> Enables the ice sprite </summary>
     public void EnableGridBackground()
     {
@@ -113,6 +172,7 @@ public class Tile : MonoBehaviour
 
     public void SetColor(Color c)
     {
+        _color = c;
         _trailEast.GetComponent<SpriteRenderer>().color = c;
         _trailWest.GetComponent<SpriteRenderer>().color = c;
         _trailNorth.GetComponent<SpriteRenderer>().color = c;
@@ -125,6 +185,11 @@ public class Tile : MonoBehaviour
 
         _ball.GetComponent<SpriteRenderer>().color = c;
     } // SetTrailColor
+
+    public Color getColor()
+    {
+        return _color;
+    }
 
     /// <summary> Enables the given wall sprites </summary>
     public void EnableWalls(WallType walls)

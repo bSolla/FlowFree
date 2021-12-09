@@ -23,9 +23,9 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
 #endif
 
     // Ad type 
-    string placementVideo = "video";
-    string placementIdRewardedVideo = "rewardedVideo";
-    string placementBannerID = "bannerPlacement";
+    string _placementVideo = "video";
+    string _placementIdRewardedVideo = "rewardedVideo";
+    string _placementBannerID = "bannerPlacement";
 
     void Awake()
     {
@@ -47,7 +47,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     {
         Advertisement.AddListener(GetInstance());
         Advertisement.Initialize(_gameID, true);
-        StartCoroutine(ShowBannerWhenInitialized());
+        StartCoroutine(ShowBannerWhenInitialized(BannerPosition.BOTTOM_CENTER));
     } // Start
 
     /// <summary>
@@ -63,11 +63,12 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
 
     /// <summary>
     /// 
-    /// Function that shows a banner in everyscene at the bottom center.
+    /// Function that shows a banner in every scene
     /// 
     /// </summary>
+    /// <param name="pos"> (BannerPosition) Position of the ad. </param>
     /// <returns> (WaitForSeconds) Seconds between ads. </returns>
-    IEnumerator ShowBannerWhenInitialized()
+    IEnumerator ShowBannerWhenInitialized(BannerPosition pos)
     {
         if (!GameManager.GetInstance().GetPlayerData()._adsRemoved)
         {
@@ -75,8 +76,8 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
             {
                 yield return new WaitForSeconds(0.5f);
             }
-            Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
-            Advertisement.Banner.Show(placementBannerID);
+            Advertisement.Banner.SetPosition(pos);
+            Advertisement.Banner.Show(_placementBannerID);
         } // if
     } // ShowBannerWhenInitialized
 
@@ -89,9 +90,9 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     {
         if (!GameManager.GetInstance().GetPlayerData()._adsRemoved)
         {
-            if (Advertisement.IsReady(placementVideo))
+            if (Advertisement.IsReady(_placementVideo))
             {
-                Advertisement.Show(placementVideo);
+                Advertisement.Show(_placementVideo);
             } // if
             else
             {
@@ -107,9 +108,9 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     /// </summary>
     public void ShowRewardedVideo()
     {
-        if (Advertisement.IsReady(placementIdRewardedVideo))
+        if (Advertisement.IsReady(_placementIdRewardedVideo))
         {
-            Advertisement.Show(placementIdRewardedVideo);
+            Advertisement.Show(_placementIdRewardedVideo);
         } // if
         else
         {
@@ -126,7 +127,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     /// <param name="res"> (ShowResult) Result of the ad. </param>
     public void OnUnityAdsDidFinish(string placementId, ShowResult res)
     {
-        if (placementId == placementIdRewardedVideo)
+        if (placementId == _placementIdRewardedVideo)
         {
             if (res == ShowResult.Finished || res == ShowResult.Skipped)
             {

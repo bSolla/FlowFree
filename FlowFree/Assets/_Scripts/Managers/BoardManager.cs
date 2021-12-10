@@ -16,6 +16,7 @@ public class BoardManager : MonoBehaviour
 
     private Tile[,] _tiles;                     // Map
     private Tile _lastTile = null;
+    private List<List<Tile>> _ghostTiles;                     // Map
 
     private LevelManager _levelManager;         // LevelManager
 
@@ -207,7 +208,7 @@ public class BoardManager : MonoBehaviour
                     {
                         if (tile.IsTrail())
                         {
-                            deleteTrails(tile);
+                            deleteTrails(tile, tile.getColor() == _lastTile.getColor());
                         }
 
                         _lastTile.SetNextTile(tile);
@@ -222,10 +223,40 @@ public class BoardManager : MonoBehaviour
         } // if
     } // ReceiveInput
 
-    private void deleteTrails(Tile tile)
+    public void reviveTrails(List<Tile> tileList)
     {
-        List<Tile> tileList = new List<Tile>();
+        Tile aux = tileList[0];
+        tileList.Remove(aux);
+        foreach (Tile t in tileList)
+        {
+            aux.SetNextTile(t);
+            aux = t;
+            tileList.Remove(aux);
+        }
+    }
+
+    private void deleteTrails(Tile tile, bool sameColor)
+    {
+        List<Tile> tileList = new List<Tile>(); // list of tiles deleted
         tile.TrailDeletion(ref tileList, _lastTile.TrailFordward() > _lastTile.TrailBackward());
+
+        if (!sameColor)
+            _ghostTiles.Add(tileList);
+        else    // check if the tile deletes is the begining of a ghost list
+        {
+            foreach (Tile t in tileList)
+            {
+                foreach (List<Tile> g in _ghostTiles)
+                {
+                    if (g[0] == t)
+                    {   // has found a ghost tile in the list of tiles deleted
+                        reviveTrails(g);   //Revive all the tiles in the list g
+                        _ghostTiles.Remove(g);  // Remove the list of tiles ghost from the ghost list
+                    }
+                }
+            }
+        }
+
         //      tile.deleteNextFlow()
         //                  -> if last tile in flow is an end and connected,
         //                     do flowCount--

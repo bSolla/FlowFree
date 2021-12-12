@@ -10,6 +10,6 @@ using UnityEngine;
 public class LevelLot : ScriptableObject
 {
     // whatever is in the level
-    public string _name;
-    public TextAsset _level;
+    public string _lotName;
+    public TextAsset _lotLevel;
 } // LevelPackage

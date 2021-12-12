@@ -276,6 +276,11 @@ public class GameManager : MonoBehaviour
         return GetInstance()._levels.Length;
     } // GetNumPackages
 
+    public int GetNumLotsInPackage(LevelPackage levPack)
+    {
+        return levPack._lotArray.Length;
+    }
+
     /// <summary>
     /// 
     /// Get the name of the current package selected.
@@ -299,6 +304,7 @@ public class GameManager : MonoBehaviour
     {
         return GetInstance()._levels[i];
     } // GetPackage
+
 
     /// <summary>
     /// 
@@ -332,11 +338,11 @@ public class GameManager : MonoBehaviour
     public LevelLot GetLevelLot()
     {
         LevelPackage pack = GetInstance().GetLevelPackage();
-        for (int i = 0; i < pack._levels.Length; i++)
+        for (int i = 0; i < pack._lotArray.Length; i++)
         {
-            if (pack._levels[i].name == _lot)
+            if (pack._lotArray[i].name == _lot)
             {
-                return pack._levels[i];
+                return pack._lotArray[i];
             } // if
         } // for
 

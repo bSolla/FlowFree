@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: 8x8Manias
   m_EditorClassIdentifier: 
-  _name: 8x8 Manias
-  _level: {fileID: 4900000, guid: 289538e7e607e0d4c8d867159b0b27be, type: 3}
+  _lotName: 8x8 Manias
+  _lotLevel: {fileID: 4900000, guid: 289538e7e607e0d4c8d867159b0b27be, type: 3}

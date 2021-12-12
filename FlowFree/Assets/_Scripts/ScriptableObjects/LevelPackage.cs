@@ -10,7 +10,7 @@ using UnityEngine;
 public class LevelPackage : ScriptableObject
 {
     // whatever is in the level
-    public string _name;
-    public LevelLot[] _levels;
+    public string _packageName;
+    public LevelLot[] _lotArray;
     public Color _packageColor;
 } // LevelPackage

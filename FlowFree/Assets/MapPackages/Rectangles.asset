@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8deb88e476a064cb454ec06e87ec02, type: 3}
   m_Name: Rectangles
   m_EditorClassIdentifier: 
-  _name: Rectangles
-  _levels:
+  _packageName: Rectangles
+  _lotArray:
   - {fileID: 11400000, guid: df4161dc0a1807347a0c53e094c846dd, type: 2}
   - {fileID: 11400000, guid: 1f3ff99f616669d47877c5c1ef08bd74, type: 2}
   - {fileID: 11400000, guid: 514332db8d2b69640bf8973a6942e166, type: 2}
-  _packageColor: {r: 0.9843137, g: 0.5372549, b: 0, a: 0}
+  _packageColor: {r: 0.9843137, g: 0.5372549, b: 0, a: 1}

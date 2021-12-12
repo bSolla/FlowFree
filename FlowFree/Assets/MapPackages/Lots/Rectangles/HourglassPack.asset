@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: HourglassPack
   m_EditorClassIdentifier: 
-  _name: Hourglass Pack
-  _level: {fileID: 4900000, guid: ee68250fdb1f148459d078d01ff2437d, type: 3}
+  _lotName: Hourglass Pack
+  _lotLevel: {fileID: 4900000, guid: ee68250fdb1f148459d078d01ff2437d, type: 3}

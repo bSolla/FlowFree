@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b222632b94a230546bb95190c60e632c, type: 3}
   m_Name: 10x10Manias
   m_EditorClassIdentifier: 
-  _name: 10x10 Manias
-  _level: {fileID: 4900000, guid: fb8a34a08229e0e4a8c3a181bace15c6, type: 3}
+  _lotName: 10x10 Manias
+  _lotLevel: {fileID: 4900000, guid: fb8a34a08229e0e4a8c3a181bace15c6, type: 3}

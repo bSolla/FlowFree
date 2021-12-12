@@ -174,7 +174,7 @@ public class Map : MonoBehaviour
     {
         // parsing ..................
         // adapt from Reader
-        string[] lines = path._level.text.Split(Environment.NewLine.ToCharArray());
+        string[] lines = path._lotLevel.text.Split(Environment.NewLine.ToCharArray());
         String[] levelInfo = lines[level*2].Split(';');
 
         String[] basicInfo = levelInfo[0].Split(',');

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8deb88e476a064cb454ec06e87ec02, type: 3}
   m_Name: Intro
   m_EditorClassIdentifier: 
-  _name: Tutorial
-  _levels:
+  _packageName: Intro
+  _lotArray:
   - {fileID: 11400000, guid: a84a165345ade8c4ca3e68127f9e9f96, type: 2}
   - {fileID: 11400000, guid: a3c3c5c6c03933148899864ce7eb5f8e, type: 2}
   - {fileID: 11400000, guid: 9af255a0cf8d70c42a69841a72c0b6ff, type: 2}
   - {fileID: 11400000, guid: f7ed1f38d75e01e49964de00e0af3390, type: 2}
-  _packageColor: {r: 0, g: 0.5529412, b: 0, a: 0}
+  _packageColor: {r: 0, g: 0.5529412, b: 0, a: 1}

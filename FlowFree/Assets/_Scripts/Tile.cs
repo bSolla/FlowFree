@@ -58,7 +58,7 @@ public class Tile : MonoBehaviour
     [SerializeField]
     [Tooltip("Child component that stores the ball")]
     private GameObject _ball;
-    private Color _color;
+    private Color _color = Color.black;
     public Tile _next;
     public Tile _back;
     private Point _pos;
@@ -151,6 +151,7 @@ public class Tile : MonoBehaviour
         _trailSouth.SetActive(false);
         _trailEast.SetActive(false);
         _trailWest.SetActive(false);
+        _color = Color.black;
         if(condition)
             if (_next != null)
                 TrailDeletion(ref list, condition);
@@ -316,6 +317,10 @@ public class Tile : MonoBehaviour
         return rectTransform.rect.Contains(rectTransform.InverseTransformPoint(pointerPosition));
     }
 
+    public bool hasConection()
+    {
+        return (_next != null || _back != null);
+    }
 
     #region setter/getters
     // -----------------------------------------------

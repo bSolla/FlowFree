@@ -17,6 +17,9 @@ public class BoardManager : MonoBehaviour
     private Tile[,] _tiles;                     // Map
     private Tile _lastTile = null;
     private List<List<Tile>> _ghostTiles;                     // Map
+    private int _numberFlows;
+    private int _flowCount;
+    private List<Tile[]> _flowPoints;
 
     private LevelManager _levelManager;         // LevelManager
 
@@ -54,7 +57,8 @@ public class BoardManager : MonoBehaviour
         // Init board sizes and variables
         _tiles = new Tile[map.X, map.Y];
         //_hintArray = map.hintArray; _tilesHint = Mathf.CeilToInt(_hintArray.Length / 3.0f);
-
+        _numberFlows = map.getFlowSolution().GetLength(0);
+        _flowPoints = new List<Tile[]>();
         // Calculate space available for board
         CalculateSpace();
 
@@ -71,7 +75,22 @@ public class BoardManager : MonoBehaviour
                 SetTile(map.tileInfoMatrix[x, y], _tiles[x, y], x, y);
             }
         }
+        Point[,] solutions = map.getFlowSolution();
+        int flowed = 0;
 
+        for (int flowNumber = 0; flowNumber < _numberFlows; flowNumber++)
+        {
+            Point sol1 = solutions[flowNumber, flowed];
+            while (solutions[flowNumber, flowed + 1].x != -1)
+            {
+
+                flowed++;
+            }
+            Point sol2 = solutions[flowNumber, flowed];
+            Tile[] auxT = { _tiles[sol1.x, sol1.y], _tiles[sol2.x, sol2.y] };
+            _flowPoints.Add(auxT);
+            flowed = 0;
+        }
 
         //-----------------------------------------DEBUG-----------------------------------------
         //Point lastPos = new Point(); 
@@ -137,42 +156,62 @@ public class BoardManager : MonoBehaviour
         //Debug.Log(it);
         //Vector2 realPos = new Vector2(pos.x - (_board.transform.position.x / _board.transform.localScale.x), pos.y - (_board.transform.position.y / _board.transform.localScale.y));
         Vector2 realPos = new Vector2((pos.x - _board.transform.position.x) / _board.transform.localScale.x, (pos.y - _board.transform.position.y) / _board.transform.localScale.y);
-        Debug.Log("X: " + Mathf.Round(realPos.x) + "Y: " + Mathf.Round(realPos.y));
+        //Debug.Log("X: " + Mathf.Round(realPos.x) + "Y: " + Mathf.Round(realPos.y));
         if (it == InputManager.InputType.NONE)
         {
             _lastTile = null;
         }
         if (it == InputManager.InputType.MOVEMENT)
         {
-            if (_lastTile == null)
-            {
-                // delete all forward flows 
-            }
             int x = Mathf.RoundToInt(realPos.x), y = Mathf.RoundToInt(realPos.y);
             if ((x >= 0 && x < _tiles.GetLength(0)) &&
                 (y >= 0 && y < _tiles.GetLength(1)))
             {
                 Tile tile = _tiles[x, y];
-                if (tile.IsPointed(realPos) && tile != _lastTile)
+                // new click
+                if (_lastTile == null && tile.IsBall())
                 {
-                    //...
-                    // check directions
-                    // It isn't a ball with different color
-                    Debug.Log(tile.GetPosition());
-                    if ((tile.IsBall() && tile.getColor() == _lastTile.getColor()))
+                    _lastTile = tile;
+                    return;
+                }
+                if (tile != _lastTile)
+                {
+                    // new tile is empty tile
+                    if (tile.getColor() == Color.black)
                     {
-                        if (tile.IsTrail())
+                        _lastTile.SetNextTile(tile);
+                        tile.SetColor(_lastTile.getColor());
+                        _lastTile = tile;
+                        return;
+                    }
+                    // flow finish!
+                    if(tile.IsBall() && tile.getColor() == _lastTile.getColor() && !tile.hasConection())
+                    {
+                        _flowCount++;
+                        _lastTile.SetNextTile(tile);
+                        tile.SetColor(_lastTile.getColor());
+                        _lastTile = tile;
+                        return;
+                    }
+                    // delete other flow
+                    if (tile.IsTrail() && tile.getColor() != _lastTile.getColor())
+                    {
+                        Debug.Log("Delete");
+                        bool completeFlow = false;
+                        foreach (Tile[] t in _flowPoints)
                         {
-                            deleteTrails(tile, tile.getColor() == _lastTile.getColor());
+                            if (t[0].getColor() == tile.getColor())  // if the color is the same
+                                if (t[0].hasConection() && t[1].hasConection()) //and the flow is complete
+                                    completeFlow = true;
                         }
+                        Debug.Log("Completed: " + completeFlow);
+
+                        deleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
 
                         _lastTile.SetNextTile(tile);
+                        tile.SetColor(_lastTile.getColor());
+                        _lastTile = tile;
                     }
-                    // if (flowEnd)
-                    //      flowCount++
-
-                    _lastTile = tile;
-                    //break;
                 }
             }
             //TODO: DRAW FLOW
@@ -215,10 +254,17 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    private void deleteTrails(Tile tile, bool sameColor)
+    private void deleteTrails(Tile tile, bool sameColor,bool completeTrail)
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
-        tile.TrailDeletion(ref tileList, _lastTile.TrailFordward() > _lastTile.TrailBackward());
+        if (completeTrail)
+        {
+            tile.TrailDeletion(ref tileList, _lastTile.TrailFordward() > _lastTile.TrailBackward());
+            _flowCount--;
+        }
+        else
+            tile.TrailDeletion(ref tileList, true);
+
 
         if (!sameColor)
             _ghostTiles.Add(tileList);
@@ -259,7 +305,7 @@ public class BoardManager : MonoBehaviour
         infoWalls.top = info.wallDown;
         if (info.wallEast || info.wallDown) tile.EnableWalls(infoWalls);
         tile.gameObject.SetActive(!info.empty);
-        if (info.uroboros)
+        if (info.uroboros)  // ball type
         {
             tile.SetColor(info.ballColor);
             tile.EnableBall();

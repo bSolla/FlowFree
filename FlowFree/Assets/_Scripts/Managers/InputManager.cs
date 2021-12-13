@@ -14,18 +14,23 @@ public class InputManager : MonoBehaviour
 
     public enum InputType { NONE, MOVEMENT };
 
+    private bool pressing = false;
+
     void Update()
     {
         // if we're in editor, use PC input
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
-            _touchPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y); // save touch 
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
             GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
+            pressing = true;
         } // if
         if (Input.GetMouseButtonUp(0))
         {
             GameManager.GetInstance().ReceiveInput(InputType.NONE, _touchPos);
+            pressing = false;
         }
 #else
         // TODO: MULTI TOUCH SUPPORT
@@ -43,6 +48,12 @@ public class InputManager : MonoBehaviour
             }
         } // if
 #endif
+        if (pressing)
+        {
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
+            GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
+        }
     } // Update
 } // InputManager
 

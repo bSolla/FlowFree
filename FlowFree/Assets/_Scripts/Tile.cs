@@ -177,13 +177,14 @@ public class Tile : MonoBehaviour
         _trailWest.GetComponent<SpriteRenderer>().color = c;
         _trailNorth.GetComponent<SpriteRenderer>().color = c;
         _trailSouth.GetComponent<SpriteRenderer>().color = c;
-
         //_hintEast.GetComponent<SpriteRenderer>().color = c;
         //_hintWest.GetComponent<SpriteRenderer>().color = c;
         //_hintNorth.GetComponent<SpriteRenderer>().color = c;
         //_hintSouth.GetComponent<SpriteRenderer>().color = c;
 
         _ball.GetComponent<SpriteRenderer>().color = c;
+        c.a = 0.3f;
+        _gridBackground.GetComponent<SpriteRenderer>().color = c;
     } // SetTrailColor
 
     public Color getColor()

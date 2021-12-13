@@ -74,78 +74,27 @@ public class BoardManager : MonoBehaviour
 
 
         //-----------------------------------------DEBUG-----------------------------------------
-        Point lastPos = new Point(); 
-        int flowed = 0;
-        Point sol, lastNext;
-        Point[,] solutions = map.getFlowSolution();
-        for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
-        {
-            sol = solutions[flowNumber, flowed];
-            //if (sol.x + 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-            //else if (sol.x - 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-            //else if (sol.y - 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-            //else if (sol.y + 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
-            _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
-           lastNext = sol;
-            flowed++;
-            while (solutions[flowNumber, flowed + 1].x != -1)
-            {
-                sol = solutions[flowNumber, flowed];
-                //if      (sol.x + 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-                //else if (sol.x - 1 == solutions[flowNumber, flowed + 1].x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-                //else if (sol.y - 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-                //else if (sol.y + 1 == solutions[flowNumber, flowed + 1].y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
-
-                _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
-
-                //if      (lastNext.x - 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-                //else if (lastNext.x + 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-                //else if (lastNext.y + 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-                //else if (lastNext.y - 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
-                flowed++;
-                lastNext = sol;
-            }
-            //sol = solutions[flowNumber, flowed];
-            //if      (lastNext.x - 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.EAST);
-            //else if (lastNext.x + 1 == sol.x) _tiles[sol.x, sol.y].EnableTrail(TrailType.WEST);
-            //else if (lastNext.y + 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.SOUTH);
-            //else if (lastNext.y - 1 == sol.y) _tiles[sol.x, sol.y].EnableTrail(TrailType.NORTH);
-            flowed = 0;
-        }
-
-        //for (int flow = 0; flow < map.flowNumber(); flow++)
+        //Point lastPos = new Point(); 
+        //int flowed = 0;
+        //Point sol;
+        //Point[,] solutions = map.getFlowSolution();
+        //for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
         //{
-        //    Point[,] solutions = map.getFlowSolution();
-        //    int x = solutions[flow, 0].x, y =solutions[flow, 0].y,
-        //        xNext = map.tileInfoMatrix[x, y].next.x, yNext = map.tileInfoMatrix[x, y].next.y,
-        //        xLast = 0, yLast = 0;
-        //    lastPos = map.tileInfoMatrix[x, y].next;
-        //    if      (x + 1 == xNext) _tiles[x, y].EnableTrail(TrailType.EAST);
-        //    else if (x - 1 == xNext) _tiles[x, y].EnableTrail(TrailType.WEST);
-        //    else if (y + 1 == yNext) _tiles[x, y].EnableTrail(TrailType.SOUTH);
-        //    else if (y - 1 == yNext) _tiles[x, y].EnableTrail(TrailType.NORTH);
-        //    for (int tl = 1; tl < solutions.GetLength(1); tl++)
+        //    sol = solutions[flowNumber, flowed];
+        //    _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
+        //    _tiles[sol.x, sol.y].SetColor(info.ballColor);
+        //    flowed++;
+        //    while (solutions[flowNumber, flowed + 1].x != -1)
         //    {
-        //        y = solutions[flow, tl].y;
-        //        x = solutions[flow, tl].x;
+        //        sol = solutions[flowNumber, flowed];
 
-        //        xLast = lastPos.x;
-        //        yLast = lastPos.y;
-        //        if (xLast + 1 == x) _tiles[x, y].EnableTrail(TrailType.EAST);
-        //        else if (xLast - 1 == x) _tiles[x, y].EnableTrail(TrailType.WEST);
-        //        else if (yLast + 1 == y) _tiles[x, y].EnableTrail(TrailType.SOUTH);
-        //        else if (yLast - 1 == y) _tiles[x, y].EnableTrail(TrailType.NORTH);
+        //        _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
 
-        //        xNext = map.tileInfoMatrix[x, y].next.x;
-        //        yNext = map.tileInfoMatrix[x, y].next.y;
-        //        lastPos = map.tileInfoMatrix[x, y].next;
-        //        if (x + 1 == xNext) _tiles[x, y].EnableTrail(TrailType.EAST);
-        //        else if (x - 1 == xNext) _tiles[x, y].EnableTrail(TrailType.WEST);
-        //        else if (y + 1 == yNext) _tiles[x, y].EnableTrail(TrailType.SOUTH);
-        //        else if (y - 1 == yNext) _tiles[x, y].EnableTrail(TrailType.NORTH);
-
-        //        lastPos = map.tileInfoMatrix[x, y].next;
+        //         tile.SetColor(info.ballColor);
+        //        flowed++;
         //    }
+        //    _tiles[flowNumber, flowed].SetColor(info.ballColor);
+        //    flowed = 0;
         //}
         //-----------------------------------------DEBUG-----------------------------------------
 
@@ -185,6 +134,10 @@ public class BoardManager : MonoBehaviour
     /// <param name="it"> (InputType) Type of the input. </param>
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)
     {
+        //Debug.Log(it);
+        //Vector2 realPos = new Vector2(pos.x - (_board.transform.position.x / _board.transform.localScale.x), pos.y - (_board.transform.position.y / _board.transform.localScale.y));
+        Vector2 realPos = new Vector2((pos.x - _board.transform.position.x) / _board.transform.localScale.x, (pos.y - _board.transform.position.y) / _board.transform.localScale.y);
+        Debug.Log("X: " + Mathf.Round(realPos.x) + "Y: " + Mathf.Round(realPos.y));
         if (it == InputManager.InputType.NONE)
         {
             _lastTile = null;
@@ -195,16 +148,18 @@ public class BoardManager : MonoBehaviour
             {
                 // delete all forward flows 
             }
-
-            //TODO: DRAW FLOW
-            foreach (Tile tile in _tiles)
+            int x = Mathf.RoundToInt(realPos.x), y = Mathf.RoundToInt(realPos.y);
+            if ((x >= 0 && x < _tiles.GetLength(0)) &&
+                (y >= 0 && y < _tiles.GetLength(1)))
             {
-                if (tile.IsPointed(pos) && tile != _lastTile)
+                Tile tile = _tiles[x, y];
+                if (tile.IsPointed(realPos) && tile != _lastTile)
                 {
                     //...
                     // check directions
                     // It isn't a ball with different color
-                    if (!(tile.IsBall() && tile.getColor() != _lastTile.getColor()))
+                    Debug.Log(tile.GetPosition());
+                    if ((tile.IsBall() && tile.getColor() == _lastTile.getColor()))
                     {
                         if (tile.IsTrail())
                         {
@@ -217,9 +172,34 @@ public class BoardManager : MonoBehaviour
                     //      flowCount++
 
                     _lastTile = tile;
-                    break;
+                    //break;
                 }
             }
+            //TODO: DRAW FLOW
+            //foreach (Tile tile in _tiles)
+            //{
+                //if (tile.IsPointed(realPos) && tile != _lastTile)
+                //{
+                //    //...
+                //    // check directions
+                //    // It isn't a ball with different color
+                //    Debug.Log(tile.GetPosition());
+                //    if ((tile.IsBall() && tile.getColor() == _lastTile.getColor()))
+                //    {
+                //        if (tile.IsTrail())
+                //        {
+                //            deleteTrails(tile, tile.getColor() == _lastTile.getColor());
+                //        }
+
+                //        _lastTile.SetNextTile(tile);
+                //    }
+                //    // if (flowEnd)
+                //    //      flowCount++
+
+                //    _lastTile = tile;
+                //    break;
+                //}
+            //}
         } // if
     } // ReceiveInput
 
@@ -279,8 +259,11 @@ public class BoardManager : MonoBehaviour
         infoWalls.top = info.wallDown;
         if (info.wallEast || info.wallDown) tile.EnableWalls(infoWalls);
         tile.gameObject.SetActive(!info.empty);
-        tile.SetColor(info.ballColor);
-        if(info.uroboros)tile.EnableBall();
+        if (info.uroboros)
+        {
+            tile.SetColor(info.ballColor);
+            tile.EnableBall();
+        }
 
         tile.SetPosition(x, y);
         

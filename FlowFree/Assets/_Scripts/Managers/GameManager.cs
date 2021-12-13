@@ -1,6 +1,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -139,6 +140,11 @@ public class GameManager : MonoBehaviour
         _levelManager.ReceiveInput(it, pos);
     }
 
+    public void LoadPlayScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+
     #region Setters
 
     /// <summary>
@@ -173,6 +179,7 @@ public class GameManager : MonoBehaviour
     /// <param name="p"> (string) Package selected. </param>
     public void SetPackage(string p)
     {
+        p = p.Replace(" ", String.Empty);   // prevention of spaces in the name
         GetInstance()._package = p;
     } // SetPackage
 
@@ -182,6 +189,7 @@ public class GameManager : MonoBehaviour
     /// <param name="l"> (string) Lot selected </param>
     public void SetLot(string l)
     {
+        l = l.Replace(" ", String.Empty);   // prevention of spaces in the name
         GetInstance()._lot = l;
     }
 

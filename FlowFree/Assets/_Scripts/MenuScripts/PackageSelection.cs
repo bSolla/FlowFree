@@ -13,6 +13,9 @@ public class PackageSelection : MonoBehaviour
     [Header("Prefabs")]
     public LotSelection _lotSelectionPrefab = null;
 
+    private LevelSelection _levelSelectionPanel;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +23,11 @@ public class PackageSelection : MonoBehaviour
         if (_lineDetail == null) Debug.LogError("Line detail image reference not set in Package selection object " + gameObject.name);
         if (_background == null) Debug.LogError("Background image reference not set in package selection object " + gameObject.name);
         if (_lotSelectionPrefab == null) Debug.LogError("Lot prefab not set in package selection object " + gameObject.name);
+    }
+
+    public void SetSelectionPanelReference(LevelSelection ls)
+    {
+        _levelSelectionPanel = ls;
     }
 
     /// <summary>
@@ -52,10 +60,9 @@ public class PackageSelection : MonoBehaviour
         {
             lot = Instantiate(_lotSelectionPrefab, verticalLayout.transform);
             // TODO: modify the value of the completed lots according to player data
-            lot._lotName.color = package._packageColor;
-            lot._lotName.text = package._lotArray[i]._lotName;
-
-            // TODO: link up with level selection -> each lot button has to send lot info to next scene
+            lot.SetLotData(package._packageName, package._lotArray[i]._lotName, package._packageColor);
+            lot.SetButtonCall(_levelSelectionPanel);
         }
     }
+
 }

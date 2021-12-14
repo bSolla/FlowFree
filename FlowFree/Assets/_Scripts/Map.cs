@@ -81,6 +81,7 @@ public class Map : MonoBehaviour
     public int X, Y;
     private Point[,] solutions;
 
+    Color[] colores = new Color[8];
     public Point[,] getFlowSolution()
     {
         return solutions;
@@ -118,8 +119,6 @@ public class Map : MonoBehaviour
         //------------------------------------------------DEBUG------------------------------------------------
         int flowed = 0;
         Point sol;
-
-        Color [] colores = new Color[8];
         colores[0] = Color.red;
         colores[1] = Color.green;
         colores[2] = Color.blue;

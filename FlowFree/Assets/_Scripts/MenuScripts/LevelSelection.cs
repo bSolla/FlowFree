@@ -75,7 +75,7 @@ public class LevelSelection : MonoBehaviour
 
         Debug.Log("This sets level " + level + " of the lot " + _lotName.text + " of the package " + _packageName);
 
-        //GameManager.GetInstance().LoadPlayScene();
+        GameManager.GetInstance().LoadPlayScene();
         // TODO: fix errors in map
     }
 }

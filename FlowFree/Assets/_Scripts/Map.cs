@@ -119,7 +119,7 @@ public class Map : MonoBehaviour
         int flowed = 0;
         Point sol;
 
-        Color[] colores = new Color[12];
+        Color [] colores = new Color[8];
         colores[0] = Color.red;
         colores[1] = Color.green;
         colores[2] = Color.blue;
@@ -128,27 +128,25 @@ public class Map : MonoBehaviour
         colores[5] = Color.gray;
         colores[6] = Color.magenta;
         colores[7] = Color.white;
-        colores[8] = Color.cyan;
-        colores[9] = Color.yellow;
-        colores[10] = Color.green;
-        colores[11] = Color.red;
+        Color colorFlow;
         for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
         {
+            colorFlow = (flowNumber < colores.Length) ? colores[flowNumber] : UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
             tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
             while (solutions[flowNumber, flowed + 1].x != -1) {
                 sol = solutions[flowNumber, flowed];
                 tileInfoMatrix[sol.x, sol.y].next.x = solutions[flowNumber, flowed + 1].x;
                 tileInfoMatrix[sol.x, sol.y].next.y = solutions[flowNumber, flowed + 1].y;
-                tileInfoMatrix[sol.x, sol.y].ballColor = colores[flowNumber];
+                tileInfoMatrix[sol.x, sol.y].ballColor = colorFlow;
                 flowed++;
             }
             tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
-            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].ballColor = colores[flowNumber];
+            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].ballColor = colorFlow;
             flowed = 0;
         }
         //------------------------------------------------DEBUG------------------------------------------------
         // wall info
-        foreach (Wall wall in w)
+        foreach (Wall wall in w)        
         {
             tileInfoMatrix[wall.pos.x, wall.pos.y].wallDown = wall.s;
             tileInfoMatrix[wall.pos.x, wall.pos.y].wallEast = wall.e;
@@ -234,7 +232,11 @@ public class Map : MonoBehaviour
                 }
             }
         }
-
+        if (4 >= basicInfo.Length)
+        {
+            readenMap.walls = new Wall[0];
+            readenMap.empties = new Point[0];
+        }
 
         for (int i = 1; i < levelInfo.Length; i++)
         {

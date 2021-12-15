@@ -138,11 +138,11 @@ public class Tile : MonoBehaviour
 
     public int TrailBackward()
     {
-        return (_back != null) ? 1 + TrailBackward() : 0;
+        return (_back != null) ? 1 + _back.TrailBackward() : 0;
     }
     public int TrailFordward()
     {
-        return (_next != null) ? 1 + TrailFordward() : 0;
+        return (_next != null) ? 1 + _next.TrailFordward() : 0;
     }
     public void TrailDeletion(ref List<Tile> list, bool condition)
     {
@@ -152,13 +152,11 @@ public class Tile : MonoBehaviour
         _trailEast.SetActive(false);
         _trailWest.SetActive(false);
         _color = Color.black;
-        if(condition)
-            if (_next != null)
-                TrailDeletion(ref list, condition);
-        else if (_back != null)
-                TrailDeletion(ref list, condition);
-
-
+        if (condition)
+        { 
+            if (_next != null) _next.TrailDeletion(ref list, condition);
+        }
+        else if (_back != null) _back.TrailDeletion(ref list, condition);
     }
     /// <summary> Enables the ice sprite </summary>
     public void EnableGridBackground()

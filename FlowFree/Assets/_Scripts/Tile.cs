@@ -118,11 +118,11 @@ public class Tile : MonoBehaviour
     public void SetNextTile(Tile t)
     {
         _next = t;
-        if      (_pos.x + 1 == t.GetPosition().x) EnableTrail(TrailType.EAST);
+        if (_pos.x + 1 == t.GetPosition().x) EnableTrail(TrailType.EAST);
         else if (_pos.x - 1 == t.GetPosition().x) EnableTrail(TrailType.WEST);
         else if (_pos.y - 1 == t.GetPosition().y) EnableTrail(TrailType.SOUTH);
         else if (_pos.y + 1 == t.GetPosition().y) EnableTrail(TrailType.NORTH);
-        
+
         t.SetBackTile(this);
     }
 
@@ -130,7 +130,7 @@ public class Tile : MonoBehaviour
     public void SetBackTile(Tile t)
     {
         _back = t;
-        if      (t.GetPosition().x - 1 == _pos.x) EnableTrail(TrailType.EAST);
+        if (t.GetPosition().x - 1 == _pos.x) EnableTrail(TrailType.EAST);
         else if (t.GetPosition().x + 1 == _pos.x) EnableTrail(TrailType.WEST);
         else if (t.GetPosition().y + 1 == _pos.y) EnableTrail(TrailType.SOUTH);
         else if (t.GetPosition().y - 1 == _pos.y) EnableTrail(TrailType.NORTH);
@@ -153,10 +153,15 @@ public class Tile : MonoBehaviour
         _trailWest.SetActive(false);
         _color = Color.black;
         if (condition)
-        { 
-            if (_next != null) _next.TrailDeletion(ref list, condition);
+        {
+            if (_next != null)
+            {
+                _next.TrailDeletion(ref list, condition);
+                _next = null;
+            }
         }
-        else if (_back != null) _back.TrailDeletion(ref list, condition);
+        else if (_back != null)
+            _back.TrailDeletion(ref list, condition);
     }
     /// <summary> Enables the ice sprite </summary>
     public void EnableGridBackground()

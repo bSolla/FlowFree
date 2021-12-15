@@ -18,6 +18,7 @@ public class LevelSelection : MonoBehaviour
     private int _nLevels = 150;
     private const int LEVELS_PER_GROUP = 30;
     private string _packageName;
+    private int[] _completedLevelsMarkers;
 
     void Start()
     {
@@ -26,7 +27,7 @@ public class LevelSelection : MonoBehaviour
         if (_lotName == null) Debug.LogError("lot name object reference not set in level selection object");
     }
 
-    public void SetLotData(Color c, string lotName, string packageName)
+    public void SetLotData(Color c, string lotName, string packageName, int[] completedLevelsMarkers)
     {
         _lotColor = c;
 
@@ -34,6 +35,8 @@ public class LevelSelection : MonoBehaviour
         _lotName.color = c;
 
         _packageName = packageName;
+
+        _completedLevelsMarkers = completedLevelsMarkers;
     }
 
     public void CreateLevelButtons()
@@ -47,7 +50,7 @@ public class LevelSelection : MonoBehaviour
             group = Instantiate(_levelGroupPrefab, _levelLayout.transform);
             group.SetLevelSelection(this);
             group.SetButtonColor(_lotColor);
-            group.SetButtonNumbers(1 + LEVELS_PER_GROUP * i);
+            group.SetButtonNumbers(1 + LEVELS_PER_GROUP * i, _completedLevelsMarkers);
 
             _levels[i] = group;
         }
@@ -76,6 +79,5 @@ public class LevelSelection : MonoBehaviour
         Debug.Log("This sets level " + level + " of the lot " + _lotName.text + " of the package " + _packageName);
 
         GameManager.GetInstance().LoadPlayScene();
-        // TODO: fix errors in map
     }
 }

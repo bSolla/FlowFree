@@ -15,9 +15,10 @@ public struct PlayerData
 {
     // Player's information 
     public float _playerLevel;                               // Coins that the player has
-    public Dictionary<string, int> _completedLevelsLot;      // Levels completed per lot
+    /// <summary> 0 : not completed // 1 : completed // 2 : completed and perfect</summary>
+    public Dictionary<string, int[]> _completedLevelsLot;    // Levels completed per lot
     public int _hints;                                       // Hints available
-    public int _timePlayed;                                  // Time played this match
+    public int _totalLevelsCompleted;                        // Time played this match
     public bool _adsRemoved;                                 // if the player paid for no ads
     private int _hash;                                       // hash code 
 
@@ -27,39 +28,42 @@ public struct PlayerData
     /// 
     /// </summary>
     /// <param name="level"> (float) Current level. </param>
-    /// <param name="completed"> (Dictionary) Number of levels completed per package. </param>
+    /// <param name="completed"> (Dictionary) levels completed per lot. </param>
     /// <param name="hints"> (int) Number hints available. </param>
     /// <param name="removed"> (bool) Ads removed flag. </param>
-    public PlayerData(float level, Dictionary<string, int> completed, int hints, bool removed)
+    public PlayerData(float level, Dictionary<string, int[]> completed, int hints, bool removed)
     {
         _playerLevel = level;
         _completedLevelsLot = completed;
         _hints = hints;
         _adsRemoved = removed;
         _hash = 0;
-        _timePlayed = 0;
+        _totalLevelsCompleted = 0;
 
         GetTimePlayed();
     } // PlayerData
 
     /// <summary>
     /// 
-    /// Calculates the time played, which is the number
-    /// of levels completed.
+    /// Calculates the total number of levels completed
     /// 
     /// </summary>
-    /// <returns> (int) Total time played. </returns>
+    /// <returns> (int) number of levels completed </returns>
     public int GetTimePlayed()
     {
-        _timePlayed = 0;
+        _totalLevelsCompleted = 0;
         foreach (var data in _completedLevelsLot)
         {
-            _timePlayed += data.Value;
+            for (int i = 0; i < 150; ++i)
+            {
+                if (data.Value[i] != 0)
+                    _totalLevelsCompleted++;
+            }
         } // foreach
 
-        _timePlayed += (_hints + Convert.ToInt32(_adsRemoved));
+        _totalLevelsCompleted += (_hints + Convert.ToInt32(_adsRemoved));
 
-        return _timePlayed;
+        return _totalLevelsCompleted;
     } // GetTimePlayed
 
     /// <summary>
@@ -103,16 +107,21 @@ public class SaveLoadSystem : MonoBehaviour
     /// asigned to the GameManager. Ignores the ads. 
     /// 
     /// </summary>
-    /// <param name="packages"> (string[]) Packages. </param>
+    /// <param name="lots"> (string[]) Packages. </param>
     /// <returns> (PlayerData) New player data. </returns>
-    public static PlayerData NewPlayerData(string[] packages)
+    public static PlayerData NewPlayerData(List<string> lots)
     {
-        Dictionary<string, int> completed = new Dictionary<string, int>();
+        Dictionary<string, int[]> completed = new Dictionary<string, int[]>();
 
-        for (int i = 0; i < packages.Length; i++)
+        for (int i = 0; i < lots.Count; i++)
         {
-            if (packages[i] != "ad")
-                completed.Add(packages[i], 0);
+            if (lots[i] != "ad")
+            {
+                int[] levels = new int[150];
+                levels[0] = 1; levels[3] = 2; // TODO: remove, only for testing
+                completed.Add(lots[i], levels);
+            }
+                
         } // for
 
         PlayerData dat = new PlayerData(0.0f, completed, 0, false);
@@ -150,9 +159,9 @@ public class SaveLoadSystem : MonoBehaviour
     /// checks if all data is correct. 
     /// 
     /// </summary>
-    /// <param name="packages"> (string) List of packages names. </param>
+    /// <param name="lots"> (string) List of lot names. </param>
     /// <returns> (PlayerData) Data loaded or created. </returns>
-    public static PlayerData ReadPlayerData(string[] packages)
+    public static PlayerData ReadPlayerData(List<string> lots)
     {
         if (File.Exists(Application.persistentDataPath + "/vmFlowFree.dat"))
         {
@@ -162,34 +171,38 @@ public class SaveLoadSystem : MonoBehaviour
             PlayerData playerData = (PlayerData)bf.Deserialize(f);
 
             // Calculate checks
-            int totalTimePlayed = playerData._timePlayed;
+            int totalLevelsComplete = playerData._totalLevelsCompleted;
             int hash = playerData.GetHash();
 
             playerData.SetHash(0);
-            int checkTime = _releaseDay + playerData._hints + Convert.ToInt32(playerData._adsRemoved);
+            int checkPlayer = _releaseDay + playerData._hints + Convert.ToInt32(playerData._adsRemoved);
             foreach (var data in playerData._completedLevelsLot)
             {
-                checkTime += data.Value;
+                for (int i = 0; i < 150; ++i)
+                {
+                    if (data.Value[i] != 0)
+                        checkPlayer++;
+                }
             } // foreach
             int checkHash = Encrypt(bf, playerData);
             f.Close();
 
             // If data is corrupted, create new data
-            if (hash == checkHash && totalTimePlayed == checkTime)
+            if (hash == checkHash && totalLevelsComplete == checkPlayer)
             {
                 // New packages
-                if (playerData._completedLevelsLot.Count < packages.Length)
+                if (playerData._completedLevelsLot.Count < lots.Count)
                 {
-                    for (int i = 0; i < packages.Length; i++)
+                    for (int i = 0; i < lots.Count; i++)
                     {
                         // Check if there is no ad
-                        if (packages[i] != "ad")
+                        if (lots[i] != "ad")
                         {
                             // Check if it is in dictionary
-                            if (!playerData._completedLevelsLot.ContainsKey(packages[i]))
+                            if (!playerData._completedLevelsLot.ContainsKey(lots[i]))
                             {
                                 // If not, add it to it
-                                playerData._completedLevelsLot.Add(packages[i], 0);
+                                playerData._completedLevelsLot.Add(lots[i], new int[150]);
                             } // if
                         } // if
                     } // for
@@ -199,12 +212,12 @@ public class SaveLoadSystem : MonoBehaviour
             } // if
             else
             {
-                return NewPlayerData(packages);
+                return NewPlayerData(lots);
             } // else
         } // if
         else
         {
-            return NewPlayerData(packages);
+            return NewPlayerData(lots);
         } // else
     } // ReadPlayerData
 
@@ -223,7 +236,7 @@ public class SaveLoadSystem : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/vmFlowFree.dat");
 
         // Check data 
-        d._timePlayed = _releaseDay + d.GetTimePlayed();
+        d._totalLevelsCompleted = _releaseDay + d.GetTimePlayed();
 
         // Reset the hash for new codification
         if (d.GetHash() != 0)

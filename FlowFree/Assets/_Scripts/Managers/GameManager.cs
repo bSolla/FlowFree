@@ -2,6 +2,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -56,12 +57,14 @@ public class GameManager : MonoBehaviour
             // Set this GameManager as instance
             _instance = this;
 
-            string[] packagesNames = new string[_levels.Length];
-
-            for (int i = 0; i < _levels.Length; i++)
+            List<string> lotNames = new List<string>();
+            for (int i = 0; i < _levels.Length; ++i)
             {
-                packagesNames[i] = _levels[i].name;
-            } // for
+                foreach (LevelLot lot in _levels[i]._lotArray)
+                {
+                    lotNames.Add(lot._lotName);
+                }
+            }
 
             // Store canvas' scaling reference resolution
             _scalingReferenceResolution = _cnv.GetComponent<CanvasScaler>().referenceResolution;
@@ -71,7 +74,7 @@ public class GameManager : MonoBehaviour
             _scalator = new Scaling(res, _scalingReferenceResolution, (int)_cam.orthographicSize);
 
             // Get Player information and store it
-            //_player = FileLoader.ReadPlayerData(packagesNames);
+            _player = SaveLoadSystem.ReadPlayerData(lotNames);
 
             DontDestroyOnLoad(_instance);
         } // if
@@ -144,6 +147,29 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
+
+    /// <summary>
+    /// 
+    /// Function called when the Level is completed. Updates the level and
+    /// calls the level manager so it shows the end panel.
+    /// 
+    /// </summary>
+    public void LevelCompleted()
+    {
+        //_level++;
+        //if (_level < GameManager.GetInstance().GetLevelPackage().levels.Length)
+        //{
+        //    if (GetInstance()._player._completedLevelsPackage[_package] <= _level)
+        //        GetInstance()._player._completedLevelsPackage[_package]++;
+        //    _levelManager.ShowEndMenu();
+        //}
+        //else
+        //{
+        //    _levelManager.ShowFinalMenu();
+        //}
+
+    } // LevelCompleted
 
     #region Setters
 
@@ -380,4 +406,48 @@ public class GameManager : MonoBehaviour
         return GetInstance()._player;
     } // GetPlayerData
     #endregion getters
+
+    #region AppLifeManagement
+    /// <summary>
+    /// 
+    /// Eventhough it's not an applifemanagement method, here are all
+    /// the methods that interact with external data. This method opens
+    /// a browser window with the provided link.
+    /// 
+    /// </summary>
+    /// <param name="link"> (string) Link. </param>
+    public void OpenLink(string link)
+    {
+        Application.OpenURL(link);
+    } // OpenLink
+
+    /// <summary>
+    /// 
+    /// Function that will manage the close of the app, saving the player's current status. Not
+    /// working in mobile.
+    /// 
+    /// </summary>
+    private void OnApplicationQuit()
+    {
+        // Save player information
+        SaveLoadSystem.SavePlayerData(GetInstance()._player);
+    } // OnApplicationQuit
+
+    /// <summary>
+    /// 
+    /// Save data also when application loses focus, to avoid
+    /// losing data and etc.
+    /// 
+    /// </summary>
+    /// <param name="focus"> (bool) Focus status. </param>
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus)
+        {
+            // Save player information
+            SaveLoadSystem.SavePlayerData(GetInstance()._player);
+        } // if
+    } // OnApplicationFocus
+
+    #endregion
 }

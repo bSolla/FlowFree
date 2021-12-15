@@ -206,7 +206,7 @@ public class BoardManager : MonoBehaviour
                         }
                         Debug.Log("Completed: " + completeFlow);
 
-                        deleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
+                        DeleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
 
                         _lastTile.SetNextTile(tile);
                         tile.SetColor(_lastTile.getColor());
@@ -242,7 +242,7 @@ public class BoardManager : MonoBehaviour
         } // if
     } // ReceiveInput
 
-    public void reviveTrails(List<Tile> tileList)
+    public void ReviveTrails(List<Tile> tileList)
     {
         Tile aux = tileList[0];
         tileList.Remove(aux);
@@ -254,7 +254,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    private void deleteTrails(Tile tile, bool sameColor,bool completeTrail)
+    private void DeleteTrails(Tile tile, bool sameColor,bool completeTrail)
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
         if (completeTrail)
@@ -276,7 +276,7 @@ public class BoardManager : MonoBehaviour
                 {
                     if (g[0] == t)
                     {   // has found a ghost tile in the list of tiles deleted
-                        reviveTrails(g);   //Revive all the tiles in the list g
+                        ReviveTrails(g);   //Revive all the tiles in the list g
                         _ghostTiles.Remove(g);  // Remove the list of tiles ghost from the ghost list
                     }
                 }

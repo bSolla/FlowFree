@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lotName: {fileID: 6149075524229875296}
-  _completedLots: {fileID: 6356936505978982199}
+  _completedLevelsText: {fileID: 6356936505978982199}
   _buttonComponent: {fileID: 4615498632189013684}
 --- !u!114 &4615498632189013684
 MonoBehaviour:

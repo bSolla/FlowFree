@@ -393,6 +393,15 @@ public class GameManager : MonoBehaviour
         return GetInstance()._level;
     } // GetLevel
 
+    /// <summary>
+    /// Gets the color of the current package
+    /// </summary>
+    /// <returns>(Color) color of the current package</returns>
+    public Color GetPackageColor()
+    {
+        return GetLevelPackage()._packageColor;
+    }
+
 
     /// <summary>
     /// 

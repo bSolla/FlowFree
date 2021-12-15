@@ -151,17 +151,27 @@ public class Tile : MonoBehaviour
         _trailSouth.SetActive(false);
         _trailEast.SetActive(false);
         _trailWest.SetActive(false);
-        _color = Color.black;
+        SetColor(Color.black);
+
         if (condition)
         {
             if (_next != null)
             {
-                _next.TrailDeletion(ref list, condition);
-                _next = null;
+                if (_next.IsBall())
+                    _next.DisableTrails();
+                else
+                    _next.TrailDeletion(ref list, condition);
             }
         }
         else if (_back != null)
-            _back.TrailDeletion(ref list, condition);
+        {
+            if (_back.IsBall())
+                _back.DisableTrails();
+            else
+                _back.TrailDeletion(ref list, condition);
+        }
+        _next = null;
+        _back = null;
     }
     /// <summary> Enables the ice sprite </summary>
     public void EnableGridBackground()
@@ -242,6 +252,46 @@ public class Tile : MonoBehaviour
                 break;
         }
     }
+
+    public void CalculateTrails()
+    {
+        if (_next != null)
+        {
+            if (_pos.x + 1 == _next.GetPosition().x) EnableTrail(TrailType.EAST);
+            else if (_pos.x - 1 == _next.GetPosition().x) EnableTrail(TrailType.WEST);
+            else if (_pos.y - 1 == _next.GetPosition().y) EnableTrail(TrailType.SOUTH);
+            else if (_pos.y + 1 == _next.GetPosition().y) EnableTrail(TrailType.NORTH);
+        }
+        else DisableTrails();
+        if (_back != null)
+        {
+            if (_back.GetPosition().x - 1 == _pos.x) EnableTrail(TrailType.EAST);
+            else if (_back.GetPosition().x + 1 == _pos.x) EnableTrail(TrailType.WEST);
+            else if (_back.GetPosition().y + 1 == _pos.y) EnableTrail(TrailType.SOUTH);
+            else if (_back.GetPosition().y - 1 == _pos.y) EnableTrail(TrailType.NORTH);
+        }
+        else
+        {
+            DisableTrails();
+            if (_next != null)
+            {
+                if (_pos.x + 1 == _next.GetPosition().x) EnableTrail(TrailType.EAST);
+                else if (_pos.x - 1 == _next.GetPosition().x) EnableTrail(TrailType.WEST);
+                else if (_pos.y - 1 == _next.GetPosition().y) EnableTrail(TrailType.SOUTH);
+                else if (_pos.y + 1 == _next.GetPosition().y) EnableTrail(TrailType.NORTH);
+            }
+        }
+    }
+
+    public void DisableTrails()
+    {
+        _trailNorth.SetActive(false);
+        _trailSouth.SetActive(false);
+        _trailEast.SetActive(false);
+        _trailWest.SetActive(false);
+    }
+
+
 
     /// <summary> Disables the specified trail sprite </summary>
     public void DisableTrail(TrailType tt)

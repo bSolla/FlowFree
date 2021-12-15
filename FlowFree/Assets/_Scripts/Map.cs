@@ -45,21 +45,7 @@ public class LotMap
     //public Point[,] initANDend;
 }
 
-//[System.Serializable]
-//public class JSONmap
-//{
-//    public int c, r;
-//    public Point s;
-//    public Point f;
-//    public Point[] h;
-//    public Wall[] w;
-//    public PointDouble[] i;
-//    public Point[] e;
-//    public object[] t;
-//}
-
 // used for board creation in play scene
-
 public class TileInfo
 {
     public bool wallDown = false,

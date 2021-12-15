@@ -15,7 +15,7 @@ public struct PlayerData
 {
     // Player's information 
     public float _playerLevel;                               // Coins that the player has
-    public Dictionary<string, int> _completedLevelsPackage;  // Levels completed per package
+    public Dictionary<string, int> _completedLevelsLot;      // Levels completed per lot
     public int _hints;                                       // Hints available
     public int _timePlayed;                                  // Time played this match
     public bool _adsRemoved;                                 // if the player paid for no ads
@@ -33,7 +33,7 @@ public struct PlayerData
     public PlayerData(float level, Dictionary<string, int> completed, int hints, bool removed)
     {
         _playerLevel = level;
-        _completedLevelsPackage = completed;
+        _completedLevelsLot = completed;
         _hints = hints;
         _adsRemoved = removed;
         _hash = 0;
@@ -52,7 +52,7 @@ public struct PlayerData
     public int GetTimePlayed()
     {
         _timePlayed = 0;
-        foreach (var data in _completedLevelsPackage)
+        foreach (var data in _completedLevelsLot)
         {
             _timePlayed += data.Value;
         } // foreach
@@ -95,7 +95,7 @@ public struct PlayerData
 public class SaveLoadSystem : MonoBehaviour
 {
     // Num packages
-    static private int numPackages; //TODO: set to appropriate number
+    static private int _releaseDay = 171221; 
 
     /// <summary>
     /// 
@@ -159,26 +159,26 @@ public class SaveLoadSystem : MonoBehaviour
             // Initialize everything
             BinaryFormatter bf = new BinaryFormatter();
             FileStream f = File.Open(Application.persistentDataPath + "/vmFlowFree.dat", FileMode.Open);
-            PlayerData d = (PlayerData)bf.Deserialize(f);
+            PlayerData playerData = (PlayerData)bf.Deserialize(f);
 
             // Calculate checks
-            int totalTimePlayed = d._timePlayed;
-            int hash = d.GetHash();
+            int totalTimePlayed = playerData._timePlayed;
+            int hash = playerData.GetHash();
 
-            d.SetHash(0);
-            int checkTime = numPackages + d._hints + Convert.ToInt32(d._adsRemoved);
-            foreach (var data in d._completedLevelsPackage)
+            playerData.SetHash(0);
+            int checkTime = _releaseDay + playerData._hints + Convert.ToInt32(playerData._adsRemoved);
+            foreach (var data in playerData._completedLevelsLot)
             {
                 checkTime += data.Value;
             } // foreach
-            int checkHash = Encrypt(bf, d);
+            int checkHash = Encrypt(bf, playerData);
             f.Close();
 
             // If data is corrupted, create new data
             if (hash == checkHash && totalTimePlayed == checkTime)
             {
                 // New packages
-                if (d._completedLevelsPackage.Count < packages.Length)
+                if (playerData._completedLevelsLot.Count < packages.Length)
                 {
                     for (int i = 0; i < packages.Length; i++)
                     {
@@ -186,16 +186,16 @@ public class SaveLoadSystem : MonoBehaviour
                         if (packages[i] != "ad")
                         {
                             // Check if it is in dictionary
-                            if (!d._completedLevelsPackage.ContainsKey(packages[i]))
+                            if (!playerData._completedLevelsLot.ContainsKey(packages[i]))
                             {
                                 // If not, add it to it
-                                d._completedLevelsPackage.Add(packages[i], 0);
+                                playerData._completedLevelsLot.Add(packages[i], 0);
                             } // if
                         } // if
                     } // for
                 } // if
 
-                return d;
+                return playerData;
             } // if
             else
             {
@@ -223,7 +223,7 @@ public class SaveLoadSystem : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/vmFlowFree.dat");
 
         // Check data 
-        d._timePlayed = numPackages + d.GetTimePlayed();
+        d._timePlayed = _releaseDay + d.GetTimePlayed();
 
         // Reset the hash for new codification
         if (d.GetHash() != 0)

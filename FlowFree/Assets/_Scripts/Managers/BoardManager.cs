@@ -215,7 +215,7 @@ public class BoardManager : MonoBehaviour
                         return;
                     }
                     // delete other flow
-                    if (tile.IsTrail() && tile.getColor() != _lastTile.getColor())
+                    if (tile.IsTrail() )
                     {
                         Debug.Log("Delete");
                         bool completeFlow = false;
@@ -279,7 +279,6 @@ public class BoardManager : MonoBehaviour
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
         bool f = tile.forwardIsInit(), b = tile.backIsInit();
-        Debug.Log(f && b);
         bool direction = (f && b) ? !(tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
         if (!direction)
         {
@@ -296,7 +295,6 @@ public class BoardManager : MonoBehaviour
                 tile._back.CalculateTrails();
             }
         }
-
         if (completeTrail)
         {
             _flowCount--;
@@ -305,6 +303,11 @@ public class BoardManager : MonoBehaviour
 
         tile.TrailDeletion(ref tileList, direction);
 
+        if (sameColor)
+        {
+            tile.DisableTrails();
+            tile.CalculateTrails();
+        }
         if (!sameColor)
             _ghostTiles.Add(tileList);
         else    // check if the tile deletes is the begining of a ghost list

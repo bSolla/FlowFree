@@ -263,6 +263,7 @@ public class Tile : MonoBehaviour
 
     public void CalculateTrails()
     {
+        DisableTrails();
         if (_next != null)
         {
             if (_pos.x + 1 == _next.GetPosition().x) EnableTrail(TrailType.EAST);
@@ -270,24 +271,12 @@ public class Tile : MonoBehaviour
             else if (_pos.y - 1 == _next.GetPosition().y) EnableTrail(TrailType.SOUTH);
             else if (_pos.y + 1 == _next.GetPosition().y) EnableTrail(TrailType.NORTH);
         }
-        else DisableTrails();
         if (_back != null)
         {
             if (_back.GetPosition().x - 1 == _pos.x) EnableTrail(TrailType.EAST);
             else if (_back.GetPosition().x + 1 == _pos.x) EnableTrail(TrailType.WEST);
             else if (_back.GetPosition().y + 1 == _pos.y) EnableTrail(TrailType.SOUTH);
             else if (_back.GetPosition().y - 1 == _pos.y) EnableTrail(TrailType.NORTH);
-        }
-        else
-        {
-            DisableTrails();
-            if (_next != null)
-            {
-                if (_pos.x + 1 == _next.GetPosition().x) EnableTrail(TrailType.EAST);
-                else if (_pos.x - 1 == _next.GetPosition().x) EnableTrail(TrailType.WEST);
-                else if (_pos.y - 1 == _next.GetPosition().y) EnableTrail(TrailType.SOUTH);
-                else if (_pos.y + 1 == _next.GetPosition().y) EnableTrail(TrailType.NORTH);
-            }
         }
     }
 

@@ -279,7 +279,8 @@ public class BoardManager : MonoBehaviour
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
         bool f = tile.forwardIsInit(), b = tile.backIsInit();
-        bool direction = (f && b) ? (tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
+        Debug.Log(f && b);
+        bool direction = (f && b) ? !(tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
         if (!direction)
         {
             if(tile._next != null)

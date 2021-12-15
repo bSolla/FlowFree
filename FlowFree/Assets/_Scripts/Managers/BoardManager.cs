@@ -278,7 +278,8 @@ public class BoardManager : MonoBehaviour
     private void DeleteTrails(Tile tile, bool sameColor, bool completeTrail)
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
-        bool direction = (completeTrail) ? (tile.TrailFordward() > tile.TrailBackward()) : true;
+        bool f = tile.forwardIsInit(), b = tile.backIsInit();
+        bool direction = (f && b) ? (tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
         if (!direction)
         {
             if(tile._next != null)

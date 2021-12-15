@@ -135,6 +135,14 @@ public class Tile : MonoBehaviour
         else if (t.GetPosition().y + 1 == _pos.y) EnableTrail(TrailType.SOUTH);
         else if (t.GetPosition().y - 1 == _pos.y) EnableTrail(TrailType.NORTH);
     }
+    public bool backIsInit()
+    {
+        return (_back == null) ? false : (_back.IsBall()) ? true : _back.backIsInit();
+    }
+    public bool forwardIsInit()
+    {
+        return (_next == null) ? false : (_next.IsBall()) ? true : _next.forwardIsInit();
+    }
 
     public int TrailBackward()
     {

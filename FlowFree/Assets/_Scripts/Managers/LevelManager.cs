@@ -37,9 +37,6 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.GetInstance().SetCamera(_camera);
-        GameManager.GetInstance().SetCanvas(_canvas);
-
         // set callbacks
         //_homePauseButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);
         //_homeEndedButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);

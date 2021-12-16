@@ -16,7 +16,7 @@ public class BoardManager : MonoBehaviour
 
     private Tile[,] _tiles;                     // Map
     private Tile _lastTile = null;
-    private List<List<Tile>> _ghostTiles;                     // Map
+    private List<List<Tile>> _ghostTiles;      
     private int _numberFlows;
     private int _flowCount;
     private List<Tile[]> _flowPoints;
@@ -127,7 +127,7 @@ public class BoardManager : MonoBehaviour
         float factor = nScale.x / oScale.x;
 
         // Relocate board
-        _board.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 1) / 2.0f) * factor)));
+        _board.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 3) / 2.0f) * factor)));
     }
 
 

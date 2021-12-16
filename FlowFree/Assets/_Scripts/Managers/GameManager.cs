@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     public Canvas _cnv;                           // Canvas of the scene
     public Camera _cam;                           // Camera of the scene
 
+    [Header("Canvas objects")]
+    public RectTransform _topPanel;              // Top panel of the canvas
+    public RectTransform _bottomPanel;           // Bottom panel of the canvas
+
     [Header("Levels")]
     public LevelManager _levelManager = null;     // LevelManager for level
     public LevelPackage[] _levels;                // Array of LevelPackages
@@ -27,8 +31,6 @@ public class GameManager : MonoBehaviour
 
     // GAME/SCENE MANAGEMENT
     private PlayerData _player;                   // Player data
-    private RectTransform _topPanel;              // Top panel of the canvas
-    private RectTransform _bottomPanel;           // Bottom panel of the canvas
     private MainMenuManager _mainMenu;            // MainMenuManager to change things and update data
     private int _lastScene;                       // Last scene to return to it if necessary
 
@@ -81,6 +83,10 @@ public class GameManager : MonoBehaviour
         else if (_instance != this)
         {
             _instance._levelManager = _levelManager;
+            _instance._topPanel = _topPanel;
+            _instance._bottomPanel = _bottomPanel;
+            _instance._cam = _cam;
+            _instance._cnv = _cnv;
 
             Destroy(gameObject);
         } // else if
@@ -100,27 +106,6 @@ public class GameManager : MonoBehaviour
     } // GetInstance
 
     #endregion
-
-    /// <summary>
-    /// 
-    /// Load all panels in scene for dimensions info.
-    /// 
-    /// </summary>
-    public void ReloadPanels()
-    {
-        // Search in the canvas and check names
-        foreach (Transform child in GetInstance()._cnv.transform)
-        {
-            if (child.name == "Top")
-            {
-                GetInstance()._topPanel = child.GetComponent<RectTransform>();
-            } // if
-            else if (child.name == "Bottom")
-            {
-                GetInstance()._bottomPanel = child.GetComponent<RectTransform>();
-            } // if
-        } // foreach
-    } // ReloadPanels
 
     /// <summary>
     /// 
@@ -172,30 +157,6 @@ public class GameManager : MonoBehaviour
     } // LevelCompleted
 
     #region Setters
-
-    /// <summary>
-    /// 
-    /// Set the camera of the scene as the instance's camera.
-    /// 
-    /// </summary>
-    /// <param name="c"> (Camera) Camera to be set. </param>
-    public void SetCamera(Camera c)
-    {
-        // Set the camera
-        GetInstance()._cam = c;
-    } // SetCamera
-
-    /// <summary>
-    /// 
-    /// Set the current canvas. 
-    /// 
-    /// </summary>
-    /// <param name="c"> (Canvas) Canvas of the scene. </param>
-    public void SetCanvas(Canvas c)
-    {
-        GetInstance()._cnv = c;
-        ReloadPanels();
-    } // SetCanvas
 
     /// <summary>
     /// 

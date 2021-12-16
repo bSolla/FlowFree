@@ -4381,6 +4381,16 @@ PrefabInstance:
       propertyPath: _cnv
       value: 
       objectReference: {fileID: 2035810372}
+    - target: {fileID: 1445006272236235321, guid: 1ada7ab1b13eceb4597f49955469af31,
+        type: 3}
+      propertyPath: _topPanel
+      value: 
+      objectReference: {fileID: 1926743142}
+    - target: {fileID: 1445006272236235321, guid: 1ada7ab1b13eceb4597f49955469af31,
+        type: 3}
+      propertyPath: _bottomPanel
+      value: 
+      objectReference: {fileID: 2080937562}
     - target: {fileID: 1445006272236235322, guid: 1ada7ab1b13eceb4597f49955469af31,
         type: 3}
       propertyPath: m_RootOrder

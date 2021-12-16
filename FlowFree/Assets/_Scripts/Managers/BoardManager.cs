@@ -264,8 +264,7 @@ public class BoardManager : MonoBehaviour
                         {
                             tile._next = null;
                             tile.CalculateTrails();
-                            _lastTile._back = null;
-                            _lastTile.CalculateTrails();
+                            _lastTile.emptyTrail();
                         }
                         _lastTile = tile;
                         return;

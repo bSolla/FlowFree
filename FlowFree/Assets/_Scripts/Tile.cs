@@ -187,6 +187,18 @@ public class Tile : MonoBehaviour
         _next = null;
         _back = null;
     }
+
+    public void emptyTrail()
+    {
+        _trailNorth.SetActive(false);
+        _trailSouth.SetActive(false);
+        _trailEast.SetActive(false);
+        _trailWest.SetActive(false);
+        SetColor(Color.black);
+        _next = null;
+        _back = null;
+    }
+
     /// <summary> Enables the ice sprite </summary>
     public void EnableGridBackground()
     {

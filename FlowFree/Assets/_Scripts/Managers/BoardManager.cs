@@ -172,6 +172,7 @@ public class BoardManager : MonoBehaviour
                 // new click
                 if (_lastTile == null)
                 {
+
                     if (tile.IsBall())
                     {
                         //delete de todo el camino
@@ -196,6 +197,18 @@ public class BoardManager : MonoBehaviour
                 }
                 if (tile != _lastTile)
                 {
+                    //Are u trying to pass through THE CURSED HOLLOWS CORRIDOR, or a empty tile... yep... u cant go trough empties tiles
+                    if (!tile.gameObject.activeSelf) return;
+
+                    //The next tile is really next to the last?
+                    if (Mathf.Abs(x - _lastTile.GetPosition().x) +
+                        Mathf.Abs(y - _lastTile.GetPosition().y) > 1) return;
+                    //You can pass over here?
+                    if (_lastTile.IsRightWall() && (_lastTile.GetPosition().x < x)) return;
+                    if (_lastTile.IsBottomWall() && (_lastTile.GetPosition().y > y)) return;
+                    if (tile.IsRightWall() && (x < _lastTile.GetPosition().x)) return;
+                    if (tile.IsBottomWall() && (y > _lastTile.GetPosition().y)) return;
+
                     // new tile is empty tile
                     if (tile.getColor() == Color.black)
                     {
@@ -343,8 +356,8 @@ public class BoardManager : MonoBehaviour
     {
         // set walls
         WallType infoWalls;
-        infoWalls.left = info.wallEast;
-        infoWalls.top = info.wallDown;
+        infoWalls.right = info.wallEast;
+        infoWalls.bottom = info.wallDown;
         if (info.wallEast || info.wallDown) tile.EnableWalls(infoWalls);
         tile.gameObject.SetActive(!info.empty);
         if (info.uroboros)  // ball type

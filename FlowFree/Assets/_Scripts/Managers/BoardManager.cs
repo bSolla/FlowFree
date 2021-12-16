@@ -74,6 +74,7 @@ public class BoardManager : MonoBehaviour
             {
                 _tiles[x, y] = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, _board.transform);
                 SetTile(map.tileInfoMatrix[x, y], _tiles[x, y], x, y);
+                _tiles[x, y].setWallColor(GameManager.GetInstance().GetPackageColor());
             }
         }
         Point[,] solutions = map.getFlowSolution();
@@ -185,8 +186,7 @@ public class BoardManager : MonoBehaviour
                 // new click
                 if (_lastTile == null)
                 {
-
-                    if (tile.IsBall())
+                    if (tile.IsBall() || tile.IsTrail())
                     {
                         //delete de todo el camino
                         if (tile._next != null)
@@ -194,18 +194,8 @@ public class BoardManager : MonoBehaviour
                             List<Tile> tileList = new List<Tile>(); // list of tiles deleted
                             tile._next.TrailDeletion(ref tileList, true);
                         }
-
+                        _lastTile = tile;
                     }
-                    else if (tile.IsTrail())
-                    {
-                        //delete
-                        if (tile._next != null)
-                        {
-                            List<Tile> tileList = new List<Tile>(); // list of tiles deleted
-                            tile._next.TrailDeletion(ref tileList, true);
-                        }
-                    }
-                    _lastTile = tile;
                     return;
                 }
                 if (tile != _lastTile)
@@ -255,9 +245,9 @@ public class BoardManager : MonoBehaviour
 
                         DeleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
 
-                        _lastTile.SetNextTile(tile);
-                        tile.SetColor(_lastTile.getColor());
-                        _lastTile = tile;
+                            _lastTile.SetNextTile(tile);
+                            tile.SetColor(_lastTile.getColor());
+                            _lastTile = tile;
                     }
                 }
             }
@@ -304,6 +294,7 @@ public class BoardManager : MonoBehaviour
     private void DeleteTrails(Tile tile, bool sameColor, bool completeTrail)
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
+        if(sameColor) _lastTile = tile._back;
         bool f = tile.forwardIsInit(), b = tile.backIsInit();
         bool direction = (f && b) ? !(tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
         if (!direction)
@@ -329,27 +320,22 @@ public class BoardManager : MonoBehaviour
 
         tile.TrailDeletion(ref tileList, direction);
 
-        if (sameColor)
-        {
-            tile.DisableTrails();
-            tile.CalculateTrails();
-        }
         if (!sameColor)
             _ghostTiles.Add(tileList);
-        else    // check if the tile deletes is the begining of a ghost list
-        {
-            foreach (Tile t in tileList)
-            {
-                foreach (List<Tile> g in _ghostTiles)
-                {
-                    if (g[0] == t)
-                    {   // has found a ghost tile in the list of tiles deleted
-                        ReviveTrails(g);   //Revive all the tiles in the list g
-                        _ghostTiles.Remove(g);  // Remove the list of tiles ghost from the ghost list
-                    }
-                }
-            }
-        }
+        //else    // check if the tile deletes is the begining of a ghost list
+        //{
+        //    foreach (Tile t in tileList)
+        //    {
+        //        foreach (List<Tile> g in _ghostTiles)
+        //        {
+        //            if (g[0] == t)
+        //            {   // has found a ghost tile in the list of tiles deleted
+        //                ReviveTrails(g);   //Revive all the tiles in the list g
+        //                _ghostTiles.Remove(g);  // Remove the list of tiles ghost from the ghost list
+        //            }
+        //        }
+        //    }
+        //}
 
         //      tile.deleteNextFlow()
         //                  -> if last tile in flow is an end and connected,

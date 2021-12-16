@@ -20,6 +20,10 @@ public class LevelManager : MonoBehaviour
     public Image _endPanelDetailImg;
     public Text _endPanelMovesText;
 
+    [Header("Settings panel UI objects")]
+    public Image _optPanelHeaderImg;
+    public Image _optPanelDetailImg;
+
 
     private bool _paused = false;                 // Pause flag for Input control
     const string MOVES_MSG = "you completed the level in ";
@@ -41,9 +45,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        Color packageColor = GameManager.GetInstance().GetPackageColor();
-        _endPanelHeaderImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelHeaderImg.color.a);
-        _endPanelDetailImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelDetailImg.color.a);
+        SetUIColors();
 
         // set callbacks
         //_homePauseButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);
@@ -94,6 +96,11 @@ public class LevelManager : MonoBehaviour
     } // ReceiveInput
 
 
+    public void SetPause(bool isPaused)
+    {
+        _paused = isPaused;
+    }
+
     public void ShowEndPanel(bool isPerfect, int moves)
     {
         _paused = true;
@@ -111,5 +118,16 @@ public class LevelManager : MonoBehaviour
     {
         _paused = false;
         _endPanel.SetActive(false);
+    }
+
+    private void SetUIColors()
+    {
+        Color packageColor = GameManager.GetInstance().GetPackageColor();
+        
+        _endPanelHeaderImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelHeaderImg.color.a);
+        _endPanelDetailImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelDetailImg.color.a);
+
+        _optPanelHeaderImg.color = _endPanelHeaderImg.color;
+        _optPanelDetailImg.color = _endPanelDetailImg.color;
     }
 }

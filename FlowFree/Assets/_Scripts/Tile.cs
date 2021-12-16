@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public struct WallType
 {
-    public bool top, left;
+    public bool bottom, right;
 }
 
 public enum TrailType { NORTH, SOUTH, EAST, WEST, START };
@@ -217,15 +217,15 @@ public class Tile : MonoBehaviour
     /// <summary> Enables the given wall sprites </summary>
     public void EnableWalls(WallType walls)
     {
-        if (walls.top) _wallBottom.SetActive(true);
-        if (walls.left) _wallEast.SetActive(true);
+        if (walls.bottom) _wallBottom.SetActive(true);
+        if (walls.right) _wallEast.SetActive(true);
 
     }
     /// <summary> Disables the given wall sprites </summary>
     public void DisableWalls(WallType walls)
     {
-        if (walls.top) _wallBottom.SetActive(false);
-        if (walls.left) _wallEast.SetActive(false);
+        if (walls.bottom) _wallBottom.SetActive(false);
+        if (walls.right) _wallEast.SetActive(false);
     }
 
     /// <summary> Enables the goal sprite </summary>
@@ -376,12 +376,12 @@ public class Tile : MonoBehaviour
     // -----------------------------------------------
     // -----           setters/getters           -----
     // -----------------------------------------------
-    public bool IsTopWall()
+    public bool IsBottomWall()
     {
         return _wallBottom.active;
     }
 
-    public bool IsLeftWall()
+    public bool IsRightWall()
     {
         return _wallEast.active;
     }

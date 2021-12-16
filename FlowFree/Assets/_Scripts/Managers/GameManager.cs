@@ -115,13 +115,16 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void AdEnded()
     {
-        GetInstance()._player._hints++;
-
         // MainMenu
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            _mainMenu.AdCompleted();
+            _levelManager.AdCompleted();
         } // if
+    }
+
+    public void IncreaseHints()
+    {
+        GetInstance()._player._hints++;
     }
 
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)

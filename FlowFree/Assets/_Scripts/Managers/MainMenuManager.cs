@@ -106,15 +106,5 @@ public class MainMenuManager : MonoBehaviour
         package.SetLots(lp, _packageArea);
     } // SetButton
 
-    /// <summary>
-    /// 
-    /// Called when a rewarded ad is successful. Shows a panel.
-    /// 
-    /// </summary>
-    public void AdCompleted()
-    {
-        Debug.Log("Panel should show here");
-        //_hintsMessagePanel.SetActive(true);
-        //_hintsMessage.Play("hints_window");
-    } // AdCompleted
+    
 }

@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour
     public RectTransform _topPanel;               // Top panel of canvas
     public RectTransform _botPanel;               // Bottom panel of canvas
     public Text _levelText;                       // Text with the level
+    public GameObject _hintsMessagePanel;
 
     [Header("Buttons")]
     public Button _backToMenuButton;
@@ -30,6 +31,13 @@ public class LevelManager : MonoBehaviour
     public Image _optPanelHeaderImg;
     public Image _optPanelDetailImg;
 
+    [Header("Hints panel UI objects")]
+    public Image _hintPanelHeaderImg;
+    public Image _hintPanelDetailImg;
+
+    [Header("Hints completed UI objects")]
+    public Image _hintCompleteHeaderImg;
+    public Image _hintCompleteDetailImg;
 
     private bool _paused = false;                 // Pause flag for Input control
     const string MOVES_MSG = "you completed the level in ";
@@ -137,9 +145,26 @@ public class LevelManager : MonoBehaviour
         _optPanelHeaderImg.color = _endPanelHeaderImg.color;
         _optPanelDetailImg.color = _endPanelDetailImg.color;
 
+        _hintPanelHeaderImg.color = _endPanelHeaderImg.color;
+        _hintPanelDetailImg.color = _endPanelDetailImg.color;
+
+        _hintCompleteHeaderImg.color = _endPanelHeaderImg.color;
+        _hintCompleteDetailImg.color = _endPanelDetailImg.color;
+
         if (GameManager.GetInstance().GetLevel() == 0)
             _prevLevelButton.interactable = false;
         else if (GameManager.GetInstance().GetLevel() == 149)
             _nextLevelButton.interactable = false;
     }
+
+
+    /// <summary>
+    /// 
+    /// Called when a rewarded ad is successful. Shows a panel.
+    /// 
+    /// </summary>
+    public void AdCompleted()
+    {
+        _hintsMessagePanel.SetActive(true);
+    } // AdCompleted
 }

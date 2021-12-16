@@ -23,9 +23,9 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
 #endif
 
     // Ad type 
-    string _placementVideo = "video";
-    string _placementIdRewardedVideo = "rewardedVideo";
-    string _placementBannerID = "bannerPlacement";
+    string _placementVideo = "Interstitial_Android";
+    string _placementIdRewardedVideo = "Rewarded_Android";
+    string _placementBannerID = "Banner_Android";
 
     void Awake()
     {

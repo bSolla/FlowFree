@@ -165,14 +165,19 @@ public class Tile : MonoBehaviour
         _trailSouth.SetActive(false);
         _trailEast.SetActive(false);
         _trailWest.SetActive(false);
-        SetColor(Color.black);
+        if(!IsBall())
+            SetColor(Color.black);
+
 
         if (condition)
         {
             if (_next != null)
             {
                 if (_next.IsBall())
+                {
                     _next.DisableTrails();
+                    _next._back = null;
+                }
                 else
                     _next.TrailDeletion(ref list, condition);
             }
@@ -180,7 +185,10 @@ public class Tile : MonoBehaviour
         else if (_back != null)
         {
             if (_back.IsBall())
+            {
                 _back.DisableTrails();
+                _back._next = null;
+            }
             else
                 _back.TrailDeletion(ref list, condition);
         }

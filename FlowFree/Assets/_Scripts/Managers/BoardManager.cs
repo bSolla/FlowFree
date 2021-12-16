@@ -188,7 +188,6 @@ public class BoardManager : MonoBehaviour
                 _cursor.SetActive(true);
                 _cursor.transform.position = pos;
                 _cursor.GetComponent<SpriteRenderer>().color = new Color(tile.getColor().r, tile.getColor().g, tile.getColor().b, 0.5f);
-                
                 // new click
                 if (_lastTile == null)
                 {
@@ -232,6 +231,8 @@ public class BoardManager : MonoBehaviour
                         {
                             List<Tile> tileList = new List<Tile>(); // list of tiles deleted
                             tile._next.TrailDeletion(ref tileList, true);
+                            tile._next = null;
+                            tile.CalculateTrails();
                         }
                         _lastTile = tile;
                     }
@@ -251,6 +252,8 @@ public class BoardManager : MonoBehaviour
                     if (tile.IsRightWall() && (x < _lastTile.GetPosition().x)) return;
                     if (tile.IsBottomWall() && (y > _lastTile.GetPosition().y)) return;
 
+                    if (tile.IsBall() && tile.getColor() != _lastTile.getColor()) return;
+
                     // new tile is empty tile
                     if (tile.getColor() == Color.black)
                     {
@@ -261,7 +264,7 @@ public class BoardManager : MonoBehaviour
                     }
                     // flow finish!
                     //
-                    if (tile.IsBall() && tile.getColor() == _lastTile.getColor() /*&& !tile.hasConection()*/)
+                    if (tile.IsBall() && tile.getColor() == _lastTile.getColor())
                     {
                         if (!tile.hasConection())
                         {

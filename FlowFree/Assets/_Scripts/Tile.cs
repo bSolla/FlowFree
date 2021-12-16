@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public struct WallType
 {
-    public bool bottom, right;
+    public bool bottom, right, top, left;
 }
 
 public enum TrailType { NORTH, SOUTH, EAST, WEST, START };
@@ -24,6 +24,12 @@ public class Tile : MonoBehaviour
     [Tooltip("Child component that stores the left wall sprite")]
     private GameObject _wallBottom;
     [SerializeField]
+    [Tooltip("Child component that stores the top wall sprite")]
+    private GameObject _wallWest;
+    [SerializeField]
+    [Tooltip("Child component that stores the left wall sprite")]
+    private GameObject _wallTop;
+    [SerializeField]
     [Tooltip("Child component that stores the north trail")]
     private GameObject _trailNorth;
     [SerializeField]
@@ -35,13 +41,13 @@ public class Tile : MonoBehaviour
     [SerializeField]
     [Tooltip("Child component that stores the west trail")]
     private GameObject _trailWest;
+    /*
     [SerializeField]
     [Tooltip("Child component that stores the south trail")]
     private GameObject _smothAngle01;
     [SerializeField]
     [Tooltip("Child component that stores the west trail")]
     private GameObject _smothAngle02;
-    /*
     [SerializeField]
     [Tooltip("Child component that stores the north hint")]
     private GameObject _hintNorth;
@@ -214,18 +220,45 @@ public class Tile : MonoBehaviour
         return _color;
     }
 
+    public void setWallColor(Color c)
+    {
+        _wallBottom.GetComponent<SpriteRenderer>().color = c;
+        _wallTop.GetComponent<SpriteRenderer>().color = c;
+        _wallEast.GetComponent<SpriteRenderer>().color = c;
+        _wallWest.GetComponent<SpriteRenderer>().color = c;
+    }
+
     /// <summary> Enables the given wall sprites </summary>
     public void EnableWalls(WallType walls)
     {
         if (walls.bottom) _wallBottom.SetActive(true);
         if (walls.right) _wallEast.SetActive(true);
-
+        if (walls.top) _wallTop.SetActive(true);
+        if (walls.left) _wallWest.SetActive(true);
+    }
+    public void EnableWallTop()
+    {
+        _wallTop.SetActive(true);
+    }
+    public void EnableWallBottom()
+    {
+        _wallBottom.SetActive(true);
+    }
+    public void EnableWallEast()
+    {
+        _wallEast.SetActive(true);
+    }
+    public void EnableWallWest()
+    {
+        _wallWest.SetActive(true);
     }
     /// <summary> Disables the given wall sprites </summary>
     public void DisableWalls(WallType walls)
     {
         if (walls.bottom) _wallBottom.SetActive(false);
         if (walls.right) _wallEast.SetActive(false);
+        if (walls.top) _wallTop.SetActive(false);
+        if (walls.left) _wallWest.SetActive(false);
     }
 
     /// <summary> Enables the goal sprite </summary>

@@ -78,7 +78,20 @@ public class BoardManager : MonoBehaviour
         }
         Point[,] solutions = map.getFlowSolution();
         int flowed = 0;
-
+        // Decorate
+        for (int x = 0; x < map.X; x++)
+        {
+            for (int y = 0; y < map.Y; y++)
+            {
+                if (!_tiles[x, y].gameObject.activeSelf)
+                {
+                    if (x + 1 < _tiles.GetLength(0)) _tiles[x + 1, y].EnableWallEast();
+                    if (x - 1 >= 0) _tiles[x - 1, y].EnableWallWest();
+                    if (y + 1 < _tiles.GetLength(1)) _tiles[x, y + 1].EnableWallBottom();
+                    if (y - 1 >= 0) _tiles[x, y - 1].EnableWallTop();
+                }
+            }
+        }
         for (int flowNumber = 0; flowNumber < _numberFlows; flowNumber++)
         {
             Point sol1 = solutions[flowNumber, flowed];
@@ -356,9 +369,11 @@ public class BoardManager : MonoBehaviour
     {
         // set walls
         WallType infoWalls;
-        infoWalls.right = info.wallEast;
-        infoWalls.bottom = info.wallDown;
-        if (info.wallEast || info.wallDown) tile.EnableWalls(infoWalls);
+        infoWalls.right = info.wallEast || x >= _tiles.GetLength(0) - 1;
+        infoWalls.bottom = info.wallDown || y <= 0;
+        infoWalls.left = x <= 0;
+        infoWalls.top = y >= _tiles.GetLength(1) - 1;
+        tile.EnableWalls(infoWalls);
         tile.gameObject.SetActive(!info.empty);
         if (info.uroboros)  // ball type
         {

@@ -9,6 +9,7 @@ public class BoardManager : MonoBehaviour
     public int _topMargin;                      // Space to the top
     public GameObject _board;                   // Board gameObject
     public Tile _tilePrefab;                    // Tile prefab to instantiate
+    public GameObject _cursor;
 
     // Calculate space remaining for the board
     private float _topPanel;                    // Top panel in canvas
@@ -175,6 +176,7 @@ public class BoardManager : MonoBehaviour
         if (it == InputManager.InputType.NONE)
         {
             _lastTile = null;
+            _cursor.SetActive(false);
         }
         if (it == InputManager.InputType.MOVEMENT)
         {
@@ -183,11 +185,15 @@ public class BoardManager : MonoBehaviour
                 (y >= 0 && y < _tiles.GetLength(1)))
             {
                 Tile tile = _tiles[x, y];
+                _cursor.SetActive(true);
+                _cursor.transform.position = pos;
+                _cursor.GetComponent<SpriteRenderer>().color = new Color(tile.getColor().r, tile.getColor().g, tile.getColor().b, 0.5f);
                 // new click
                 if (_lastTile == null)
                 {
                     if (tile.IsBall() || tile.IsTrail())
                     {
+                        //are you pressing other init?
                         if (tile.IsBall())
                         {
                             List<Tile> tileList = new List<Tile>(); // list of tiles deleted
@@ -245,12 +251,22 @@ public class BoardManager : MonoBehaviour
                         return;
                     }
                     // flow finish!
-                    if (tile.IsBall() && tile.getColor() == _lastTile.getColor() && !tile.hasConection())
+                    if (tile.IsBall() && tile.getColor() == _lastTile.getColor())
                     {
-                        _flowCount++;
-                        Debug.Log(_flowCount);
-                        _lastTile.SetNextTile(tile);
-                        tile.SetColor(_lastTile.getColor());
+                        if (!tile.hasConection())
+                        {
+                            _flowCount++;
+                            Debug.Log(_flowCount);
+                            _lastTile.SetNextTile(tile);
+                            tile.SetColor(_lastTile.getColor());
+                        }
+                        else
+                        {
+                            tile._next = null;
+                            tile.CalculateTrails();
+                            _lastTile._back = null;
+                            _lastTile.CalculateTrails();
+                        }
                         _lastTile = tile;
                         return;
                     }
@@ -266,12 +282,12 @@ public class BoardManager : MonoBehaviour
                                     completeFlow = true;
                         }
                         Debug.Log("Completed: " + completeFlow);
-
+                        
                         DeleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
 
-                            _lastTile.SetNextTile(tile);
-                            tile.SetColor(_lastTile.getColor());
-                            _lastTile = tile;
+                        _lastTile.SetNextTile(tile);
+                        tile.SetColor(_lastTile.getColor());
+                        _lastTile = tile;
                     }
                 }
             }

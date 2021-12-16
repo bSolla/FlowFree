@@ -188,6 +188,30 @@ public class BoardManager : MonoBehaviour
                 {
                     if (tile.IsBall() || tile.IsTrail())
                     {
+                        if (tile.IsBall())
+                        {
+                            List<Tile> tileList = new List<Tile>(); // list of tiles deleted
+                            foreach (Tile[] t in _flowPoints)
+                            {
+                                foreach (Tile b in t)
+                                {
+                                    if (b.getColor() == tile.getColor() && b != tile)
+                                    {
+                                        if (b._next != null)
+                                        {
+                                            b._next.TrailDeletion(ref tileList, true);
+                                            b._next = null;
+                                        }
+                                        if (b._back != null)
+                                        {
+                                            b._back.TrailDeletion(ref tileList, false);
+                                            b._back = null;
+                                        }
+                                        b.CalculateTrails();
+                                    }
+                                }
+                            }
+                        }
                         //delete de todo el camino
                         if (tile._next != null)
                         {

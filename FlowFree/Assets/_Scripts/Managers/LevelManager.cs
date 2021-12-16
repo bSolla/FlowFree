@@ -12,6 +12,12 @@ public class LevelManager : MonoBehaviour
     public RectTransform _topPanel;               // Top panel of canvas
     public RectTransform _botPanel;               // Bottom panel of canvas
     public Text _levelText;                       // Text with the level
+
+    [Header("Buttons")]
+    public Button _backToMenuButton;
+    public Button _prevLevelButton;
+    public Button _reloadButton;
+    public Button _nextLevelButton;
     
     [Header("End panel UI objects")]
     public GameObject _endPanel;
@@ -45,12 +51,13 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        SetUIColors();
+        PrepareUI();
 
         // set callbacks
-        //_homePauseButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);
-        //_homeEndedButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);
-        //_finalHomeButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);
+        _nextLevelButton.onClick.AddListener(GameManager.GetInstance().LoadNextLevel);
+        _reloadButton.onClick.AddListener(GameManager.GetInstance().LoadPlayScene);
+        _prevLevelButton.onClick.AddListener(GameManager.GetInstance().LoadPreviousLevel);
+        _backToMenuButton.onClick.AddListener(GameManager.GetInstance().LoadMainMenu);
 
         PlayLevel();
     } // Start
@@ -74,7 +81,7 @@ public class LevelManager : MonoBehaviour
         int level = GameManager.GetInstance().GetLevel();
         Map map = Map.FromLot(GameManager.GetInstance().GetLevelLot(), level);
 
-        _levelText.text = "level " + level.ToString();
+        _levelText.text = "level " + (level + 1).ToString() ;
         _levelText.color = GameManager.GetInstance().GetPackageColor();
 
         _boardManager.EmptyBoard();
@@ -120,7 +127,7 @@ public class LevelManager : MonoBehaviour
         _endPanel.SetActive(false);
     }
 
-    private void SetUIColors()
+    private void PrepareUI()
     {
         Color packageColor = GameManager.GetInstance().GetPackageColor();
         
@@ -129,5 +136,10 @@ public class LevelManager : MonoBehaviour
 
         _optPanelHeaderImg.color = _endPanelHeaderImg.color;
         _optPanelDetailImg.color = _endPanelDetailImg.color;
+
+        if (GameManager.GetInstance().GetLevel() == 0)
+            _prevLevelButton.interactable = false;
+        else if (GameManager.GetInstance().GetLevel() == 149)
+            _nextLevelButton.interactable = false;
     }
 }

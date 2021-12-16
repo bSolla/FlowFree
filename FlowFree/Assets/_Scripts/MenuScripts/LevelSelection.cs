@@ -72,11 +72,11 @@ public class LevelSelection : MonoBehaviour
     public void LoadSelectedLevel(int level) {
         // send info to game manager
 
-        GameManager.GetInstance().SetLevel(level);
+        GameManager.GetInstance().SetLevel(level - 1);
         GameManager.GetInstance().SetLot(_lotName.text);
         GameManager.GetInstance().SetPackage(_packageName);
 
-        Debug.Log("This sets level " + level + " of the lot " + _lotName.text + " of the package " + _packageName);
+        Debug.Log("This sets level " + (level - 1) + " of the lot " + _lotName.text + " of the package " + _packageName);
 
         GameManager.GetInstance().LoadPlayScene();
     }

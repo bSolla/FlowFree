@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     private PlayerData _player;                   // Player data
     private MainMenuManager _mainMenu;            // MainMenuManager to change things and update data
     private int _lastScene;                       // Last scene to return to it if necessary
+    private bool _reloadPanels = false;
 
     #region Singleton
     /// <summary>
@@ -133,6 +134,29 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public void LoadMainMenu()
+    {
+        _reloadPanels = true;
+        SceneManager.LoadScene(0);
+    }
+
+    public void LoadNextLevel()
+    {
+        if (GetInstance()._level < 149)
+        {
+            GetInstance()._level += 1;
+            LoadPlayScene();
+        }
+    }
+
+    public void LoadPreviousLevel()
+    {
+        if (GetInstance()._level > 0)
+        {
+            GetInstance()._level -= 1;
+            LoadPlayScene();
+        }
+    }
 
     /// <summary>
     /// 
@@ -201,6 +225,11 @@ public class GameManager : MonoBehaviour
     {
         GetInstance()._mainMenu = mg;
     } // SetMainMenuManager
+
+    public void SetReloadPanels(bool val)
+    {
+        _reloadPanels = val;
+    }
     #endregion
 
     #region getters
@@ -375,6 +404,12 @@ public class GameManager : MonoBehaviour
     {
         return GetInstance()._player;
     } // GetPlayerData
+
+
+    public bool GetReloadPanels()
+    {
+        return _reloadPanels;
+    }
     #endregion getters
 
     #region AppLifeManagement

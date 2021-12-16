@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Scene References")]
     public RectTransform _scrollContent = null;
     public VerticalLayoutGroup _packageArea = null;
+    public GameObject _packageSelectionPanel = null;
     public LevelSelection _levelSelectionPanel = null;
 
     [Header("Prefabs")]
@@ -32,8 +33,14 @@ public class MainMenuManager : MonoBehaviour
         if (_packageArea == null) Debug.LogError("Package area reference not set in main menu manager");
         if (_packageUIPrefab == null) Debug.LogError("Package UI prefab not set in main menu manager");
         if (_levelSelectionPanel == null) Debug.LogError("level selection panel reference not set in main menu manager");
+        if (_packageSelectionPanel == null) Debug.LogError("package selection panel reference not set in main menu manager");
 
         GameManager.GetInstance().SetMainMenuManager(this);
+        if(GameManager.GetInstance().GetReloadPanels())
+        {
+            ComingFromPlayScene();
+            GameManager.GetInstance().SetReloadPanels(false);
+        }
     }
 
     public void CreatePackageSelectionObjects()
@@ -47,6 +54,12 @@ public class MainMenuManager : MonoBehaviour
            
             _packagesCreated = true;
         }
+    }
+
+    public void ComingFromPlayScene()
+    {
+        _packageSelectionPanel.SetActive(true);
+        CreatePackageSelectionObjects();
     }
 
     /// <summary>
@@ -92,6 +105,7 @@ public class MainMenuManager : MonoBehaviour
         
         package.SetLots(lp, _packageArea);
     } // SetButton
+
     /// <summary>
     /// 
     /// Called when a rewarded ad is successful. Shows a panel.

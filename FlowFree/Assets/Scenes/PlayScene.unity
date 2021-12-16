@@ -2210,6 +2210,10 @@ MonoBehaviour:
   _topPanel: {fileID: 1852959636}
   _botPanel: {fileID: 1009019114}
   _levelText: {fileID: 217540898}
+  _backToMenuButton: {fileID: 1951602175}
+  _prevLevelButton: {fileID: 1909511761}
+  _reloadButton: {fileID: 1339409822}
+  _nextLevelButton: {fileID: 1846281471}
   _endPanel: {fileID: 1325242032}
   _endPanelHeaderText: {fileID: 126330229}
   _endPanelHeaderImg: {fileID: 98046902}
@@ -3323,7 +3327,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1339409823}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1491704989}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadPlayScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1339409823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3441,6 +3457,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1383704605}
   m_CullTransparentMesh: 1
+--- !u!114 &1491704989 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1445006272236235321, guid: 1ada7ab1b13eceb4597f49955469af31,
+    type: 3}
+  m_PrefabInstance: {fileID: 1445006270376939200}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aec88322d813ba43bffffb3df08602c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1494016696
 GameObject:
   m_ObjectHideFlags: 0
@@ -4338,7 +4366,7 @@ MonoBehaviour:
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 104b3c33d1e10fa4788c55d068107bae, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: 104b3c33d1e10fa4788c55d068107bae, type: 3}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 21300000, guid: 7d58034a229c73d4d97a791247f9db00, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -4349,7 +4377,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1846281472}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1491704989}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadNextLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1846281472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4612,7 +4652,7 @@ MonoBehaviour:
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf, type: 3}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 21300000, guid: 63f0f1df392481246abd80e32b5e2b52, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -4623,7 +4663,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1909511762}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1491704989}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadPreviousLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1909511762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4744,7 +4796,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1951602176}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1491704989}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1951602176
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -410,6 +410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scrollContent: {fileID: 627198562}
   _packageArea: {fileID: 678389058}
+  _packageSelectionPanel: {fileID: 1337426619}
   _levelSelectionPanel: {fileID: 255080362}
   _packageUIPrefab: {fileID: 5656613286210877807, guid: 33b7ce1974426614f9d1b6aed2922eed,
     type: 3}

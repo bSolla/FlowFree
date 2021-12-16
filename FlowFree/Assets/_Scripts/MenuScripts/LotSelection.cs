@@ -26,7 +26,7 @@ public class LotSelection : MonoBehaviour
         _buttonComponent.onClick.AddListener(ButtonTask);
     }
 
-    public void SetLotData(string packageName, string lotName, Color lotColor) // TODO: add completed levels eventually
+    public void SetLotData(string packageName, string lotName, Color lotColor) 
     {
         _packageName = packageName;
         _lotName.text = lotName;

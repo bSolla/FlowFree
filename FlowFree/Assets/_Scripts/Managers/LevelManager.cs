@@ -5,16 +5,24 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    [Tooltip("Game Object references")]
+    [Header("Game Object references")]
     public BoardManager _boardManager;            // BoardManager instance
     public Canvas _canvas;                        // Canvas of the scene
     public Camera _camera;                        // Camera 
     public RectTransform _topPanel;               // Top panel of canvas
-    public Text _levelText;                       // Text with the level
     public RectTransform _botPanel;               // Bottom panel of canvas
+    public Text _levelText;                       // Text with the level
+    
+    [Header("End panel UI objects")]
+    public GameObject _endPanel;
+    public Text _endPanelHeaderText;
+    public Image _endPanelHeaderImg;
+    public Image _endPanelDetailImg;
+    public Text _endPanelMovesText;
+
 
     private bool _paused = false;                 // Pause flag for Input control
-
+    const string MOVES_MSG = "you completed the level in ";
     // ----------------------------------------------
     // --------------- UNITY METHODS ----------------
     // ----------------------------------------------
@@ -25,10 +33,6 @@ public class LevelManager : MonoBehaviour
         {
             Debug.LogError("Board Manager reference not set");
         } // if
-        //if (_endPanel == null)
-        //{
-        //    Debug.LogError("End panel reference not set");
-        //} // if
         else
         {
             _boardManager.Init(this);
@@ -37,6 +41,10 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        Color packageColor = GameManager.GetInstance().GetPackageColor();
+        _endPanelHeaderImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelHeaderImg.color.a);
+        _endPanelDetailImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelDetailImg.color.a);
+
         // set callbacks
         //_homePauseButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);
         //_homeEndedButton.onClick.AddListener(GameManager.GetInstance().ReturnToMenu);
@@ -84,4 +92,24 @@ public class LevelManager : MonoBehaviour
             _boardManager.ReceiveInput(it, pos);
         } // if
     } // ReceiveInput
+
+
+    public void ShowEndPanel(bool isPerfect, int moves)
+    {
+        _paused = true;
+        _endPanel.SetActive(true);
+        
+        if (isPerfect)
+            _endPanelHeaderText.text = "perfect!";
+        else
+            _endPanelHeaderText.text = "level complete!";
+
+        _endPanelMovesText.text = MOVES_MSG + moves.ToString() + " moves";
+    }
+
+    public void HideEndPanel()
+    {
+        _paused = false;
+        _endPanel.SetActive(false);
+    }
 }

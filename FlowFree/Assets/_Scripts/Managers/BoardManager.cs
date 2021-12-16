@@ -188,6 +188,7 @@ public class BoardManager : MonoBehaviour
                 _cursor.SetActive(true);
                 _cursor.transform.position = pos;
                 _cursor.GetComponent<SpriteRenderer>().color = new Color(tile.getColor().r, tile.getColor().g, tile.getColor().b, 0.5f);
+                
                 // new click
                 if (_lastTile == null)
                 {
@@ -260,28 +261,22 @@ public class BoardManager : MonoBehaviour
                     }
                     // flow finish!
                     //
-                    if (tile.IsBall() && tile.getColor() == _lastTile.getColor() && !tile.hasConection())
+                    if (tile.IsBall() && tile.getColor() == _lastTile.getColor() /*&& !tile.hasConection()*/)
                     {
-                        _flowCount++;
-                        Debug.Log("FlowCount: " + _flowCount);
-                        _lastTile.SetNextTile(tile);
-                        tile.SetColor(_lastTile.getColor());
-                        //
-                        /*if (tile.IsBall() && tile.getColor() == _lastTile.getColor())
+                        if (!tile.hasConection())
                         {
-                            if (!tile.hasConection())
-                            {
-                                _flowCount++;
-                                Debug.Log(_flowCount);
-                                _lastTile.SetNextTile(tile);
-                                tile.SetColor(_lastTile.getColor());
-                            }
-                            else
-                            {
-                                tile._next = null;
-                                tile.CalculateTrails();
-                                _lastTile.emptyTrail();
-                            }*/
+                            _flowCount++;
+                            Debug.Log(_flowCount);
+                            _lastTile.SetNextTile(tile);
+                            tile.SetColor(_lastTile.getColor());
+                        }
+                        else
+                        {
+                            tile._next = null;
+                            tile.CalculateTrails();
+                            _lastTile.emptyTrail();
+
+                        }
                         _lastTile = tile;
                         return;
                     }
@@ -297,6 +292,7 @@ public class BoardManager : MonoBehaviour
                         _lastTile = tile;
                     }
                 }
+
             }
             //TODO: DRAW FLOW
             //foreach (Tile tile in _tiles)

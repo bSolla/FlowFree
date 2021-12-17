@@ -17,7 +17,19 @@ public class BoardManager : MonoBehaviour
 
     private Tile[,] _tiles;                     // Map
     private Tile _lastTile = null;
-    private List<List<Tile>> _ghostTiles;
+    struct Ghost
+    {
+        public List<Tile> tileList;
+        public Tile back;
+        public Color color;
+        public Ghost(List<Tile> t, Tile b, Color c)
+        {
+            tileList = t;
+            back = b;
+            color = c;
+        }
+    }
+    private List<Ghost> _ghostTiles;
     private int _numberFlows;
     private int _flowCount;
     private List<Tile[]> _flowPoints;
@@ -57,7 +69,7 @@ public class BoardManager : MonoBehaviour
     {
         // Init board sizes and variables
         _tiles = new Tile[map.X, map.Y];
-        _ghostTiles = new List<List<Tile>>();
+        _ghostTiles = new List<Ghost>();
         //_hintArray = map.hintArray; _tilesHint = Mathf.CeilToInt(_hintArray.Length / 3.0f);
         _numberFlows = map.getFlowSolution().GetLength(0);
         _flowPoints = new List<Tile[]>();
@@ -269,7 +281,7 @@ public class BoardManager : MonoBehaviour
                         if (!tile.hasConection())
                         {
                             _flowCount++;
-                            Debug.Log(_flowCount);
+                            Debug.Log("FlowCount: " + _flowCount);
                             _lastTile.SetNextTile(tile);
                             tile.SetColor(_lastTile.getColor());
                         }
@@ -338,15 +350,20 @@ public class BoardManager : MonoBehaviour
         return completeFlow;
     }
 
-    public void ReviveTrails(List<Tile> tileList)
+    private void ReviveTrails(Ghost g)
     {
-        Tile aux = tileList[0];
-        tileList.Remove(aux);
-        foreach (Tile t in tileList)
+        Tile aux = g.tileList[0];
+        aux.SetColor(g.color);
+        g.back.SetNextTile(aux);
+        aux._back = g.back;
+        g.tileList.Remove(aux);
+
+        foreach (Tile t in g.tileList)
         {
             aux.SetNextTile(t);
             aux = t;
-            tileList.Remove(aux);
+            aux.SetColor(g.color);
+            //tileList.Remove(aux);
         }
     }
 
@@ -356,8 +373,10 @@ public class BoardManager : MonoBehaviour
         if (sameColor) _lastTile = tile._back;
         bool f = tile.forwardIsInit(), b = tile.backIsInit();
         bool direction = (f && b) ? !(tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
+        Ghost gh;
         if (!direction)
         {
+            gh =  new Ghost (tileList, tile._next, tile.getColor());
             if (tile._next != null)
             {
                 tile._next._back = null;
@@ -366,6 +385,7 @@ public class BoardManager : MonoBehaviour
         }
         else
         {
+            gh = new Ghost(tileList, tile._back, tile.getColor());
             if (tile._back != null)
             {
                 tile._back._next = null;
@@ -381,21 +401,30 @@ public class BoardManager : MonoBehaviour
         tile.TrailDeletion(ref tileList, direction);
 
         if (!sameColor)
-            _ghostTiles.Add(tileList);
-        //else    // check if the tile deletes is the begining of a ghost list
-        //{
-        //    foreach (Tile t in tileList)
-        //    {
-        //        foreach (List<Tile> g in _ghostTiles)
-        //        {
-        //            if (g[0] == t)
-        //            {   // has found a ghost tile in the list of tiles deleted
-        //                ReviveTrails(g);   //Revive all the tiles in the list g
-        //                _ghostTiles.Remove(g);  // Remove the list of tiles ghost from the ghost list
-        //            }
-        //        }
-        //    }
-        //}
+        {
+            _ghostTiles.Add(gh);
+        }
+        else    // check if the tile deletes is the begining of a ghost list
+        {
+            foreach (Tile t in tileList)
+            {
+                List<Ghost> toRemove = new List<Ghost>();
+                foreach (Ghost g in _ghostTiles)
+                {
+
+                    if (g.tileList[0] == t)
+                    {   // has found a ghost tile in the list of tiles deleted
+                        ReviveTrails(g);   //Revive all the tiles in the list g
+                        toRemove.Add(g);
+                       // _ghostTiles.Remove(g);  // Remove the list of tiles ghost from the ghost list
+                    }
+                }
+                foreach(Ghost rm in toRemove)
+                {
+                    _ghostTiles.Remove(rm); // Remove the list of tiles ghost from the ghost list
+                }
+            }
+        }
 
         //      tile.deleteNextFlow()
         //                  -> if last tile in flow is an end and connected,

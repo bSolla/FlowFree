@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b61f3f00f87b97349a366b4e8cdfd3d2, type: 3}
+  m_Name: ClassicTheme
+  m_EditorClassIdentifier: 
+  _name: Classic Theme
+  _shortName: classic
+  _arrayColors:
+  - {r: 1, g: 0.14528298, b: 0.14528298, a: 1}
+  - {r: 0, g: 0.7924528, b: 0.16706222, a: 1}
+  - {r: 0, g: 0.17004097, b: 0.8301887, a: 1}
+  - {r: 1, g: 0.98744744, b: 0.19245279, a: 1}
+  - {r: 1, g: 0.491453, b: 0, a: 1}
+  - {r: 0, g: 0.9801898, b: 1, a: 1}
+  - {r: 0.990566, g: 0, b: 0.64174485, a: 1}
+  - {r: 0.5566038, g: 0.09136701, b: 0.09136701, a: 1}
+  - {r: 0.7264151, g: 0.030153047, b: 0.6474829, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.6509434, g: 0.6509434, b: 0.6509434, a: 1}
+  - {r: 0.32452828, g: 1, b: 0.32547554, a: 1}
+  - {r: 0.6603774, g: 0.6392152, b: 0.2953008, a: 1}
+  - {r: 0.14513218, g: 0.12944107, b: 0.33962262, a: 1}
+  - {r: 0.11050192, g: 0.6037736, b: 0.4119228, a: 1}

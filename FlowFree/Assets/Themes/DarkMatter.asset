@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b61f3f00f87b97349a366b4e8cdfd3d2, type: 3}
+  m_Name: DarkMatter
+  m_EditorClassIdentifier: 
+  _name: Dark Matter
+  _shortName: dark
+  _arrayColors:
+  - {r: 0.7169812, g: 0.12445709, b: 0.12445709, a: 1}
+  - {r: 0.086329624, g: 0.4716981, b: 0.16836351, a: 1}
+  - {r: 0.12495549, g: 0.41528815, b: 0.5660378, a: 1}
+  - {r: 0.4811321, g: 0.09259521, b: 0.43033454, a: 1}
+  - {r: 0.7169812, g: 0.35146138, b: 0, a: 1}
+  - {r: 0.17180489, g: 0.70495516, b: 0.7169812, a: 1}
+  - {r: 0.7924528, g: 0.24222142, b: 0.598893, a: 1}
+  - {r: 0.68013436, g: 0.7924528, b: 0.13755782, a: 1}
+  - {r: 0.46226418, g: 0.084603034, b: 0.10564464, a: 1}
+  - {r: 0.6132076, g: 0.6132076, b: 0.6132076, a: 1}
+  - {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
+  - {r: 0.12844422, g: 0.8301887, b: 0.12844422, a: 1}
+  - {r: 0.49056602, g: 0.48170817, b: 0.32580987, a: 1}
+  - {r: 0.19018896, g: 0.17974366, b: 0.3207547, a: 1}
+  - {r: 0.15550016, g: 0.4528302, b: 0.33720186, a: 1}

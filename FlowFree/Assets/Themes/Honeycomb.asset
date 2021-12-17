@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b61f3f00f87b97349a366b4e8cdfd3d2, type: 3}
+  m_Name: Honeycomb
+  m_EditorClassIdentifier: 
+  _name: Honeycomb
+  _shortName: honey
+  _arrayColors:
+  - {r: 1, g: 0.39203247, b: 0, a: 1}
+  - {r: 0.99400353, g: 1, b: 0.07924521, a: 1}
+  - {r: 0.9870852, g: 1, b: 0.48490566, a: 1}
+  - {r: 0.9056604, g: 0.73253155, b: 0.31100032, a: 1}
+  - {r: 0.754717, g: 0.30165842, b: 0.11676748, a: 1}
+  - {r: 0.6603774, g: 0.12709147, b: 0.1424379, a: 1}
+  - {r: 0.5471698, g: 0.08981841, b: 0.2727505, a: 1}
+  - {r: 1, g: 0, b: 0.15016556, a: 1}
+  - {r: 0.9811321, g: 0.58682805, b: 0.6087339, a: 1}
+  - {r: 0.66683114, g: 0.9056604, b: 0.48187968, a: 1}
+  - {r: 0.58473796, g: 0.735849, b: 0.30128157, a: 1}
+  - {r: 0.5849056, g: 0.573857, b: 0.27258807, a: 1}
+  - {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
+  - {r: 0.8851724, g: 0.8867924, b: 0.8650409, a: 1}
+  - {r: 0.08421142, g: 0.7830189, b: 0.51281345, a: 1}

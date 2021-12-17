@@ -21,11 +21,13 @@ public class BoardManager : MonoBehaviour
     {
         public List<Tile> tileList;
         public Tile back;
+        public Tile next;
         public Color color;
-        public Ghost(List<Tile> t, Tile b, Color c)
+        public Ghost(List<Tile> t, Tile b, Tile n, Color c)
         {
             tileList = t;
             back = b;
+            next = n;
             color = c;
         }
     }
@@ -203,6 +205,7 @@ public class BoardManager : MonoBehaviour
                 // new click
                 if (_lastTile == null)
                 {
+                    _ghostTiles.Clear();
                     if (tile.IsBall() || tile.IsTrail())
                     {
                         //are you pressing other init?
@@ -227,8 +230,10 @@ public class BoardManager : MonoBehaviour
                                         if (b._back != null)
                                         {
                                             if (CompleteFlow(b._back))
+                                            {
                                                 _flowCount--;
-                                            Debug.Log("FlowCount: " + _flowCount);
+                                                Debug.Log("FlowCount: " + _flowCount);
+                                            }
 
                                             b._back.TrailDeletion(ref tileList, false);
                                             b._back = null;
@@ -241,6 +246,11 @@ public class BoardManager : MonoBehaviour
                         //delete de todo el camino
                         if (tile._next != null)
                         {
+                            if (tile._next.IsBall())
+                            {
+                                _flowCount--;
+                                Debug.Log("FlowCount: " + _flowCount);
+                            }
                             List<Tile> tileList = new List<Tile>(); // list of tiles deleted
                             tile._next.TrailDeletion(ref tileList, true);
                             tile._next = null;
@@ -365,18 +375,25 @@ public class BoardManager : MonoBehaviour
             aux.SetColor(g.color);
             //tileList.Remove(aux);
         }
+        if (g.next != null)
+        {
+            aux.SetNextTile(g.next);
+            _flowCount++;
+            Debug.Log("FlowCount: " + _flowCount);
+        }
     }
 
     private void DeleteTrails(Tile tile, bool sameColor, bool completeTrail)
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
-        if (sameColor) _lastTile = tile._back;
+        if (sameColor) 
+            _lastTile = tile._back;
         bool f = tile.forwardIsInit(), b = tile.backIsInit();
         bool direction = (f && b) ? !(tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
         Ghost gh;
         if (!direction)
         {
-            gh =  new Ghost (tileList, tile._next, tile.getColor());
+            gh =  new Ghost (tileList, tile._next, null, tile.getColor());
             if (tile._next != null)
             {
                 tile._next._back = null;
@@ -385,21 +402,30 @@ public class BoardManager : MonoBehaviour
         }
         else
         {
-            gh = new Ghost(tileList, tile._back, tile.getColor());
+            gh = new Ghost(tileList, tile._back, null, tile.getColor());
             if (tile._back != null)
             {
                 tile._back._next = null;
                 tile._back.CalculateTrails();
             }
         }
+
+        tile.TrailDeletion(ref tileList, direction);
+        if (sameColor)
+            tileList.Remove(tile);
         if (completeTrail)
         {
+            foreach (Tile[] t in _flowPoints)
+            {
+                if (t[0].getColor() == gh.color)  // if the color is the same
+                    if (!t[0].hasConection()) //and the flow is complete
+                        gh.next = t[0];
+                else if(!t[1].hasConection())
+                        gh.next = t[1];
+            }
             _flowCount--;
             Debug.Log("FlowCount: " + _flowCount);
         }
-
-        tile.TrailDeletion(ref tileList, direction);
-
         if (!sameColor)
         {
             _ghostTiles.Add(gh);

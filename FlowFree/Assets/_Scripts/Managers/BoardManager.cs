@@ -309,6 +309,7 @@ public class BoardManager : MonoBehaviour
                     if (tile.IsBottomWall() && (y > _lastTile.GetPosition().y)) return;
 
                     if (tile.IsBall() && tile.getColor() != _lastTile.getColor()) return;
+                    if (_lastTile.IsBall() && _lastTile._back != null && _lastTile._back != tile) return;
 
                     // new tile is empty tile
                     if (tile.getColor() == Color.black)

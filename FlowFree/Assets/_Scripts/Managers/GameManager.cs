@@ -18,9 +18,16 @@ public class GameManager : MonoBehaviour
     public LevelManager _levelManager = null;     // LevelManager for level
     public LevelPackage[] _levels;                // Array of LevelPackages
 
+    [Header("Themes")]
+    public Themes _themesScriptObj;               // scriptable object that contains theme info
+
     [Header("Debugging")]
     public bool _debugging = false;               // Sets if debug mode is on, for avoiding some changes
 
+    // THEME DATA
+    private int _themeIndex = 0;                  // current theme used
+
+    // LEVEL DATA
     private string _package = "Rectangles";       // Sets game style
     private string _lot = "HourglassPack";        // Sets lot to use
     private int _level = 5;                       // Sets the level to be loaded
@@ -78,7 +85,7 @@ public class GameManager : MonoBehaviour
 
             // Get Player information and store it
             _player = SaveLoadSystem.ReadPlayerData(lotNames);
-
+            _themeIndex = _player._themeIndex;
             DontDestroyOnLoad(_instance);
         } // if
         else if (_instance != this)
@@ -229,9 +236,26 @@ public class GameManager : MonoBehaviour
         GetInstance()._mainMenu = mg;
     } // SetMainMenuManager
 
+    /// <summary>
+    /// 
+    /// Setter for the reload panels bool 
+    /// 
+    /// </summary>
+    /// <param name="val">(bool) wether or not to reload the panels</param>
     public void SetReloadPanels(bool val)
     {
         _reloadPanels = val;
+    }
+
+    /// <summary>
+    /// 
+    /// Sets the theme index to the provided value
+    /// 
+    /// </summary>
+    /// <param name="index">(int) new value of the theme index</param>
+    public void SetThemeIndex(int index)
+    {
+        _themeIndex = index;
     }
     #endregion
 
@@ -412,6 +436,11 @@ public class GameManager : MonoBehaviour
     public bool GetReloadPanels()
     {
         return _reloadPanels;
+    }
+
+    public Colorway GetTheme()
+    {
+        return _themesScriptObj._themeArray[2];
     }
     #endregion getters
 

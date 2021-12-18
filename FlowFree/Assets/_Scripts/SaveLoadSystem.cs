@@ -20,7 +20,9 @@ public struct PlayerData
     public int _hints;                                       // Hints available
     public int _totalLevelsCompleted;                        // Time played this match
     public bool _adsRemoved;                                 // if the player paid for no ads
+    public int _themeIndex;                                  // current theme for the player
     private int _hash;                                       // hash code 
+    
 
     /// <summary>
     /// 
@@ -31,7 +33,7 @@ public struct PlayerData
     /// <param name="completed"> (Dictionary) levels completed per lot. </param>
     /// <param name="hints"> (int) Number hints available. </param>
     /// <param name="removed"> (bool) Ads removed flag. </param>
-    public PlayerData(float level, Dictionary<string, int[]> completed, int hints, bool removed)
+    public PlayerData(float level, Dictionary<string, int[]> completed, int hints, bool removed, int theme)
     {
         _playerLevel = level;
         _completedLevelsLot = completed;
@@ -39,6 +41,7 @@ public struct PlayerData
         _adsRemoved = removed;
         _hash = 0;
         _totalLevelsCompleted = 0;
+        _themeIndex = theme;
 
         GetTimePlayed();
     } // PlayerData
@@ -124,7 +127,7 @@ public class SaveLoadSystem : MonoBehaviour
                 
         } // for
 
-        PlayerData dat = new PlayerData(0.0f, completed, 0, false);
+        PlayerData dat = new PlayerData(0.0f, completed, 0, false, 0);
 
         return dat;
     } // NewPlayerData

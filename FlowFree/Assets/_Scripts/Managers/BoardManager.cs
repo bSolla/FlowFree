@@ -68,7 +68,7 @@ public class BoardManager : MonoBehaviour
     public void SetMap(Map map)
     {
         // Init board sizes and variables
-        _tiles = new Tile[map.X, map.Y];
+        _tiles = new Tile[map._X, map._Y];
         _ghostTiles = new List<Ghost>();
         //_hintArray = map.hintArray; _tilesHint = Mathf.CeilToInt(_hintArray.Length / 3.0f);
         _numberFlows = map.getFlowSolution().GetLength(0);
@@ -81,21 +81,21 @@ public class BoardManager : MonoBehaviour
         Vector2 tam = CalculateSize(background);
 
         // Instantiate tiles
-        for (int x = 0; x < map.X; x++)
+        for (int x = 0; x < map._X; x++)
         {
-            for (int y = 0; y < map.Y; y++)
+            for (int y = 0; y < map._Y; y++)
             {
                 _tiles[x, y] = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, _board.transform);
-                SetTile(map.tileInfoMatrix[x, y], _tiles[x, y], x, y);
+                SetTile(map._tileInfoMatrix[x, y], _tiles[x, y], x, y);
                 _tiles[x, y].setWallColor(GameManager.GetInstance().GetPackageColor());
             }
         }
         Point[,] solutions = map.getFlowSolution();
         int flowed = 0;
         // Decorate
-        for (int x = 0; x < map.X; x++)
+        for (int x = 0; x < map._X; x++)
         {
-            for (int y = 0; y < map.Y; y++)
+            for (int y = 0; y < map._Y; y++)
             {
                 if (!_tiles[x, y].gameObject.activeSelf)
                 {
@@ -154,7 +154,7 @@ public class BoardManager : MonoBehaviour
         float factor = nScale.x / oScale.x;
 
         // Relocate board
-        _board.transform.Translate(new Vector3((-(map.X - 1) / 2.0f) * factor, ((-(map.Y - 3) / 2.0f) * factor)));
+        _board.transform.Translate(new Vector3((-(map._X - 1) / 2.0f) * factor, ((-(map._Y - 3) / 2.0f) * factor)));
     }
 
 

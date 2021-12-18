@@ -63,81 +63,66 @@ public class Map : MonoBehaviour
     /// Matrix that stores all the information needed for the creation of tiles.
     /// Access with tileInfoMatrix[x,y]
     /// </summary>
-    public TileInfo[,] tileInfoMatrix;
-    public int X, Y;
-    private Point[,] solutions;
+    public TileInfo[,] _tileInfoMatrix;
+    public int _X, _Y;
+    private Point[,] _solutions;
 
-    Color[] colores = new Color[8];
     public Point[,] getFlowSolution()
     {
-        return solutions;
+        return _solutions;
     }
 
     public int flowNumber()
     {
-        return solutions.GetLength(0);
+        return _solutions.GetLength(0);
     }
     public Map(int c, int r, Wall[] w, Point[] e, Point[,] s/*, Point[,] iAe*/)
     {
         // make tile matrix
         
-        X = c; Y = r;
-        tileInfoMatrix = new TileInfo[X, Y]; //one extra col & row to draw the bottom and right walls of the map
+        _X = c; _Y = r;
+        _tileInfoMatrix = new TileInfo[_X, _Y]; //one extra col & row to draw the bottom and right walls of the map
         for (int col = 0; col < c; ++col)
         {
             for (int row = 0; row < r; ++row)
             {
-                tileInfoMatrix[col, row] = new TileInfo();
+                _tileInfoMatrix[col, row] = new TileInfo();
             } // for
         } // for
 
-
-        // set special points like ball start and finish
-        /*
-        for(int row = 0; row < iAe.GetLength(1); row++) 
-        {
-            tileInfoMatrix[iAe[0, row].x, iAe[0, row].y].uroboros = true;
-            tileInfoMatrix[iAe[1, row].x, iAe[1, row].y].uroboros = true;
-        }
-        */
         // hint info
-        solutions = s;
+        _solutions = s;
         //------------------------------------------------DEBUG------------------------------------------------
         int flowed = 0;
         Point sol;
-        colores[0] = Color.red;
-        colores[1] = Color.green;
-        colores[2] = Color.blue;
-        colores[3] = Color.yellow;
-        colores[4] = Color.cyan;
-        colores[5] = Color.gray;
-        colores[6] = Color.magenta;
-        colores[7] = Color.white;
+        // Add colors from themes
+        Colorway theme = GameManager.GetInstance().GetTheme();
         Color colorFlow;
-        for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
+        for (int flowNumber = 0; flowNumber < _solutions.GetLength(0); flowNumber++)
         {
-            colorFlow = (flowNumber < colores.Length) ? colores[flowNumber] : UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
-            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
-            while (solutions[flowNumber, flowed + 1].x != -1) {
-                sol = solutions[flowNumber, flowed];
-                tileInfoMatrix[sol.x, sol.y].next.x = solutions[flowNumber, flowed + 1].x;
-                tileInfoMatrix[sol.x, sol.y].next.y = solutions[flowNumber, flowed + 1].y;
-                tileInfoMatrix[sol.x, sol.y].ballColor = colorFlow;
+            colorFlow = (flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
+            _tileInfoMatrix[_solutions[flowNumber, flowed].x, _solutions[flowNumber, flowed].y].uroboros = true;
+            
+            while (_solutions[flowNumber, flowed + 1].x != -1) {
+                sol = _solutions[flowNumber, flowed];
+                _tileInfoMatrix[sol.x, sol.y].next.x = _solutions[flowNumber, flowed + 1].x;
+                _tileInfoMatrix[sol.x, sol.y].next.y = _solutions[flowNumber, flowed + 1].y;
+                _tileInfoMatrix[sol.x, sol.y].ballColor = colorFlow;
                 flowed++;
             }
-            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].uroboros = true;
-            tileInfoMatrix[solutions[flowNumber, flowed].x, solutions[flowNumber, flowed].y].ballColor = colorFlow;
+            _tileInfoMatrix[_solutions[flowNumber, flowed].x, _solutions[flowNumber, flowed].y].uroboros = true;
+            _tileInfoMatrix[_solutions[flowNumber, flowed].x, _solutions[flowNumber, flowed].y].ballColor = colorFlow;
             flowed = 0;
         }
         //------------------------------------------------DEBUG------------------------------------------------
         // wall info
         foreach (Wall wall in w)        
         {
-            tileInfoMatrix[wall.pos.x, wall.pos.y].wallDown = wall.s;
-            tileInfoMatrix[wall.pos.x, wall.pos.y].wallEast = wall.e;
+            _tileInfoMatrix[wall.pos.x, wall.pos.y].wallDown = wall.s;
+            _tileInfoMatrix[wall.pos.x, wall.pos.y].wallEast = wall.e;
         }
         // other info (bridges and other stuff)
-        foreach (Point empty in e) tileInfoMatrix[empty.x, empty.y].empty = true; 
+        foreach (Point empty in e) _tileInfoMatrix[empty.x, empty.y].empty = true; 
     }
     /// <summary>
     /// Reads a json level file and creates an instance of Map with a filled TileInfo matrix

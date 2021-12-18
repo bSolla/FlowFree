@@ -12,11 +12,11 @@ public class ThemeObject : MonoBehaviour
     private int _themeIndex;
     private string _shortName;
     private GameObject _settingsPanelReference;
-    private GameObject _themesPanelReference;
+    private ThemeSelection _themesPanelReference;
     private GameObject _optionsPanelReference;
     private LevelManager _levelManager;
 
-    public void Init(Colorway theme, int idx, GameObject setPanel, GameObject themPanel, GameObject optPanel, LevelManager lm)
+    public void Init(Colorway theme, int idx, GameObject setPanel, ThemeSelection themPanel, GameObject optPanel, LevelManager lm)
     {
         _themeName.text = theme._name;
         _themeName.color = theme._nameColor;
@@ -42,13 +42,15 @@ public class ThemeObject : MonoBehaviour
         GameManager.GetInstance().SetThemeIndex(_themeIndex);
     }
 
-    public void DisablePanels()
+    public void ThemeChange()
     {
         _settingsPanelReference.SetActive(false);
-        _themesPanelReference.SetActive(false);
+        _themesPanelReference.gameObject.SetActive(false);
         if (_optionsPanelReference != null)
             _optionsPanelReference.SetActive(false);
         if (_levelManager != null)
             _levelManager.SetPause(false);
+
+        _themesPanelReference.ChangeTextColors(GameManager.GetInstance().GetThemeByNumber(_themeIndex));
     }
 }

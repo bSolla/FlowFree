@@ -24,9 +24,6 @@ public class GameManager : MonoBehaviour
     [Header("Debugging")]
     public bool _debugging = false;               // Sets if debug mode is on, for avoiding some changes
 
-    // THEME DATA
-    private int _themeIndex = 0;                  // current theme used
-
     // LEVEL DATA
     private string _package = "Rectangles";       // Sets game style
     private string _lot = "HourglassPack";        // Sets lot to use
@@ -85,7 +82,6 @@ public class GameManager : MonoBehaviour
 
             // Get Player information and store it
             _player = SaveLoadSystem.ReadPlayerData(lotNames);
-            _themeIndex = _player._themeIndex;
             DontDestroyOnLoad(_instance);
         } // if
         else if (_instance != this)
@@ -255,7 +251,6 @@ public class GameManager : MonoBehaviour
     /// <param name="index">(int) new value of the theme index</param>
     public void SetThemeIndex(int index)
     {
-        _themeIndex = index;
         _player._themeIndex = index;
     }
     #endregion
@@ -441,7 +436,7 @@ public class GameManager : MonoBehaviour
 
     public Colorway GetTheme()
     {
-        return _themesScriptObj._themeArray[_themeIndex];
+        return _themesScriptObj._themeArray[_player._themeIndex];
     }
 
     public Colorway GetThemeByNumber(int i)

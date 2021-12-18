@@ -11,6 +11,7 @@ public class MainMenuManager : MonoBehaviour
     public VerticalLayoutGroup _packageArea = null;
     public GameObject _packageSelectionPanel = null;
     public LevelSelection _levelSelectionPanel = null;
+    public ThemeSelection _themeSelectionPanel = null;
 
     [Header("Prefabs")]
     public GameObject _packageUIPrefab = null;
@@ -41,6 +42,8 @@ public class MainMenuManager : MonoBehaviour
             ComingFromPlayScene();
             GameManager.GetInstance().SetReloadPanels(false);
         }
+
+        _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
     }
 
     public void CreatePackageSelectionObjects()

@@ -12,7 +12,8 @@ public class LevelManager : MonoBehaviour
     public RectTransform _topPanel;               // Top panel of canvas
     public RectTransform _botPanel;               // Bottom panel of canvas
     public Text _levelText;                       // Text with the level
-    public GameObject _hintsMessagePanel;
+    public GameObject _hintsMessagePanel;         // Panel that gives hint feedback
+    public ThemeSelection _themeSelectionPanel;   // Used for changing color of some texts
 
     [Header("Buttons")]
     public Button _backToMenuButton;
@@ -155,6 +156,8 @@ public class LevelManager : MonoBehaviour
             _prevLevelButton.interactable = false;
         else if (GameManager.GetInstance().GetLevel() == 149)
             _nextLevelButton.interactable = false;
+
+        _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
     }
 
 

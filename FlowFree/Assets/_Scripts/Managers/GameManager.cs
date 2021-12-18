@@ -256,6 +256,7 @@ public class GameManager : MonoBehaviour
     public void SetThemeIndex(int index)
     {
         _themeIndex = index;
+        _player._themeIndex = index;
     }
     #endregion
 
@@ -440,7 +441,17 @@ public class GameManager : MonoBehaviour
 
     public Colorway GetTheme()
     {
-        return _themesScriptObj._themeArray[2];
+        return _themesScriptObj._themeArray[_themeIndex];
+    }
+
+    public Colorway GetThemeByNumber(int i)
+    {
+        return _themesScriptObj._themeArray[i];
+    }
+
+    public int GetNumberThemes()
+    {
+        return _themesScriptObj._themeArray.Length;
     }
     #endregion getters
 

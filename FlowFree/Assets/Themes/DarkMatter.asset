@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DarkMatter
   m_EditorClassIdentifier: 
   _name: Dark Matter
+  _nameColor: {r: 0.7169812, g: 0.21238874, b: 0.5144358, a: 1}
   _shortName: dark
   _arrayColors:
   - {r: 0.7169812, g: 0.12445709, b: 0.12445709, a: 1}

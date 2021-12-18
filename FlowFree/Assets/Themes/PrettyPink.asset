@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PrettyPink
   m_EditorClassIdentifier: 
   _name: Pretty Pink
+  _nameColor: {r: 1, g: 0.48627454, b: 0.8705883, a: 1}
   _shortName: pink
   _arrayColors:
   - {r: 0.9433962, g: 0.35006884, b: 0.33285865, a: 1}

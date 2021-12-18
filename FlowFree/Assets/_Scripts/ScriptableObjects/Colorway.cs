@@ -6,6 +6,7 @@ using UnityEngine;
 public class Colorway : ScriptableObject
 {
     public string _name;
+    public Color _nameColor;
     public string _shortName;
     public Color[] _arrayColors;
 }

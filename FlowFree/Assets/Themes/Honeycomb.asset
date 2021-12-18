@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Honeycomb
   m_EditorClassIdentifier: 
   _name: Honeycomb
+  _nameColor: {r: 0.9058824, g: 0.73333335, b: 0.30980393, a: 1}
   _shortName: honey
   _arrayColors:
   - {r: 1, g: 0.39203247, b: 0, a: 1}

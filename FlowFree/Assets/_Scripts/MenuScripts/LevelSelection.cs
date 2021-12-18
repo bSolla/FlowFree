@@ -14,6 +14,7 @@ public class LevelSelection : MonoBehaviour
 
     // for easy deleting of objects without messing with scene objects
     private LevelGroup[] _levels;
+
     private Color _lotColor;
     private int _nLevels = 150;
     private const int LEVELS_PER_GROUP = 30;

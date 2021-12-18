@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ClassicTheme
   m_EditorClassIdentifier: 
   _name: Classic Theme
+  _nameColor: {r: 1, g: 0.14528298, b: 0.14528298, a: 1}
   _shortName: classic
   _arrayColors:
   - {r: 1, g: 0.14528298, b: 0.14528298, a: 1}

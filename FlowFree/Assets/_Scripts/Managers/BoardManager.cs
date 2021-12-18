@@ -10,6 +10,8 @@ public class BoardManager : MonoBehaviour
     public GameObject _board;                   // Board gameObject
     public Tile _tilePrefab;                    // Tile prefab to instantiate
     public GameObject _cursor;
+    public GameObject _lastileIndicator;
+    private Colorway _themeNow;
 
     // Calculate space remaining for the board
     private float _topPanel;                    // Top panel in canvas
@@ -59,7 +61,28 @@ public class BoardManager : MonoBehaviour
         _levelManager = levelManager;
     } // Init
 
+    public void UpdateColors()
+    {
+        Colorway theme = GameManager.GetInstance().GetTheme();
+        int flowNumber = 0;
+        Tile n;
 
+        foreach (Tile[] t in _flowPoints)
+        {
+            Color auxColor = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
+            foreach (Tile b in t)
+            {
+                b.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
+                n = b._next;
+                while(n != null)
+                {
+                    n.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
+                    n = n._next;
+                }
+                flowNumber++;
+            }
+        }
+    }
     /// <summary>
     /// 
     /// Sets the map, scaling everything to fit in the 
@@ -183,6 +206,11 @@ public class BoardManager : MonoBehaviour
     /// <param name="it"> (InputType) Type of the input. </param>
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)
     {
+        if (_themeNow != GameManager.GetInstance().GetTheme())
+        {
+            UpdateColors();
+            _themeNow = GameManager.GetInstance().GetTheme();
+        }
         //Debug.Log(it);
         //Vector2 realPos = new Vector2(pos.x - (_board.transform.position.x / _board.transform.localScale.x), pos.y - (_board.transform.position.y / _board.transform.localScale.y));
         Vector2 realPos = new Vector2((pos.x - _board.transform.position.x) / _board.transform.localScale.x, (pos.y - _board.transform.position.y) / _board.transform.localScale.y);
@@ -202,6 +230,8 @@ public class BoardManager : MonoBehaviour
                 _cursor.SetActive(true);
                 _cursor.transform.position = pos;
                 _cursor.GetComponent<SpriteRenderer>().color = new Color(tile.getColor().r, tile.getColor().g, tile.getColor().b, 0.5f);
+                _lastileIndicator.GetComponent<SpriteRenderer>().color = (tile.getColor() != Color.black) ? tile.getColor() : new Color(0,0,0,0); ;
+                _lastileIndicator.transform.position = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
                 // new click
                 if (_lastTile == null)
                 {

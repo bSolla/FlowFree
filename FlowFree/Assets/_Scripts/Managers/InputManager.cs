@@ -37,13 +37,13 @@ public class InputManager : MonoBehaviour
         if (Input.touchCount == 1) // user is touching the screen 
         {
             Touch touch = Input.GetTouch(0); // get the touch
-            
+
             if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved) //check for the first touch
             {
                 _touchPos = touch.position;
                 GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
             } // if
-            else (touch.phase == TouchPhase.Ended) {
+            else if (touch.phase == TouchPhase.Ended) {
                 GameManager.GetInstance().ReceiveInput(InputType.NONE, _touchPos);
             }
         } // if

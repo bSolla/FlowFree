@@ -182,7 +182,7 @@ public class Map : MonoBehaviour
                         col = int.Parse(muroInfo[0]) - (readenMap.width * fil);
                         int first = int.Parse(muroInfo[0]), second = int.Parse(muroInfo[1]);
                         readenMap.walls[z].pos.x = col;
-                        readenMap.walls[z].pos.y = fil;
+                        readenMap.walls[z].pos.y = Math.Abs(fil - (readenMap.height - 1));
                         readenMap.walls[z].s = first < second && first + 1 != second;
                         readenMap.walls[z].e = first + 1 == second;
                     }
@@ -197,7 +197,7 @@ public class Map : MonoBehaviour
                         fil = int.Parse(posInfo[z]) / readenMap.width;
                         col = int.Parse(posInfo[z]) - (readenMap.width * fil);
                         readenMap.empties[z].x = col;
-                        readenMap.empties[z].y = fil;
+                        readenMap.empties[z].y = Math.Abs(fil - (readenMap.height - 1));
                     }
                 }
             }
@@ -222,7 +222,7 @@ public class Map : MonoBehaviour
                 fil = int.Parse(posInfo[z]) / readenMap.width;
                 col = int.Parse(posInfo[z]) - (readenMap.width * fil);
                 readenMap.solutions[i - 1, z].x = col;
-                readenMap.solutions[i - 1, z].y = fil;
+                readenMap.solutions[i - 1, z].y = Math.Abs(fil - (readenMap.height - 1));
             }
             readenMap.solutions[i - 1, posInfo.Length].x = -1;
             readenMap.solutions[i - 1, posInfo.Length].y = -1;

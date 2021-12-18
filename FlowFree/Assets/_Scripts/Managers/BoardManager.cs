@@ -69,6 +69,7 @@ public class BoardManager : MonoBehaviour
 
         foreach (Tile[] t in _flowPoints)
         {
+            bool aux = false;
             Color auxColor = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
             foreach (Tile b in t)
             {
@@ -79,7 +80,10 @@ public class BoardManager : MonoBehaviour
                     n.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
                     n = n._next;
                 }
-                flowNumber++;
+                if (aux)
+                    flowNumber++;
+                else
+                    aux = !aux;
             }
         }
     }

@@ -552,6 +552,7 @@ MonoBehaviour:
   - {fileID: 3750575711946564193}
   - {fileID: 8759146682235259420}
   - {fileID: 3512460978645695562}
+  _buttonComponent: {fileID: 1615466544821413495}
 --- !u!114 &1615466544821413495
 MonoBehaviour:
   m_ObjectHideFlags: 0

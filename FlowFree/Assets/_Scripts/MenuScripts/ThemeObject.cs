@@ -7,15 +7,29 @@ public class ThemeObject : MonoBehaviour
 {
     public Text _themeName;
     public Image[] _dotImages;
+    public Button _buttonComponent;
 
     private int _themeIndex;
     private string _shortName;
+    private GameObject _settingsPanelReference;
+    private GameObject _themesPanelReference;
+    private GameObject _optionsPanelReference;
+    private LevelManager _levelManager;
 
-    public void Init(Colorway theme, int idx)
+    public void Init(Colorway theme, int idx, GameObject setPanel, GameObject themPanel, GameObject optPanel, LevelManager lm)
     {
         _themeName.text = theme._name;
         _themeName.color = theme._nameColor;
+        
         _themeIndex = idx;
+
+        _shortName = theme._shortName;
+
+        _settingsPanelReference = setPanel;
+        _themesPanelReference = themPanel;
+        _optionsPanelReference = optPanel;
+
+        _levelManager = lm;
 
         for (int i = 0; i < _dotImages.Length; ++i)
         {
@@ -26,5 +40,15 @@ public class ThemeObject : MonoBehaviour
     public void SetTheme()
     {
         GameManager.GetInstance().SetThemeIndex(_themeIndex);
+    }
+
+    public void DisablePanels()
+    {
+        _settingsPanelReference.SetActive(false);
+        _themesPanelReference.SetActive(false);
+        if (_optionsPanelReference != null)
+            _optionsPanelReference.SetActive(false);
+        if (_levelManager != null)
+            _levelManager.SetPause(false);
     }
 }

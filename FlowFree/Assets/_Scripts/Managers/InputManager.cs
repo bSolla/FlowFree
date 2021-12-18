@@ -22,9 +22,6 @@ public class InputManager : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
-            GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
             pressing = true;
         } // if
         if (Input.GetMouseButtonUp(0))
@@ -32,28 +29,34 @@ public class InputManager : MonoBehaviour
             GameManager.GetInstance().ReceiveInput(InputType.NONE, _touchPos);
             pressing = false;
         }
-#else
-        // TODO: MULTI TOUCH SUPPORT
-        if (Input.touchCount == 1) // user is touching the screen 
-        {
-            Touch touch = Input.GetTouch(0); // get the touch
-            
-            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved) //check for the first touch
-            {
-                _touchPos = touch.position;
-                GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
-            } // if
-            else (touch.phase == TouchPhase.Ended) {
-                GameManager.GetInstance().ReceiveInput(InputType.NONE, _touchPos);
-            }
-        } // if
-#endif
         if (pressing)
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
             GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
         }
+#else
+        // TODO: MULTI TOUCH SUPPORT
+        if (Input.touchCount == 1) // user is touching the screen 
+        {
+            Touch touch = Input.GetTouch(0); // get the touch
+            
+            _touchPos = touch.position;
+            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved) //check for the first touch
+            {
+                pressing = true;
+            } // if
+                GameManager.GetInstance().ReceiveInput(InputType.NONE, _touchPos);
+                pressing = false;
+            }
+            if (pressing)
+            {
+                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(_touchPos);
+                _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
+                GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
+            }
+        } // if
+#endif
     } // Update
 } // InputManager
 

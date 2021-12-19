@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
             GameManager.GetInstance().ReceiveInput(InputType.MOVEMENT, _touchPos);
         }
 #else
-        // TODO: MULTI TOUCH SUPPORT
+
         if (Input.touchCount == 1) // user is touching the screen 
         {
             Touch touch = Input.GetTouch(0); // get the touch

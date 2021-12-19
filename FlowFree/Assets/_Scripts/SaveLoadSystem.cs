@@ -121,7 +121,7 @@ public class SaveLoadSystem : MonoBehaviour
             if (lots[i] != "ad")
             {
                 int[] levels = new int[150];
-                //levels[0] = 1; levels[3] = 2; // TODO: remove, only for testing
+
                 completed.Add(lots[i], levels);
             }
                 

@@ -59,7 +59,7 @@ public class PackageSelection : MonoBehaviour
         for (int i = 0; i < package._lotArray.Length; i++)
         {
             lot = Instantiate(_lotSelectionPrefab, verticalLayout.transform);
-            // TODO: modify the value of the completed lots according to player data
+
             lot.SetLotData(package._packageName, package._lotArray[i]._lotName, package._packageColor);
             lot.SetButtonCall(_levelSelectionPanel);
         }

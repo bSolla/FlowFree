@@ -99,10 +99,6 @@ public class Tile : MonoBehaviour
         _pos.x = x;
         _pos.y = y;
     }
-    public Point GetPosition()
-    {
-        return _pos;
-    }
 
     /// <summary> Set the next tile </summary>
     public void SetNextTile(Tile t)
@@ -125,23 +121,38 @@ public class Tile : MonoBehaviour
         else if (t.GetPosition().y + 1 == _pos.y) EnableTrail(TrailType.SOUTH);
         else if (t.GetPosition().y - 1 == _pos.y) EnableTrail(TrailType.NORTH);
     }
+
+    /// <summary> is the init of the flow from back? </summary>
     public bool backIsInit()
     {
         return (_back == null) ? false : (_back.IsBall()) ? true : _back.backIsInit();
     }
+
+    /// <summary> is the init of the flow from init? </summary>
     public bool forwardIsInit()
     {
         return (_next == null) ? false : (_next.IsBall()) ? true : _next.forwardIsInit();
     }
 
+    /// <summary> how muchs tiles have that tiles back to him </summary>
     public int TrailBackward()
     {
         return (_back != null) ? 1 + _back.TrailBackward() : 0;
     }
+
+    /// <summary> how muchs tiles have that tiles next to him </summary>
     public int TrailFordward()
     {
         return (_next != null) ? 1 + _next.TrailFordward() : 0;
     }
+
+    /// <summary>
+    /// 
+    /// Delete all the trail from this tile
+    /// 
+    /// </summary>
+    /// <param name="list"> (List<Tile>) a list from the tiles that have been removed </param>
+    /// <param name="condition"> (bool) we are looking from back or next trail </param>
     public void TrailDeletion(ref List<Tile> list, bool condition)
     {
         list.Add(this);
@@ -183,6 +194,7 @@ public class Tile : MonoBehaviour
         _back = null;
     }
 
+    /// <summary> make this Tile a empty  </summary>
     public void emptyTrail()
     {
         _trailNorth.SetActive(false);
@@ -194,17 +206,7 @@ public class Tile : MonoBehaviour
         _back = null;
     }
 
-    /// <summary> Enables the ice sprite </summary>
-    public void EnableGridBackground()
-    {
-        _gridBackground.SetActive(true);
-    }
-    /// <summary> Disables the ice sprite </summary>
-    public void DisableGridBackground()
-    {
-        _gridBackground.SetActive(false);
-    }
-
+    /// <summary> change and update the color of the tile </summary>
     public void SetColor(Color c)
     {
         _color = c;
@@ -212,30 +214,27 @@ public class Tile : MonoBehaviour
         _trailWest.GetComponent<SpriteRenderer>().color = c;
         _trailNorth.GetComponent<SpriteRenderer>().color = c;
         _trailSouth.GetComponent<SpriteRenderer>().color = c;
-        //_hintEast.GetComponent<SpriteRenderer>().color = c;
-        //_hintWest.GetComponent<SpriteRenderer>().color = c;
-        //_hintNorth.GetComponent<SpriteRenderer>().color = c;
-        //_hintSouth.GetComponent<SpriteRenderer>().color = c;
 
         _ball.GetComponent<SpriteRenderer>().color = c;
-    } // SetTrailColor
+    }
+
+    /// <summary> Active the background decoration </summary>
     public void ActiveBackGround()
     {
         Color c = _color;
         c.a = 0.3f;
         _gridBackground.GetComponent<SpriteRenderer>().color = c;
     }
+
+    /// <summary> Desactivate the background decoration </summary>
     public void DesactivateBackGround()
     {
         Color c = Color.black;
         c.a = 0.3f;
         _gridBackground.GetComponent<SpriteRenderer>().color = c;
     }
-    public Color getColor()
-    {
-        return _color;
-    }
 
+    /// <summary> Change the color from the walls </summary>
     public void setWallColor(Color c)
     {
         _wallBottom.GetComponent<SpriteRenderer>().color = c;
@@ -252,30 +251,32 @@ public class Tile : MonoBehaviour
         if (walls.top) _wallTop.SetActive(true);
         if (walls.left) _wallWest.SetActive(true);
     }
+
+    /// <summary> Enables top wall </summary>
     public void EnableWallTop()
     {
         _wallTop.SetActive(true);
     }
+
+    /// <summary> Enables bottom wall </summary>
     public void EnableWallBottom()
     {
         _wallBottom.SetActive(true);
     }
+
+    /// <summary> Enables east wall </summary>
     public void EnableWallEast()
     {
         _wallEast.SetActive(true);
     }
+
+    /// <summary> Enables west wall </summary>
     public void EnableWallWest()
     {
         _wallWest.SetActive(true);
     }
-    /// <summary> Disables the given wall sprites </summary>
-    public void DisableWalls(WallType walls)
-    {
-        if (walls.bottom) _wallBottom.SetActive(false);
-        if (walls.right) _wallEast.SetActive(false);
-        if (walls.top) _wallTop.SetActive(false);
-        if (walls.left) _wallWest.SetActive(false);
-    }
+
+    /// <summary> Enables the hint sprite </summary>
     public void enableHint()
     {
         if (_color == Color.white) _hint.GetComponent<SpriteRenderer>().color = Color.black;
@@ -286,11 +287,6 @@ public class Tile : MonoBehaviour
     public void EnableBall()
     {
         _ball.SetActive(true);
-    }
-    /// <summary> Disables the goal sprite </summary>
-    public void DisableGoal()
-    {
-        _ball.SetActive(false);
     }
 
     /// <summary> Enables the specified trail sprite </summary>
@@ -315,6 +311,7 @@ public class Tile : MonoBehaviour
         }
     }
 
+    /// <summary> Activate the trails that the tile needs </summary>
     public void CalculateTrails()
     {
         DisableTrails();
@@ -334,6 +331,7 @@ public class Tile : MonoBehaviour
         }
     }
 
+    /// <summary> disable all the trails </summary>
     public void DisableTrails()
     {
         _trailNorth.SetActive(false);
@@ -342,85 +340,7 @@ public class Tile : MonoBehaviour
         _trailWest.SetActive(false);
     }
 
-
-
-    /// <summary> Disables the specified trail sprite </summary>
-    public void DisableTrail(TrailType tt)
-    {
-        switch (tt)
-        {
-            case TrailType.NORTH:
-                _trailNorth.SetActive(false);
-                break;
-            case TrailType.SOUTH:
-                _trailSouth.SetActive(false);
-                break;
-            case TrailType.EAST:
-                _trailEast.SetActive(false);
-                break;
-            case TrailType.WEST:
-                _trailWest.SetActive(false);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void EnableHint(TrailType dir)
-    {
-        //switch (dir)
-        //{
-        //    case TrailType.NORTH:
-        //        _hintNorth.SetActive(true);
-        //        break;
-        //    case TrailType.SOUTH:
-        //        _hintSouth.SetActive(true);
-        //        break;
-        //    case TrailType.EAST:
-        //        _hintEast.SetActive(true);
-        //        break;
-        //    case TrailType.WEST:
-        //        _hintWest.SetActive(true);
-        //        break;
-        //    default:
-        //        break;
-        //}
-    }
-
-
-    public void DisableHint(TrailType dir)
-    {
-        //switch (dir)
-        //{
-        //    case TrailType.NORTH:
-        //        _hintNorth.SetActive(false);
-        //        break;
-        //    case TrailType.SOUTH:
-        //        _hintSouth.SetActive(false);
-        //        break;
-        //    case TrailType.EAST:
-        //        _hintEast.SetActive(false);
-        //        break;
-        //    case TrailType.WEST:
-        //        _hintWest.SetActive(false);
-        //        break;
-        //    default:
-        //        break;
-        //}
-    }
-
-    /// <summary>
-    /// Checks if the pointer object is over the image
-    /// </summary>
-    /// <param name="pointerPosition">(Vector3) current pointer position</param>
-    /// <returns>(bool) Wether or not the pointer is inside the image</returns>
-    public bool IsPointed(Vector3 pointerPosition)
-    {
-        RectTransform rectTransform = gameObject.GetComponent<Image>().rectTransform;
-
-        return rectTransform.rect.Contains(rectTransform.InverseTransformPoint(pointerPosition));
-    }
-
+    /// <summary> the tile has a connection? </summary>
     public bool hasConection()
     {
         return (_next != null || _back != null);
@@ -430,50 +350,42 @@ public class Tile : MonoBehaviour
     // -----------------------------------------------
     // -----           setters/getters           -----
     // -----------------------------------------------
+
+    /// <summary> Is the bottom wall active? </summary>
     public bool IsBottomWall()
     {
         return _wallBottom.active;
     }
 
+    /// <summary> Is the rigth wall active? </summary>
     public bool IsRightWall()
     {
         return _wallEast.active;
     }
 
+    /// <summary> Is the ball active? </summary>
     public bool IsBall()
     {
         return _ball.active;
     }
 
-    public bool IsGridBackground()
-    {
-        return _gridBackground.active;
-    }
-
-    public bool IsNorthTrail()
-    {
-        return _trailNorth.active;
-    }
-
-    public bool IsSouthTrail()
-    {
-        return _trailSouth.active;
-    }
-
-    public bool IsWestTrail()
-    {
-        return _trailWest.active;
-    }
-
-    public bool IsEastTrail()
-    {
-        return _trailEast.active;
-    }
+    /// <summary> Is one or more trails active? </summary>
     public bool IsTrail()
     {
         return _trailNorth.active || _trailSouth.active || _trailWest.active || _trailEast.active;
     }
 
+    /// <summary> return the position in the table </summary>
+    public Point GetPosition()
+    {
+        return _pos;
+    }
+
+    /// <summary> return the color </summary>
+    public Color getColor()
+    {
+        return _color;
+    }
     #endregion
 
     #endregion //methods

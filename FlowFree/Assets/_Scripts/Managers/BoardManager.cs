@@ -67,35 +67,28 @@ public class BoardManager : MonoBehaviour
     {
         _levelManager = levelManager;
     } // Init
+
+
     /// <summary>
     /// 
-    /// calculate and update the value of the pipe
+    /// Checks if a flow is completed by following it along
     /// 
     /// </summary>
-    public void calculatePipe()
+    /// <param name="tile">(Tile) used for color comparison</param>
+    /// <returns>(bool) true if the flow is complete</returns>
+    public bool CompleteFlow(Tile tile)
     {
-        float tilesWithFlow = 0;
+        bool completeFlow = false;
         foreach (Tile[] t in _flowPoints)
         {
-            if (t[0]._next != null)
-            {
-                tilesWithFlow += t[0].TrailFordward() + 1;
-            }
-            else if (t[0]._back != null)
-            {
-                tilesWithFlow += t[0].TrailBackward() + 1;
-            }
-            else if (t[1]._next != null)
-            {
-                tilesWithFlow += t[1].TrailFordward() + 1;
-            }
-            else if (t[1]._back != null)
-            {
-                tilesWithFlow += t[1].TrailBackward() + 1;
-            }
+            if (t[0].getColor() == tile.getColor())  // if the color is the same
+                if (t[0].hasConection() && t[1].hasConection()) //and the flow is complete
+                    completeFlow = true;
         }
-        _levelManager.UpdateInfoUI(null, null, null, (Mathf.RoundToInt((tilesWithFlow / _realSize) * 100)).ToString());
+        Debug.Log("Completed: " + completeFlow);
+        return completeFlow;
     }
+
     /// <summary>
     /// 
     /// Complete a flow for the player if he have hints
@@ -134,32 +127,6 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void UpdateColors()
-    {
-        Colorway theme = GameManager.GetInstance().GetTheme();
-        int flowNumber = 0;
-        Tile n;
-
-        foreach (Tile[] t in _flowPoints)
-        {
-            bool aux = false;
-            Color auxColor = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
-            foreach (Tile b in t)
-            {
-                b.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
-                n = b._next;
-                while(n != null)
-                {
-                    n.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
-                    n = n._next;
-                }
-                if (aux)
-                    flowNumber++;
-                else
-                    aux = !aux;
-            }
-        }
-    }
     /// <summary>
     /// 
     /// Sets the map, scaling everything to fit in the 
@@ -173,7 +140,6 @@ public class BoardManager : MonoBehaviour
         // Init board sizes and variables
         _tiles = new Tile[map._X, map._Y];
         _ghostTiles = new List<Ghost>();
-        //_hintArray = map.hintArray; _tilesHint = Mathf.CeilToInt(_hintArray.Length / 3.0f);
         _numberFlows = map.getFlowSolution().GetLength(0);
         _hints = map.getFlowSolution();
         _flowPoints = new List<Tile[]>();
@@ -196,9 +162,11 @@ public class BoardManager : MonoBehaviour
                 _tiles[x, y].setWallColor(GameManager.GetInstance().GetPackageColor());
             }
         }
+
         Point[,] solutions = map.getFlowSolution();
         int flowed = 0;
-        // Decorate
+
+        // Decorate the map
         for (int x = 0; x < map._X; x++)
         {
             for (int y = 0; y < map._Y; y++)
@@ -277,6 +245,23 @@ public class BoardManager : MonoBehaviour
         
     } // ReceiveInput
 
+    /// <summary>
+    /// 
+    /// Returns the total number of flows in this board
+    /// 
+    /// </summary>
+    /// <returns>(int) _numberFlows</returns>
+    public int GetTotalFlows()
+    {
+        return _numberFlows;
+    }
+
+    // ------------------ PRIVATE -------------------
+    /// <summary>
+    /// 
+    /// Do the necesary logic for finish the touch cicle
+    /// 
+    /// </summary>
     private void ProcessEndOfTouch()
     {
         
@@ -306,9 +291,78 @@ public class BoardManager : MonoBehaviour
         _lastTile = null;
         _cursor.SetActive(false);
     }
+    
+    /// <summary>
+    /// 
+    /// Update the color of all tiles by the new theme selected
+    /// 
+    /// </summary>
+    private void UpdateColors()
+    {
+        Colorway theme = GameManager.GetInstance().GetTheme();
+        int flowNumber = 0;
+        Tile n;
 
+        foreach (Tile[] t in _flowPoints)
+        {
+            bool aux = false;
+            Color auxColor = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
+            foreach (Tile b in t)
+            {
+                b.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
+                n = b._next;
+                while (n != null)
+                {
+                    n.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
+                    n = n._next;
+                }
+                if (aux)
+                    flowNumber++;
+                else
+                    aux = !aux;
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 
+    /// calculate and update the value of the pipe
+    /// 
+    /// </summary>
+    private void calculatePipe()
+    {
+        float tilesWithFlow = 0;
+        foreach (Tile[] t in _flowPoints)
+        {
+            if (t[0]._next != null)
+            {
+                tilesWithFlow += t[0].TrailFordward() + 1;
+            }
+            else if (t[0]._back != null)
+            {
+                tilesWithFlow += t[0].TrailBackward() + 1;
+            }
+            else if (t[1]._next != null)
+            {
+                tilesWithFlow += t[1].TrailFordward() + 1;
+            }
+            else if (t[1]._back != null)
+            {
+                tilesWithFlow += t[1].TrailBackward() + 1;
+            }
+        }
+        _levelManager.UpdateInfoUI(null, null, null, (Mathf.RoundToInt((tilesWithFlow / _realSize) * 100)).ToString());
+    }
+    
+    /// <summary>
+    /// 
+    /// Do the necesary logic when the player touch and hold the cursor on screen
+    /// 
+    /// </summary>
+    /// <param name="pos">(Vector 2) cursor position</param>
     private void ProcessMovement(Vector2 pos)
     {
+        //transform the cursor position to the position that will have in our table
         Vector2 realPos = new Vector2((pos.x - _board.transform.position.x) / _board.transform.localScale.x, (pos.y - _board.transform.position.y) / _board.transform.localScale.y);
         
         int x = Mathf.RoundToInt(realPos.x), y = Mathf.RoundToInt(realPos.y);
@@ -352,7 +406,7 @@ public class BoardManager : MonoBehaviour
                     {
                         foreach (Tile b in t)
                         {
-                            if (b.getColor() == tile.getColor() /*&& b != tile*/)
+                            if (b.getColor() == tile.getColor())
                             {
                                 if (b._next != null)
                                 {
@@ -381,7 +435,7 @@ public class BoardManager : MonoBehaviour
                         }
                     }
                 }
-                //delete de todo el camino
+                //delete all the flow
                 if (tile._next != null)
                 {
                     if (tile._next.IsBall())
@@ -474,26 +528,13 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// 
-    /// Checks if a flow is completed by following it along
+    /// Make flow with the data stored in our ghost struct
     /// 
     /// </summary>
-    /// <param name="tile">(Tile) used for color comparison</param>
-    /// <returns>(bool) true if the flow is complete</returns>
-    public bool CompleteFlow(Tile tile)
-    {
-        bool completeFlow = false;
-        foreach (Tile[] t in _flowPoints)
-        {
-            if (t[0].getColor() == tile.getColor())  // if the color is the same
-                if (t[0].hasConection() && t[1].hasConection()) //and the flow is complete
-                    completeFlow = true;
-        }
-        Debug.Log("Completed: " + completeFlow);
-        return completeFlow;
-    }
-
+    /// <param name="g">(Ghost) tiles that will be revive</param>
     private void ReviveTrails(Ghost g)
     {
         Tile aux = g._tileList[0];
@@ -523,7 +564,14 @@ public class BoardManager : MonoBehaviour
             _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
         }
     }
-
+    /// <summary>
+    /// 
+    /// Delete all the flow
+    /// 
+    /// </summary>
+    /// <param name="tile">(Tile) Tile that starts all the flow</param>
+    /// <param name="sameColor">(bool) Are we and tile from the same color?</param>
+    /// <param name="completeTrail">(bool) the flow that are we going to delete is a complete flow?</param>
     private void DeleteTrails(Tile tile, bool sameColor, bool completeTrail)
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
@@ -593,13 +641,7 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-
-        //      tile.deleteNextFlow()
-        //                  -> if last tile in flow is an end and connected,
-        //                     do flowCount--
     }
-
-    // ------------------ PRIVATE -------------------
 
     /// <summary>
     /// 
@@ -694,14 +736,5 @@ public class BoardManager : MonoBehaviour
         _resolution /= GameManager.GetInstance().GetScaling().TransformationFactor();
     } // CalculateSpace
 
-    /// <summary>
-    /// 
-    /// Returns the total number of flows in this board
-    /// 
-    /// </summary>
-    /// <returns>(int) _numberFlows</returns>
-    public int GetTotalFlows()
-    {
-        return _numberFlows;
-    }
+    
 }

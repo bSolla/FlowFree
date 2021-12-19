@@ -41,29 +41,13 @@ public class Tile : MonoBehaviour
     [SerializeField]
     [Tooltip("Child component that stores the west trail")]
     private GameObject _trailWest;
-    /*
     [SerializeField]
-    [Tooltip("Child component that stores the south trail")]
-    private GameObject _smothAngle01;
-    [SerializeField]
-    [Tooltip("Child component that stores the west trail")]
-    private GameObject _smothAngle02;
-    [SerializeField]
-    [Tooltip("Child component that stores the north hint")]
-    private GameObject _hintNorth;
-    [SerializeField]
-    [Tooltip("Child component that stores the east hint")]
-    private GameObject _hintEast;
-    [SerializeField]
-    [Tooltip("Child component that stores the south hint")]
-    private GameObject _hintSouth;
-    [SerializeField]
-    [Tooltip("Child component that stores the west hint")]
-    private GameObject _hintWest;
-    */
+    [Tooltip("Child component that stores the hint")]
+    private GameObject _hint;
     [SerializeField]
     [Tooltip("Child component that stores the ball")]
     private GameObject _ball;
+
     private Color _color = Color.black;
     public Tile _next;
     public Tile _back;
@@ -279,6 +263,10 @@ public class Tile : MonoBehaviour
         if (walls.right) _wallEast.SetActive(false);
         if (walls.top) _wallTop.SetActive(false);
         if (walls.left) _wallWest.SetActive(false);
+    }
+    public void enableHint()
+    {
+        _hint.SetActive(true);
     }
 
     /// <summary> Enables the goal sprite </summary>

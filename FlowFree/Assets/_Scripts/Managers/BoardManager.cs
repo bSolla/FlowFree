@@ -12,6 +12,8 @@ public class BoardManager : MonoBehaviour
     public GameObject _cursor;
     public GameObject _lastileIndicator;
     private Colorway _themeNow;
+    private int hintsUsed = 0;
+    private Point[,] hints;
 
     // Calculate space remaining for the board
     private float _topPanel;                    // Top panel in canvas
@@ -61,6 +63,35 @@ public class BoardManager : MonoBehaviour
         _levelManager = levelManager;
     } // Init
 
+    public void giveAHint()
+    {
+        if(hintsUsed < hints.GetLength(0))
+        {
+            int flowed = 1;
+            int x, y;
+            Vector2 fakePos;
+            x = hints[hintsUsed, 0].x;
+            y = hints[hintsUsed, 0].y;
+            _tiles[x, y].enableHint();
+            fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
+            ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
+            while (hints[hintsUsed, flowed + 1].x != -1)
+            {
+                x = hints[hintsUsed, flowed].x;
+                y = hints[hintsUsed, flowed].y;
+                fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
+                ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
+                flowed++;
+            }
+            x = hints[hintsUsed, flowed].x;
+            y = hints[hintsUsed, flowed].y;
+            _tiles[x, y].enableHint();
+            fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
+            ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
+            hintsUsed++;
+        }
+    }
+
     public void UpdateColors()
     {
         Colorway theme = GameManager.GetInstance().GetTheme();
@@ -96,11 +127,13 @@ public class BoardManager : MonoBehaviour
     /// <param name="map"> (Map) Map to read the data. </param>
     public void SetMap(Map map)
     {
+        hintsUsed = 0;
         // Init board sizes and variables
         _tiles = new Tile[map._X, map._Y];
         _ghostTiles = new List<Ghost>();
         //_hintArray = map.hintArray; _tilesHint = Mathf.CeilToInt(_hintArray.Length / 3.0f);
         _numberFlows = map.getFlowSolution().GetLength(0);
+        hints = map.getFlowSolution();
         _flowPoints = new List<Tile[]>();
         // Calculate space available for board
         CalculateSpace();

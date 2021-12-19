@@ -254,6 +254,9 @@ public class BoardManager : MonoBehaviour
         //Debug.Log("X: " + Mathf.Round(realPos.x) + "Y: " + Mathf.Round(realPos.y));
         if (it == InputManager.InputType.NONE)
         {
+            _lastileIndicator.GetComponent<SpriteRenderer>().color = (_lastTile.getColor() != Color.black) ? _lastTile.getColor() : new Color(0, 0, 0, 0); ;
+            _lastileIndicator.transform.localScale = _board.transform.localScale;
+            _lastileIndicator.transform.position = new Vector2((_lastTile.GetPosition().x * _board.transform.localScale.x) + _board.transform.position.x, (_lastTile.GetPosition().y * _board.transform.localScale.y) + _board.transform.position.y);
             _lastTile = null;
             _cursor.SetActive(false);
         }
@@ -267,8 +270,6 @@ public class BoardManager : MonoBehaviour
                 _cursor.SetActive(true);
                 _cursor.transform.position = pos;
                 _cursor.GetComponent<SpriteRenderer>().color = new Color(tile.getColor().r, tile.getColor().g, tile.getColor().b, 0.5f);
-                _lastileIndicator.GetComponent<SpriteRenderer>().color = (tile.getColor() != Color.black) ? tile.getColor() : new Color(0,0,0,0); ;
-                _lastileIndicator.transform.position = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
                 // new click
                 if (_lastTile == null)
                 {

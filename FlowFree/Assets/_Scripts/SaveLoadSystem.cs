@@ -48,6 +48,16 @@ public struct PlayerData
 
     /// <summary>
     /// 
+    /// Update the numbers of hints that player ahve when he use one
+    /// 
+    /// </summary>
+    public void UseAHint()
+    {
+        _hints--;
+    }
+
+    /// <summary>
+    /// 
     /// Calculates the total number of levels completed
     /// 
     /// </summary>

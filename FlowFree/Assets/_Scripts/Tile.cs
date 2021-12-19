@@ -149,6 +149,7 @@ public class Tile : MonoBehaviour
         _trailSouth.SetActive(false);
         _trailEast.SetActive(false);
         _trailWest.SetActive(false);
+        DesactivateBackGround();
         if(!IsBall())
             SetColor(Color.black);
 
@@ -161,6 +162,7 @@ public class Tile : MonoBehaviour
                 {
                     _next.DisableTrails();
                     _next._back = null;
+                    _next.DesactivateBackGround();
                 }
                 else
                     _next.TrailDeletion(ref list, condition);
@@ -172,6 +174,7 @@ public class Tile : MonoBehaviour
             {
                 _back.DisableTrails();
                 _back._next = null;
+                _back.DesactivateBackGround();
             }
             else
                 _back.TrailDeletion(ref list, condition);
@@ -215,10 +218,19 @@ public class Tile : MonoBehaviour
         //_hintSouth.GetComponent<SpriteRenderer>().color = c;
 
         _ball.GetComponent<SpriteRenderer>().color = c;
+    } // SetTrailColor
+    public void ActiveBackGround()
+    {
+        Color c = _color;
         c.a = 0.3f;
         _gridBackground.GetComponent<SpriteRenderer>().color = c;
-    } // SetTrailColor
-
+    }
+    public void DesactivateBackGround()
+    {
+        Color c = Color.black;
+        c.a = 0.3f;
+        _gridBackground.GetComponent<SpriteRenderer>().color = c;
+    }
     public Color getColor()
     {
         return _color;
@@ -266,6 +278,7 @@ public class Tile : MonoBehaviour
     }
     public void enableHint()
     {
+        if (_color == Color.white) _hint.GetComponent<SpriteRenderer>().color = Color.black;
         _hint.SetActive(true);
     }
 

@@ -69,28 +69,32 @@ public class BoardManager : MonoBehaviour
     {
         if(hintsUsed < hints.GetLength(0))
         {
-            int flowed = 1;
-            int x, y;
-            Vector2 fakePos;
-            x = hints[hintsUsed, 0].x;
-            y = hints[hintsUsed, 0].y;
-            _tiles[x, y].enableHint();
-            fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
-            ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
-            while (hints[hintsUsed, flowed + 1].x != -1)
+            if(GameManager.GetInstance().GetPlayerData()._hints > 0)
             {
-                x = hints[hintsUsed, flowed].x;
-                y = hints[hintsUsed, flowed].y;
+                int flowed = 1;
+                int x, y;
+                Vector2 fakePos;
+                x = hints[hintsUsed, 0].x;
+                y = hints[hintsUsed, 0].y;
+                _tiles[x, y].enableHint();
                 fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
                 ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
-                flowed++;
+                while (hints[hintsUsed, flowed + 1].x != -1)
+                {
+                    x = hints[hintsUsed, flowed].x;
+                    y = hints[hintsUsed, flowed].y;
+                    fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
+                    ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
+                    flowed++;
+                }
+                x = hints[hintsUsed, flowed].x;
+                y = hints[hintsUsed, flowed].y;
+                _tiles[x, y].enableHint();
+                fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
+                ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
+                hintsUsed++;
+                GameManager.GetInstance().GetPlayerData().UseAHint();
             }
-            x = hints[hintsUsed, flowed].x;
-            y = hints[hintsUsed, flowed].y;
-            _tiles[x, y].enableHint();
-            fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
-            ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
-            hintsUsed++;
         }
     }
 
@@ -184,32 +188,6 @@ public class BoardManager : MonoBehaviour
             flowed = 0;
         }
 
-        //-----------------------------------------DEBUG-----------------------------------------
-        //Point lastPos = new Point(); 
-        //int flowed = 0;
-        //Point sol;
-        //Point[,] solutions = map.getFlowSolution();
-        //for (int flowNumber = 0; flowNumber < solutions.GetLength(0); flowNumber++)
-        //{
-        //    sol = solutions[flowNumber, flowed];
-        //    _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
-        //    _tiles[sol.x, sol.y].SetColor(info.ballColor);
-        //    flowed++;
-        //    while (solutions[flowNumber, flowed + 1].x != -1)
-        //    {
-        //        sol = solutions[flowNumber, flowed];
-
-        //        _tiles[sol.x, sol.y].SetNextTile(_tiles[solutions[flowNumber, flowed + 1].x, solutions[flowNumber, flowed + 1].y]);
-
-        //         tile.SetColor(info.ballColor);
-        //        flowed++;
-        //    }
-        //    _tiles[flowNumber, flowed].SetColor(info.ballColor);
-        //    flowed = 0;
-        //}
-        //-----------------------------------------DEBUG-----------------------------------------
-
-
         // Scale tiles and Board
         Vector2 oScale = _tilePrefab.transform.localScale;
         Vector2 nScale = GameManager.GetInstance().GetScaling().ResizeObjectScale(background.bounds.size * GameManager.GetInstance().GetScaling().TransformationFactor(), tam, oScale);
@@ -256,10 +234,19 @@ public class BoardManager : MonoBehaviour
         //Debug.Log("X: " + Mathf.Round(realPos.x) + "Y: " + Mathf.Round(realPos.y));
         if (it == InputManager.InputType.NONE)
         {
-            _lastileIndicator.GetComponent<SpriteRenderer>().color = (_lastTile.getColor() != Color.black) ? _lastTile.getColor() : new Color(0, 0, 0, 0);
-            _lastileIndicator.gameObject.SetActive(true);
-            _lastileIndicator.transform.localScale = _board.transform.localScale;
-            _lastileIndicator.transform.position = new Vector2((_lastTile.GetPosition().x * _board.transform.localScale.x) + _board.transform.position.x, (_lastTile.GetPosition().y * _board.transform.localScale.y) + _board.transform.position.y);
+            if(_lastTile != null)
+            {
+                _lastileIndicator.GetComponent<SpriteRenderer>().color = (_lastTile.getColor() != Color.black) ? _lastTile.getColor() : new Color(0, 0, 0, 0);
+                _lastileIndicator.gameObject.SetActive(true);
+                _lastileIndicator.transform.localScale = _board.transform.localScale;
+                _lastileIndicator.transform.position = new Vector2((_lastTile.GetPosition().x * _board.transform.localScale.x) + _board.transform.position.x, (_lastTile.GetPosition().y * _board.transform.localScale.y) + _board.transform.position.y);
+                Tile b = _lastTile;
+                while (b != null)
+                {
+                    b.ActiveBackGround();
+                    b = b._back;
+                }
+            }
             _lastTile = null;
             _cursor.SetActive(false);
         }
@@ -428,19 +415,25 @@ public class BoardManager : MonoBehaviour
         Tile aux = g._tileList[0];
         aux.SetColor(g._color);
         g._back.SetNextTile(aux);
+        g._back.ActiveBackGround();
+        aux.ActiveBackGround();
         aux._back = g._back;
         g._tileList.Remove(aux);
 
         foreach (Tile t in g._tileList)
         {
             aux.SetNextTile(t);
+            aux.ActiveBackGround();
             aux = t;
             aux.SetColor(g._color);
+            aux.ActiveBackGround();
             //tileList.Remove(aux);
         }
         if (g._next != null)
         {
             aux.SetNextTile(g._next);
+            aux.ActiveBackGround();
+            g._next.ActiveBackGround();
             _flowCount++;
             Debug.Log("FlowCount: " + _flowCount);
             _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);

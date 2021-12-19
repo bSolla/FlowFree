@@ -179,6 +179,7 @@ public class LevelManager : MonoBehaviour
     /// <param name="pipe">(string) new value for pipe UI</param>
     public void UpdateInfoUI(string flow, string moves, string best, string pipe)
     {
+        
         if (flow != null)
             _infoFlows.text = "flow: " + flow + "/" + _boardManager.GetTotalFlows();
         if (moves != null)

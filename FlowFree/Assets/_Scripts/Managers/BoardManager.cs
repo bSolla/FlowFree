@@ -42,6 +42,7 @@ public class BoardManager : MonoBehaviour
     private int _flowCount;
     private List<Tile[]> _flowPoints;
     private int _numberMoves = 0;
+    private bool _boardComplete = false;
 
     private LevelManager _levelManager;         // LevelManager
 
@@ -224,32 +225,34 @@ public class BoardManager : MonoBehaviour
     /// <param name="it"> (InputType) Type of the input. </param>
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)
     {
-        if (_themeNow != GameManager.GetInstance().GetTheme())
+        if (!_boardComplete) 
         {
-            UpdateColors();
-            _themeNow = GameManager.GetInstance().GetTheme();
+            if (_themeNow != GameManager.GetInstance().GetTheme())
+            {
+                UpdateColors();
+                _themeNow = GameManager.GetInstance().GetTheme();
+            }
+
+            if (it == InputManager.InputType.NONE)
+                ProcessEndOfTouch();
+            else if (it == InputManager.InputType.MOVEMENT)
+                ProcessMovement(pos);
         }
-        //Debug.Log(it);
-        //Vector2 realPos = new Vector2(pos.x - (_board.transform.position.x / _board.transform.localScale.x), pos.y - (_board.transform.position.y / _board.transform.localScale.y));
-        Vector2 realPos = new Vector2((pos.x - _board.transform.position.x) / _board.transform.localScale.x, (pos.y - _board.transform.position.y) / _board.transform.localScale.y);
-        //Debug.Log("X: " + Mathf.Round(realPos.x) + "Y: " + Mathf.Round(realPos.y));
-
-        if (it == InputManager.InputType.NONE)
-            ProcessEndOfTouch();
-
-        if (it == InputManager.InputType.MOVEMENT)
-            ProcessMovement(pos);
-
-        // level complete
-        if (_flowCount == _numberFlows)
-        {
-            _levelManager.SetPause(true);
-            _levelManager.ShowEndPanel(false, _numberMoves);
-        }
+        
     } // ReceiveInput
 
     private void ProcessEndOfTouch()
     {
+        _numberMoves++;
+        _levelManager.UpdateInfoUI(null, _numberMoves.ToString(), null, null);
+        
+        // level complete
+        if (_flowCount == _numberFlows)
+        {
+            _boardComplete = true;
+            _levelManager.SetPause(true);
+            _levelManager.ShowEndPanel((_numberMoves == _numberFlows), _numberMoves);
+        }
         if (_lastTile != null)
         {
             _lastileIndicator.GetComponent<SpriteRenderer>().color = (_lastTile.getColor() != Color.black) ? _lastTile.getColor() : new Color(0, 0, 0, 0);

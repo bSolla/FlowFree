@@ -27,6 +27,11 @@ public class LevelManager : MonoBehaviour
     public Button _prevLevelButton;
     public Button _reloadButton;
     public Button _nextLevelButton;
+    public Button _endNextButton;
+    public Button _perfectEndNextButton;
+    public Button _hintButton;
+    public Button _endHintButton;
+    public Button _hintEarnedButton;
     
     [Header("End panel UI objects")]
     public GameObject _endPanel;
@@ -77,6 +82,11 @@ public class LevelManager : MonoBehaviour
         _reloadButton.onClick.AddListener(GameManager.GetInstance().LoadPlayScene);
         _prevLevelButton.onClick.AddListener(GameManager.GetInstance().LoadPreviousLevel);
         _backToMenuButton.onClick.AddListener(GameManager.GetInstance().LoadMainMenu);
+        _endNextButton.onClick.AddListener(GameManager.GetInstance().LoadNextLevel);
+        _perfectEndNextButton.onClick.AddListener(GameManager.GetInstance().LoadNextLevel);
+        _hintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
+        _endHintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
+        _hintEarnedButton.onClick.AddListener(GameManager.GetInstance().IncreaseHints);
 
         PlayLevel();
     } // Start
@@ -145,8 +155,8 @@ public class LevelManager : MonoBehaviour
 
     public void HideEndPanel()
     {
-        _paused = false;
         _endPanel.SetActive(false);
+        _perfectEndPanel.SetActive(false);
     }
 
     private void PrepareUI()
@@ -155,6 +165,8 @@ public class LevelManager : MonoBehaviour
         
         _endPanelHeaderImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelHeaderImg.color.a);
         _endPanelDetailImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelDetailImg.color.a);
+        _perfectEndHeaderImg.color = _endPanelHeaderImg.color;
+        _perfectEndDetailImg.color = _endPanelDetailImg.color;
 
         _optPanelHeaderImg.color = _endPanelHeaderImg.color;
         _optPanelDetailImg.color = _endPanelDetailImg.color;

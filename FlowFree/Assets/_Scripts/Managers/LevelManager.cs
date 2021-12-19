@@ -136,21 +136,42 @@ public class LevelManager : MonoBehaviour
         _paused = isPaused;
     }
 
+    /// <summary>
+    /// 
+    /// Shows the right end panel depending of how the level was completed
+    /// (perfect or not), and uses the game manager to save that info into
+    /// the player data
+    /// 
+    /// </summary>
+    /// <param name="isPerfect">(bool) if the level was completed with the minimum
+    /// number of moves or not</param>
+    /// <param name="moves">(int) number of moves</param>
     public void ShowEndPanel(bool isPerfect, int moves)
     {
         _paused = true; // make sure no board input is processed
-        
-        
+        int levelStatus = 0; // 0 means not completed
+
         if (isPerfect)
         {
             _perfectEndPanel.SetActive(true);
             _perfectEndPanelMovesText.text = MOVES_MSG + moves + " moves";
+            levelStatus = 2; // 2 means completed AND perfect
+            
         }
         else
         {
             _endPanel.SetActive(true);
             _endPanelMovesText.text = MOVES_MSG + moves + " moves";
-        }        
+
+            // only change save data if it comes from not being complete to avoid erasing perfect scores
+            if (GameManager.GetInstance().GetPlayerData().
+            _completedLevelsLot[GameManager.GetInstance().GetLevelLot()._lotName][GameManager.GetInstance().GetLevel()] == 0)
+                levelStatus = 1; // 1 means completed but not perfect
+        }
+
+        if (levelStatus > 0)
+            GameManager.GetInstance().GetPlayerData().
+                _completedLevelsLot[GameManager.GetInstance().GetLevelLot()._lotName][GameManager.GetInstance().GetLevel()] = levelStatus;
     }
 
     public void HideEndPanel()

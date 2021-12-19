@@ -15,6 +15,7 @@ public class BoardManager : MonoBehaviour
     private Colorway _themeNow;
     private int _hintsUsed = 0;
     private Point[,] _hints;
+    private int _realSize;
 
     // Calculate space remaining for the board
     private float _topPanel;                    // Top panel in canvas
@@ -66,7 +67,40 @@ public class BoardManager : MonoBehaviour
     {
         _levelManager = levelManager;
     } // Init
-
+    /// <summary>
+    /// 
+    /// calculate and update the value of the pipe
+    /// 
+    /// </summary>
+    public void calculatePipe()
+    {
+        float tilesWithFlow = 0;
+        foreach (Tile[] t in _flowPoints)
+        {
+            if (t[0]._next != null)
+            {
+                tilesWithFlow += t[0].TrailFordward() + 1;
+            }
+            else if (t[0]._back != null)
+            {
+                tilesWithFlow += t[0].TrailBackward() + 1;
+            }
+            else if (t[1]._next != null)
+            {
+                tilesWithFlow += t[1].TrailFordward() + 1;
+            }
+            else if (t[1]._back != null)
+            {
+                tilesWithFlow += t[1].TrailBackward() + 1;
+            }
+        }
+        _levelManager.UpdateInfoUI(null, null, null, (Mathf.RoundToInt((tilesWithFlow / _realSize) * 100)).ToString());
+    }
+    /// <summary>
+    /// 
+    /// Complete a flow for the player if he have hints
+    /// 
+    /// </summary>
     public void giveAHint()
     {
         if(_hintsUsed < _hints.GetLength(0))
@@ -145,6 +179,8 @@ public class BoardManager : MonoBehaviour
         _flowPoints = new List<Tile[]>();
         // Calculate space available for board
         CalculateSpace();
+
+        _realSize = _tiles.Length;
 
         // Get size in pixels of tile (using background sprite as reference because it fills one tile completely) and resize
         SpriteRenderer background = _tilePrefab.transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -260,6 +296,7 @@ public class BoardManager : MonoBehaviour
             _lastileIndicator.transform.localScale = _board.transform.localScale;
             _lastileIndicator.transform.position = new Vector2((_lastTile.GetPosition().x * _board.transform.localScale.x) + _board.transform.position.x, (_lastTile.GetPosition().y * _board.transform.localScale.y) + _board.transform.position.y);
             Tile b = _lastTile;
+            calculatePipe();
             while (b != null)
             {
                 b.ActiveBackGround();
@@ -580,7 +617,11 @@ public class BoardManager : MonoBehaviour
         infoWalls.left = x <= 0;
         infoWalls.top = y >= _tiles.GetLength(1) - 1;
         tile.EnableWalls(infoWalls);
-        tile.gameObject.SetActive(!info.empty);
+        if (info.empty)
+        {
+            _realSize--;
+            tile.gameObject.SetActive(false);
+        }
         if (info.uroboros)  // ball type
         {
             tile.SetColor(info.ballColor);

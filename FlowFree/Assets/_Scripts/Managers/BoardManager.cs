@@ -264,14 +264,6 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     private void ProcessEndOfTouch()
     {
-        
-        // level complete
-        if (_flowCount == _numberFlows)
-        {
-            _boardComplete = true;
-            _levelManager.SetPause(true);
-            _levelManager.ShowEndPanel((_numberMoves == _numberFlows), _numberMoves);
-        }
         if (_lastTile != null)
         {
             _numberMoves++;
@@ -287,6 +279,13 @@ public class BoardManager : MonoBehaviour
                 b.ActiveBackGround();
                 b = b._back;
             }
+        }
+        // level complete
+        if (_flowCount == _numberFlows)
+        {
+            _boardComplete = true;
+            _levelManager.SetPause(true);
+            _levelManager.ShowEndPanel((_numberMoves == _numberFlows), _numberMoves);
         }
         _lastTile = null;
         _cursor.SetActive(false);

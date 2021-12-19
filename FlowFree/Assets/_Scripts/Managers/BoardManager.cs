@@ -13,8 +13,8 @@ public class BoardManager : MonoBehaviour
     public GameObject _lastileIndicator;
     
     private Colorway _themeNow;
-    private int hintsUsed = 0;
-    private Point[,] hints;
+    private int _hintsUsed = 0;
+    private Point[,] _hints;
 
     // Calculate space remaining for the board
     private float _topPanel;                    // Top panel in canvas
@@ -69,32 +69,32 @@ public class BoardManager : MonoBehaviour
 
     public void giveAHint()
     {
-        if(hintsUsed < hints.GetLength(0))
+        if(_hintsUsed < _hints.GetLength(0))
         {
             if(GameManager.GetInstance().GetPlayerData()._hints > 0)
             {
                 int flowed = 1;
                 int x, y;
                 Vector2 fakePos;
-                x = hints[hintsUsed, 0].x;
-                y = hints[hintsUsed, 0].y;
+                x = _hints[_hintsUsed, 0].x;
+                y = _hints[_hintsUsed, 0].y;
                 _tiles[x, y].enableHint();
                 fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
-                ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
-                while (hints[hintsUsed, flowed + 1].x != -1)
+                ProcessMovement(fakePos);
+                while (_hints[_hintsUsed, flowed + 1].x != -1)
                 {
-                    x = hints[hintsUsed, flowed].x;
-                    y = hints[hintsUsed, flowed].y;
+                    x = _hints[_hintsUsed, flowed].x;
+                    y = _hints[_hintsUsed, flowed].y;
                     fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
-                    ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
+                    ProcessMovement(fakePos);
                     flowed++;
                 }
-                x = hints[hintsUsed, flowed].x;
-                y = hints[hintsUsed, flowed].y;
+                x = _hints[_hintsUsed, flowed].x;
+                y = _hints[_hintsUsed, flowed].y;
                 _tiles[x, y].enableHint();
                 fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
-                ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
-                hintsUsed++;
+                ProcessMovement(fakePos);
+                _hintsUsed++;
                 GameManager.GetInstance().DecreaseHints();
             } // if (hints > 0)
         }
@@ -135,13 +135,13 @@ public class BoardManager : MonoBehaviour
     /// <param name="map"> (Map) Map to read the data. </param>
     public void SetMap(Map map)
     {
-        hintsUsed = 0;
+        _hintsUsed = 0;
         // Init board sizes and variables
         _tiles = new Tile[map._X, map._Y];
         _ghostTiles = new List<Ghost>();
         //_hintArray = map.hintArray; _tilesHint = Mathf.CeilToInt(_hintArray.Length / 3.0f);
         _numberFlows = map.getFlowSolution().GetLength(0);
-        hints = map.getFlowSolution();
+        _hints = map.getFlowSolution();
         _flowPoints = new List<Tile[]>();
         // Calculate space available for board
         CalculateSpace();
@@ -243,8 +243,6 @@ public class BoardManager : MonoBehaviour
 
     private void ProcessEndOfTouch()
     {
-        _numberMoves++;
-        _levelManager.UpdateInfoUI(null, _numberMoves.ToString(), null, null);
         
         // level complete
         if (_flowCount == _numberFlows)
@@ -255,6 +253,8 @@ public class BoardManager : MonoBehaviour
         }
         if (_lastTile != null)
         {
+            _numberMoves++;
+            _levelManager.UpdateInfoUI(null, _numberMoves.ToString(), null, null);
             _lastileIndicator.GetComponent<SpriteRenderer>().color = (_lastTile.getColor() != Color.black) ? _lastTile.getColor() : new Color(0, 0, 0, 0);
             _lastileIndicator.gameObject.SetActive(true);
             _lastileIndicator.transform.localScale = _board.transform.localScale;

@@ -41,6 +41,7 @@ public class BoardManager : MonoBehaviour
     private int _numberFlows;
     private int _flowCount;
     private List<Tile[]> _flowPoints;
+    private int _numberMoves = 0;
 
     private LevelManager _levelManager;         // LevelManager
 
@@ -232,163 +233,206 @@ public class BoardManager : MonoBehaviour
         //Vector2 realPos = new Vector2(pos.x - (_board.transform.position.x / _board.transform.localScale.x), pos.y - (_board.transform.position.y / _board.transform.localScale.y));
         Vector2 realPos = new Vector2((pos.x - _board.transform.position.x) / _board.transform.localScale.x, (pos.y - _board.transform.position.y) / _board.transform.localScale.y);
         //Debug.Log("X: " + Mathf.Round(realPos.x) + "Y: " + Mathf.Round(realPos.y));
+
         if (it == InputManager.InputType.NONE)
-        {
-            if(_lastTile != null)
-            {
-                _lastileIndicator.GetComponent<SpriteRenderer>().color = (_lastTile.getColor() != Color.black) ? _lastTile.getColor() : new Color(0, 0, 0, 0);
-                _lastileIndicator.gameObject.SetActive(true);
-                _lastileIndicator.transform.localScale = _board.transform.localScale;
-                _lastileIndicator.transform.position = new Vector2((_lastTile.GetPosition().x * _board.transform.localScale.x) + _board.transform.position.x, (_lastTile.GetPosition().y * _board.transform.localScale.y) + _board.transform.position.y);
-                Tile b = _lastTile;
-                while (b != null)
-                {
-                    b.ActiveBackGround();
-                    b = b._back;
-                }
-            }
-            _lastTile = null;
-            _cursor.SetActive(false);
-        }
+            ProcessEndOfTouch();
+
         if (it == InputManager.InputType.MOVEMENT)
+            ProcessMovement(pos);
+
+        // level complete
+        if (_flowCount == _numberFlows)
         {
-            int x = Mathf.RoundToInt(realPos.x), y = Mathf.RoundToInt(realPos.y);
-            if ((x >= 0 && x < _tiles.GetLength(0)) &&
-                (y >= 0 && y < _tiles.GetLength(1)))
-            {
-                Tile tile = _tiles[x, y];
-
-                _lastileIndicator.gameObject.SetActive(false);
-                _cursor.SetActive(true);
-                _cursor.transform.position = pos;
-                _cursor.GetComponent<SpriteRenderer>().color = new Color(tile.getColor().r, tile.getColor().g, tile.getColor().b, 0.5f);
-                // new click
-                if (_lastTile == null)
-                {
-                    _ghostTiles.Clear();
-                    if (tile.IsBall() || tile.IsTrail())
-                    {
-                        //are you pressing other init?
-                        if (tile.IsBall())
-                        {
-                            List<Tile> tileList = new List<Tile>(); // list of tiles deleted
-                            foreach (Tile[] t in _flowPoints)
-                            {
-                                foreach (Tile b in t)
-                                {
-                                    if (b.getColor() == tile.getColor() /*&& b != tile*/)
-                                    {
-                                        if (b._next != null)
-                                        {
-                                            if (CompleteFlow(b._next))
-                                                _flowCount--;
-                                            Debug.Log("FlowCount: " + _flowCount);
-                                            _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
-
-                                            b._next.TrailDeletion(ref tileList, true);
-                                            b._next = null;
-                                        }
-                                        if (b._back != null)
-                                        {
-                                            if (CompleteFlow(b._back))
-                                            {
-                                                _flowCount--;
-                                                Debug.Log("FlowCount: " + _flowCount);
-                                                _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
-                                            }
-
-                                            b._back.TrailDeletion(ref tileList, false);
-                                            b._back = null;
-                                        }
-                                        b.CalculateTrails();
-                                    }
-                                }
-                            }
-                        }
-                        //delete de todo el camino
-                        if (tile._next != null)
-                        {
-                            if (tile._next.IsBall())
-                            {
-                                _flowCount--;
-                                Debug.Log("FlowCount: " + _flowCount);
-                                _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
-                            }
-                            List<Tile> tileList = new List<Tile>(); // list of tiles deleted
-                            tile._next.TrailDeletion(ref tileList, true);
-                            tile._next = null;
-                            tile.CalculateTrails();
-                        }
-                        _lastTile = tile;
-                    }
-                    return;
-                }
-                if (tile != _lastTile)
-                {
-                    //Are u trying to pass through THE CURSED HOLLOWS CORRIDOR, or a empty tile... yep... u cant go trough empties tiles
-                    if (!tile.gameObject.activeSelf) return;
-
-                    //The next tile is really next to the last?
-                    if (Mathf.Abs(x - _lastTile.GetPosition().x) +
-                        Mathf.Abs(y - _lastTile.GetPosition().y) > 1) return;
-                    //You can pass over here?
-                    if (_lastTile.IsRightWall() && (_lastTile.GetPosition().x < x)) return;
-                    if (_lastTile.IsBottomWall() && (_lastTile.GetPosition().y > y)) return;
-                    if (tile.IsRightWall() && (x < _lastTile.GetPosition().x)) return;
-                    if (tile.IsBottomWall() && (y > _lastTile.GetPosition().y)) return;
-
-                    if (tile.IsBall() && tile.getColor() != _lastTile.getColor()) return;
-                    if (_lastTile.IsBall() && _lastTile._back != null && _lastTile._back != tile) return;
-
-                    // new tile is empty tile
-                    if (tile.getColor() == Color.black)
-                    {
-                        _lastTile.SetNextTile(tile);
-                        tile.SetColor(_lastTile.getColor());
-                        _lastTile = tile;
-                        return;
-                    }
-                    // flow finish!
-                    //
-                    if (tile.IsBall() && tile.getColor() == _lastTile.getColor())
-                    {
-                        if (!tile.hasConection())
-                        {
-                            _flowCount++;
-                            Debug.Log("FlowCount: " + _flowCount);
-                            _lastTile.SetNextTile(tile);
-                            tile.SetColor(_lastTile.getColor());
-                            _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
-                        }
-                        else
-                        {   //if(tile._next._next != null)
-                                DeleteTrails(tile, true, CompleteFlow(tile));
-                            tile._next = null;
-                            tile.CalculateTrails();
-                            if(tile.hasConection())
-                                _lastTile.emptyTrail();
-
-                        }
-                        _lastTile = tile;
-                        return;
-                    }
-                    // delete other flow
-                    if (tile.IsTrail())
-                    {
-                        Debug.Log("Delete");
-                        bool completeFlow = CompleteFlow(tile);
-                        DeleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
-
-                        _lastTile.SetNextTile(tile);
-                        tile.SetColor(_lastTile.getColor());
-                        _lastTile = tile;
-                    }
-                }
-
-            }
-            
-        } // if
+            _levelManager.SetPause(true);
+            _levelManager.ShowEndPanel(false, _numberMoves);
+        }
     } // ReceiveInput
+
+    private void ProcessEndOfTouch()
+    {
+        if (_lastTile != null)
+        {
+            _lastileIndicator.GetComponent<SpriteRenderer>().color = (_lastTile.getColor() != Color.black) ? _lastTile.getColor() : new Color(0, 0, 0, 0);
+            _lastileIndicator.gameObject.SetActive(true);
+            _lastileIndicator.transform.localScale = _board.transform.localScale;
+            _lastileIndicator.transform.position = new Vector2((_lastTile.GetPosition().x * _board.transform.localScale.x) + _board.transform.position.x, (_lastTile.GetPosition().y * _board.transform.localScale.y) + _board.transform.position.y);
+            Tile b = _lastTile;
+            while (b != null)
+            {
+                b.ActiveBackGround();
+                b = b._back;
+            }
+        }
+        _lastTile = null;
+        _cursor.SetActive(false);
+    }
+
+    private void ProcessMovement(Vector2 pos)
+    {
+        Vector2 realPos = new Vector2((pos.x - _board.transform.position.x) / _board.transform.localScale.x, (pos.y - _board.transform.position.y) / _board.transform.localScale.y);
+        
+        int x = Mathf.RoundToInt(realPos.x), y = Mathf.RoundToInt(realPos.y);
+        
+        if ((x >= 0 && x < _tiles.GetLength(0)) &&
+            (y >= 0 && y < _tiles.GetLength(1)))
+        {
+            Tile tile = _tiles[x, y];
+
+            _lastileIndicator.gameObject.SetActive(false);
+            _cursor.SetActive(true);
+            _cursor.transform.position = pos;
+            _cursor.GetComponent<SpriteRenderer>().color = new Color(tile.getColor().r, tile.getColor().g, tile.getColor().b, 0.5f);
+            
+            // new click
+            ProcessNewClick(tile);
+
+            // ongoing click
+            ProcessOngoingClick(tile, x, y);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// Processes a new possible click and checks changes to board
+    /// 
+    /// </summary>
+    /// <param name="tile">(Tile) current tile</param>
+    private void ProcessNewClick(Tile tile)
+    {
+        if (_lastTile == null)
+        {
+            _ghostTiles.Clear();
+            if (tile.IsBall() || tile.IsTrail())
+            {
+                //are you pressing other init?
+                if (tile.IsBall())
+                {
+                    List<Tile> tileList = new List<Tile>(); // list of tiles deleted
+                    foreach (Tile[] t in _flowPoints)
+                    {
+                        foreach (Tile b in t)
+                        {
+                            if (b.getColor() == tile.getColor() /*&& b != tile*/)
+                            {
+                                if (b._next != null)
+                                {
+                                    if (CompleteFlow(b._next))
+                                        _flowCount--;
+                                    Debug.Log("FlowCount: " + _flowCount);
+                                    _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
+
+                                    b._next.TrailDeletion(ref tileList, true);
+                                    b._next = null;
+                                }
+                                if (b._back != null)
+                                {
+                                    if (CompleteFlow(b._back))
+                                    {
+                                        _flowCount--;
+                                        Debug.Log("FlowCount: " + _flowCount);
+                                        _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
+                                    }
+
+                                    b._back.TrailDeletion(ref tileList, false);
+                                    b._back = null;
+                                }
+                                b.CalculateTrails();
+                            }
+                        }
+                    }
+                }
+                //delete de todo el camino
+                if (tile._next != null)
+                {
+                    if (tile._next.IsBall())
+                    {
+                        _flowCount--;
+                        Debug.Log("FlowCount: " + _flowCount);
+                        _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
+                    }
+                    List<Tile> tileList = new List<Tile>(); // list of tiles deleted
+                    tile._next.TrailDeletion(ref tileList, true);
+                    tile._next = null;
+                    tile.CalculateTrails();
+                }
+                _lastTile = tile;
+            }
+            return;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// Processes a possible ongoing click and checks for changes to board
+    /// 
+    /// </summary>
+    /// <param name="tile">(Tile) current tile</param>
+    /// <param name="x">(int) x coord</param>
+    /// <param name="y">(int) y coord</param>
+    private void ProcessOngoingClick(Tile tile, int x, int y)
+    {
+        if (tile != _lastTile)
+        {
+            //Are u trying to pass through THE CURSED HOLLOWS CORRIDOR, or a empty tile... yep... u cant go trough empties tiles
+            if (!tile.gameObject.activeSelf) return;
+
+            //The next tile is really next to the last?
+            if (Mathf.Abs(x - _lastTile.GetPosition().x) +
+                Mathf.Abs(y - _lastTile.GetPosition().y) > 1) return;
+            //You can pass over here?
+            if (_lastTile.IsRightWall() && (_lastTile.GetPosition().x < x)) return;
+            if (_lastTile.IsBottomWall() && (_lastTile.GetPosition().y > y)) return;
+            if (tile.IsRightWall() && (x < _lastTile.GetPosition().x)) return;
+            if (tile.IsBottomWall() && (y > _lastTile.GetPosition().y)) return;
+
+            if (tile.IsBall() && tile.getColor() != _lastTile.getColor()) return;
+            if (_lastTile.IsBall() && _lastTile._back != null && _lastTile._back != tile) return;
+
+            // new tile is empty tile
+            if (tile.getColor() == Color.black)
+            {
+                _lastTile.SetNextTile(tile);
+                tile.SetColor(_lastTile.getColor());
+                _lastTile = tile;
+                return;
+            }
+            // flow finish!
+            //
+            if (tile.IsBall() && tile.getColor() == _lastTile.getColor())
+            {
+                if (!tile.hasConection())
+                {
+                    _flowCount++;
+                    Debug.Log("FlowCount: " + _flowCount);
+                    _lastTile.SetNextTile(tile);
+                    tile.SetColor(_lastTile.getColor());
+                    _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
+                }
+                else
+                {   //if(tile._next._next != null)
+                    DeleteTrails(tile, true, CompleteFlow(tile));
+                    tile._next = null;
+                    tile.CalculateTrails();
+                    if (tile.hasConection())
+                        _lastTile.emptyTrail();
+
+                }
+                _lastTile = tile;
+                return;
+            }
+            // delete other flow
+            if (tile.IsTrail())
+            {
+                Debug.Log("Delete");
+                bool completeFlow = CompleteFlow(tile);
+                DeleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
+
+                _lastTile.SetNextTile(tile);
+                tile.SetColor(_lastTile.getColor());
+                _lastTile = tile;
+            }
+        }
+    }
 
     /// <summary>
     /// 

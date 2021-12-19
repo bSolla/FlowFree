@@ -30,10 +30,13 @@ public class LevelManager : MonoBehaviour
     
     [Header("End panel UI objects")]
     public GameObject _endPanel;
-    public Text _endPanelHeaderText;
     public Image _endPanelHeaderImg;
     public Image _endPanelDetailImg;
     public Text _endPanelMovesText;
+    public GameObject _perfectEndPanel;
+    public Image _perfectEndHeaderImg;
+    public Image _perfectEndDetailImg;
+    public Text _perfectEndPanelMovesText;
 
     [Header("Settings panel UI objects")]
     public Image _optPanelHeaderImg;
@@ -125,15 +128,19 @@ public class LevelManager : MonoBehaviour
 
     public void ShowEndPanel(bool isPerfect, int moves)
     {
-        _paused = true;
-        _endPanel.SetActive(true);
+        _paused = true; // make sure no board input is processed
+        
         
         if (isPerfect)
-            _endPanelHeaderText.text = "perfect!";
+        {
+            _perfectEndPanel.SetActive(true);
+            _perfectEndPanelMovesText.text = MOVES_MSG + moves + " moves";
+        }
         else
-            _endPanelHeaderText.text = "level complete!";
-
-        _endPanelMovesText.text = MOVES_MSG + moves.ToString() + " moves";
+        {
+            _endPanel.SetActive(true);
+            _endPanelMovesText.text = MOVES_MSG + moves + " moves";
+        }        
     }
 
     public void HideEndPanel()
@@ -157,6 +164,7 @@ public class LevelManager : MonoBehaviour
 
         _hintCompleteHeaderImg.color = _endPanelHeaderImg.color;
         _hintCompleteDetailImg.color = _endPanelDetailImg.color;
+
 
         if (GameManager.GetInstance().GetLevel() == 0)
             _prevLevelButton.interactable = false;

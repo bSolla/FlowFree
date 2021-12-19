@@ -128,6 +128,13 @@ public class GameManager : MonoBehaviour
     public void IncreaseHints()
     {
         GetInstance()._player._hints++;
+        _levelManager.UpdateInfoUI(null, null, null, null);
+    }
+
+    public void DecreaseHints()
+    {
+        GetInstance()._player._hints--;
+        _levelManager.UpdateInfoUI(null, null, null, null);
     }
 
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)

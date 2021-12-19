@@ -94,8 +94,8 @@ public class BoardManager : MonoBehaviour
                 fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
                 ReceiveInput(InputManager.InputType.MOVEMENT, fakePos);
                 hintsUsed++;
-                GameManager.GetInstance().GetPlayerData().UseAHint();
-            }
+                GameManager.GetInstance().DecreaseHints();
+            } // if (hints > 0)
         }
     }
 

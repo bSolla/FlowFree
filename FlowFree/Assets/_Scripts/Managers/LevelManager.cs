@@ -15,6 +15,13 @@ public class LevelManager : MonoBehaviour
     public GameObject _hintsMessagePanel;         // Panel that gives hint feedback
     public ThemeSelection _themeSelectionPanel;   // Used for changing color of some texts
 
+    [Header("Info UI")]
+    public Text _infoFlows;
+    public Text _infoMoves;
+    public Text _infoBest;
+    public Text _infoPipe;
+    public Text _infoHints;
+
     [Header("Buttons")]
     public Button _backToMenuButton;
     public Button _prevLevelButton;
@@ -83,9 +90,6 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void PlayLevel()
     {
-        // Set info
-        // ... ad manager, pause, etc
-
         // Prepare board
         int level = GameManager.GetInstance().GetLevel();
         Map map = Map.FromLot(GameManager.GetInstance().GetLevelLot(), level);
@@ -95,6 +99,8 @@ public class LevelManager : MonoBehaviour
 
         _boardManager.EmptyBoard();
         _boardManager.SetMap(map);
+
+        UpdateInfoUI("0", "0", "0", "0");
     }
 
     /// <summary>
@@ -158,6 +164,31 @@ public class LevelManager : MonoBehaviour
             _nextLevelButton.interactable = false;
 
         _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
+    }
+
+
+    /// <summary>
+    /// 
+    /// Update the text inside some or all the info UI objects. If a parameter
+    /// is null, that object won't be updated
+    /// 
+    /// </summary>
+    /// <param name="flow">(string) new value for flow UI</param>
+    /// <param name="moves">(string) new value for moves UI</param>
+    /// <param name="best">(string) new value for best UI</param>
+    /// <param name="pipe">(string) new value for pipe UI</param>
+    public void UpdateInfoUI(string flow, string moves, string best, string pipe)
+    {
+        if (flow != null)
+            _infoFlows.text = "flow: " + flow + "/" + _boardManager.GetTotalFlows();
+        if (moves != null)
+            _infoMoves.text = "moves: " + moves;
+        if (best != null)
+            _infoBest.text = "best: " + best;
+        if (pipe != null)
+            _infoPipe.text = "pipe: " + pipe + "%";
+        
+        _infoHints.text = "x" + GameManager.GetInstance().GetPlayerData()._hints;
     }
 
 

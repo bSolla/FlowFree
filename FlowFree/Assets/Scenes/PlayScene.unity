@@ -3192,6 +3192,11 @@ MonoBehaviour:
   _levelText: {fileID: 217540898}
   _hintsMessagePanel: {fileID: 930588914}
   _themeSelectionPanel: {fileID: 860905126}
+  _infoFlows: {fileID: 583141507}
+  _infoMoves: {fileID: 1802919662}
+  _infoBest: {fileID: 1273008840}
+  _infoPipe: {fileID: 1720754612}
+  _infoHints: {fileID: 1056052360}
   _backToMenuButton: {fileID: 1951602175}
   _prevLevelButton: {fileID: 1909511761}
   _reloadButton: {fileID: 1339409822}

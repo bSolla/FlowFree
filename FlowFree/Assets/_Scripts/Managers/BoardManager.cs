@@ -11,6 +11,7 @@ public class BoardManager : MonoBehaviour
     public Tile _tilePrefab;                    // Tile prefab to instantiate
     public GameObject _cursor;
     public GameObject _lastileIndicator;
+    
     private Colorway _themeNow;
     private int hintsUsed = 0;
     private Point[,] hints;
@@ -21,18 +22,19 @@ public class BoardManager : MonoBehaviour
 
     private Tile[,] _tiles;                     // Map
     private Tile _lastTile = null;
+    
     struct Ghost
     {
-        public List<Tile> tileList;
-        public Tile back;
-        public Tile next;
-        public Color color;
+        public List<Tile> _tileList;
+        public Tile _back;
+        public Tile _next;
+        public Color _color;
         public Ghost(List<Tile> t, Tile b, Tile n, Color c)
         {
-            tileList = t;
-            back = b;
-            next = n;
-            color = c;
+            _tileList = t;
+            _back = b;
+            _next = n;
+            _color = c;
         }
     }
     private List<Ghost> _ghostTiles;
@@ -294,6 +296,7 @@ public class BoardManager : MonoBehaviour
                                             if (CompleteFlow(b._next))
                                                 _flowCount--;
                                             Debug.Log("FlowCount: " + _flowCount);
+                                            _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
 
                                             b._next.TrailDeletion(ref tileList, true);
                                             b._next = null;
@@ -304,6 +307,7 @@ public class BoardManager : MonoBehaviour
                                             {
                                                 _flowCount--;
                                                 Debug.Log("FlowCount: " + _flowCount);
+                                                _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
                                             }
 
                                             b._back.TrailDeletion(ref tileList, false);
@@ -321,6 +325,7 @@ public class BoardManager : MonoBehaviour
                             {
                                 _flowCount--;
                                 Debug.Log("FlowCount: " + _flowCount);
+                                _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
                             }
                             List<Tile> tileList = new List<Tile>(); // list of tiles deleted
                             tile._next.TrailDeletion(ref tileList, true);
@@ -366,6 +371,7 @@ public class BoardManager : MonoBehaviour
                             Debug.Log("FlowCount: " + _flowCount);
                             _lastTile.SetNextTile(tile);
                             tile.SetColor(_lastTile.getColor());
+                            _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
                         }
                         else
                         {   //if(tile._next._next != null)
@@ -393,34 +399,17 @@ public class BoardManager : MonoBehaviour
                 }
 
             }
-            //TODO: DRAW FLOW
-            //foreach (Tile tile in _tiles)
-            //{
-            //if (tile.IsPointed(realPos) && tile != _lastTile)
-            //{
-            //    //...
-            //    // check directions
-            //    // It isn't a ball with different color
-            //    Debug.Log(tile.GetPosition());
-            //    if ((tile.IsBall() && tile.getColor() == _lastTile.getColor()))
-            //    {
-            //        if (tile.IsTrail())
-            //        {
-            //            deleteTrails(tile, tile.getColor() == _lastTile.getColor());
-            //        }
-
-            //        _lastTile.SetNextTile(tile);
-            //    }
-            //    // if (flowEnd)
-            //    //      flowCount++
-
-            //    _lastTile = tile;
-            //    break;
-            //}
-            //}
+            
         } // if
     } // ReceiveInput
 
+    /// <summary>
+    /// 
+    /// Checks if a flow is completed by following it along
+    /// 
+    /// </summary>
+    /// <param name="tile">(Tile) used for color comparison</param>
+    /// <returns>(bool) true if the flow is complete</returns>
     public bool CompleteFlow(Tile tile)
     {
         bool completeFlow = false;
@@ -436,24 +425,25 @@ public class BoardManager : MonoBehaviour
 
     private void ReviveTrails(Ghost g)
     {
-        Tile aux = g.tileList[0];
-        aux.SetColor(g.color);
-        g.back.SetNextTile(aux);
-        aux._back = g.back;
-        g.tileList.Remove(aux);
+        Tile aux = g._tileList[0];
+        aux.SetColor(g._color);
+        g._back.SetNextTile(aux);
+        aux._back = g._back;
+        g._tileList.Remove(aux);
 
-        foreach (Tile t in g.tileList)
+        foreach (Tile t in g._tileList)
         {
             aux.SetNextTile(t);
             aux = t;
-            aux.SetColor(g.color);
+            aux.SetColor(g._color);
             //tileList.Remove(aux);
         }
-        if (g.next != null)
+        if (g._next != null)
         {
-            aux.SetNextTile(g.next);
+            aux.SetNextTile(g._next);
             _flowCount++;
             Debug.Log("FlowCount: " + _flowCount);
+            _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
         }
     }
 
@@ -491,14 +481,15 @@ public class BoardManager : MonoBehaviour
         {
             foreach (Tile[] t in _flowPoints)
             {
-                if (t[0].getColor() == gh.color)  // if the color is the same
+                if (t[0].getColor() == gh._color)  // if the color is the same
                     if (!t[0].hasConection()) //and the flow is complete
-                        gh.next = t[0];
+                        gh._next = t[0];
                 else if(!t[1].hasConection())
-                        gh.next = t[1];
+                        gh._next = t[1];
             }
             _flowCount--;
             Debug.Log("FlowCount: " + _flowCount);
+            _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
         }
         if (!sameColor)
         {
@@ -512,7 +503,7 @@ public class BoardManager : MonoBehaviour
                 foreach (Ghost g in _ghostTiles)
                 {
 
-                    if (g.tileList[0] == t)
+                    if (g._tileList[0] == t)
                     {   // has found a ghost tile in the list of tiles deleted
                         ReviveTrails(g);   //Revive all the tiles in the list g
                         toRemove.Add(g);
@@ -621,4 +612,15 @@ public class BoardManager : MonoBehaviour
         // Change resolution to Unity units to use it for positions
         _resolution /= GameManager.GetInstance().GetScaling().TransformationFactor();
     } // CalculateSpace
+
+    /// <summary>
+    /// 
+    /// Returns the total number of flows in this board
+    /// 
+    /// </summary>
+    /// <returns>(int) _numberFlows</returns>
+    public int GetTotalFlows()
+    {
+        return _numberFlows;
+    }
 }

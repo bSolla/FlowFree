@@ -365,10 +365,12 @@ public class BoardManager : MonoBehaviour
                             tile.SetColor(_lastTile.getColor());
                         }
                         else
-                        {
+                        {   //if(tile._next._next != null)
+                                DeleteTrails(tile, true, CompleteFlow(tile));
                             tile._next = null;
                             tile.CalculateTrails();
-                            _lastTile.emptyTrail();
+                            if(tile.hasConection())
+                                _lastTile.emptyTrail();
 
                         }
                         _lastTile = tile;
@@ -455,7 +457,7 @@ public class BoardManager : MonoBehaviour
     private void DeleteTrails(Tile tile, bool sameColor, bool completeTrail)
     {
         List<Tile> tileList = new List<Tile>(); // list of tiles deleted
-        if (sameColor) 
+        if (sameColor && !tile.IsBall()) 
             _lastTile = tile._back;
         bool f = tile.forwardIsInit(), b = tile.backIsInit();
         bool direction = (f && b) ? !(tile.TrailFordward() > tile.TrailBackward()) : !tile.forwardIsInit();
@@ -480,7 +482,7 @@ public class BoardManager : MonoBehaviour
         }
 
         tile.TrailDeletion(ref tileList, direction);
-        if (sameColor)
+        if (sameColor && !tile.IsBall())
             tileList.Remove(tile);
         if (completeTrail)
         {

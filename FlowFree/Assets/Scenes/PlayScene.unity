@@ -447,7 +447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -35.82, y: -0.0000019073486}
+  m_AnchoredPosition: {x: -35.819992, y: -0.0000019073486}
   m_SizeDelta: {x: 175.52, y: 61.76}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &129437706
@@ -2491,7 +2491,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: 53b0cb1442254eb40841c61b036902c0,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 53b0cb1442254eb40841c61b036902c0, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: 53b0cb1442254eb40841c61b036902c0, type: 3}
+    m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 21300000, guid: f8045e13741fab84981ce87151072c8b, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -2824,7 +2824,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: e68ef11627f3fbb438e9125f65fcd0b7,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: e68ef11627f3fbb438e9125f65fcd0b7, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: e68ef11627f3fbb438e9125f65fcd0b7, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 95f8a6286d241eb4581437f7f10920a4, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: 5ee3ec5ad43983f49a6a12454c036d0b, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -2837,10 +2837,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2007545715}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 995628277}
+        m_TargetAssemblyTypeName: BoardManager, Assembly-CSharp
+        m_MethodName: giveAHint
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3243,7 +3243,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: fc8e999e33e24ad4ea6f033646285c62,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: fc8e999e33e24ad4ea6f033646285c62, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: fc8e999e33e24ad4ea6f033646285c62, type: 3}
+    m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -5103,7 +5103,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 114.600006, y: 0}
+  m_AnchoredPosition: {x: 114.6, y: 0}
   m_SizeDelta: {x: -244.91, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1327089480
@@ -5214,7 +5214,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: 1d0620689d03a4644be43cace7232783,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 1d0620689d03a4644be43cace7232783, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: 1d0620689d03a4644be43cace7232783, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 007ad82d96658aa439d7ff5388aa2445, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -6250,7 +6250,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: c9906be7de9cd0a41b5dfc78d7e9c57a,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: c9906be7de9cd0a41b5dfc78d7e9c57a, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: c9906be7de9cd0a41b5dfc78d7e9c57a, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: d6a2e11cf43eaf74db90847598642084, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -7751,7 +7751,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: 104b3c33d1e10fa4788c55d068107bae,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 104b3c33d1e10fa4788c55d068107bae, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: 104b3c33d1e10fa4788c55d068107bae, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: eb87599559a16f846abbc4c0e9471f3f, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: 7d58034a229c73d4d97a791247f9db00, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -8112,7 +8112,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 078b72e4109559d4cb65fe55329142a3, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: 63f0f1df392481246abd80e32b5e2b52, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -8257,7 +8257,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf,
       type: 3}
     m_PressedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: b6395dc9874c7514f8e5a5990921d7cf, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: 078b72e4109559d4cb65fe55329142a3, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal

@@ -96,7 +96,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
             } // if
             else
             {
-                Debug.Log("Rewarded video is not ready at the moment! Try again later!");
+                //Debug.Log("Rewarded video is not ready at the moment! Try again later!");
             } // else
         } // if
     } // ShowVideo
@@ -114,7 +114,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         } // if
         else
         {
-            Debug.Log("Rewarded video is not ready at the moment! Try again later!");
+            //Debug.Log("Rewarded video is not ready at the moment! Try again later!");
         } // else
     } // ShowRewardedVideo
 

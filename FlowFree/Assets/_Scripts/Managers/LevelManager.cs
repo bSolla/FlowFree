@@ -55,7 +55,7 @@ public class LevelManager : MonoBehaviour
     public Image _hintCompleteHeaderImg;
     public Image _hintCompleteDetailImg;
 
-    private bool _paused = false;                 // Pause flag for Input control
+    public bool _paused = false;                 // Pause flag for Input control
     const string MOVES_MSG = "you completed the level in ";
     // ----------------------------------------------
     // --------------- UNITY METHODS ----------------

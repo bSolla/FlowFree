@@ -229,8 +229,6 @@ public class BoardManager : MonoBehaviour
     /// <param name="it"> (InputType) Type of the input. </param>
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)
     {
-        if (!_boardComplete) 
-        {
             if (_themeNow != GameManager.GetInstance().GetTheme())
             {
                 UpdateColors();
@@ -241,8 +239,6 @@ public class BoardManager : MonoBehaviour
                 ProcessEndOfTouch();
             else if (it == InputManager.InputType.MOVEMENT)
                 ProcessMovement(pos);
-        }
-        
     } // ReceiveInput
 
     /// <summary>
@@ -280,12 +276,13 @@ public class BoardManager : MonoBehaviour
             }
         }
         // level complete
-        if (_flowCount == _numberFlows)
+        if (_flowCount == _numberFlows && !_boardComplete)
         {
             _boardComplete = true;
             _levelManager.SetPause(true);
             _levelManager.ShowEndPanel((_numberMoves == _numberFlows), _numberMoves);
         }
+        else _boardComplete = false;
         _lastTile = null;
         _cursor.SetActive(false);
     }
@@ -377,7 +374,6 @@ public class BoardManager : MonoBehaviour
             
             // new click
             ProcessNewClick(tile);
-            Debug.Log("daw");
             // ongoing click
             ProcessOngoingClick(tile, x, y);
             calculatePipe();

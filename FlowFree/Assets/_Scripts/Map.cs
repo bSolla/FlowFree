@@ -57,7 +57,7 @@ public class TileInfo
 }
 
 
-public class Map : MonoBehaviour
+public class Map
 {
     /// <summary> 
     /// Matrix that stores all the information needed for the creation of tiles.

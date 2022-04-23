@@ -85,7 +85,7 @@ public class BoardManager : MonoBehaviour
                 if (t[0].hasConection() && t[1].hasConection()) //and the flow is complete
                     completeFlow = true;
         }
-        Debug.Log("Completed: " + completeFlow);
+        //Debug.Log("Completed: " + completeFlow);
         return completeFlow;
     }
 
@@ -273,7 +273,6 @@ public class BoardManager : MonoBehaviour
             _lastileIndicator.transform.localScale = _board.transform.localScale;
             _lastileIndicator.transform.position = new Vector2((_lastTile.GetPosition().x * _board.transform.localScale.x) + _board.transform.position.x, (_lastTile.GetPosition().y * _board.transform.localScale.y) + _board.transform.position.y);
             Tile b = _lastTile;
-            calculatePipe();
             while (b != null)
             {
                 b.ActiveBackGround();
@@ -378,9 +377,10 @@ public class BoardManager : MonoBehaviour
             
             // new click
             ProcessNewClick(tile);
-
+            Debug.Log("daw");
             // ongoing click
             ProcessOngoingClick(tile, x, y);
+            calculatePipe();
         }
     }
 
@@ -411,7 +411,7 @@ public class BoardManager : MonoBehaviour
                                 {
                                     if (CompleteFlow(b._next))
                                         _flowCount--;
-                                    Debug.Log("FlowCount: " + _flowCount);
+                                    //Debug.Log("FlowCount: " + _flowCount);
                                     _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
 
                                     b._next.TrailDeletion(ref tileList, true);
@@ -422,7 +422,7 @@ public class BoardManager : MonoBehaviour
                                     if (CompleteFlow(b._back))
                                     {
                                         _flowCount--;
-                                        Debug.Log("FlowCount: " + _flowCount);
+                                        //Debug.Log("FlowCount: " + _flowCount);
                                         _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
                                     }
 
@@ -440,7 +440,7 @@ public class BoardManager : MonoBehaviour
                     if (tile._next.IsBall())
                     {
                         _flowCount--;
-                        Debug.Log("FlowCount: " + _flowCount);
+                        //Debug.Log("FlowCount: " + _flowCount);
                         _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
                     }
                     List<Tile> tileList = new List<Tile>(); // list of tiles deleted
@@ -496,7 +496,7 @@ public class BoardManager : MonoBehaviour
                 if (!tile.hasConection())
                 {
                     _flowCount++;
-                    Debug.Log("FlowCount: " + _flowCount);
+                    //Debug.Log("FlowCount: " + _flowCount);
                     _lastTile.SetNextTile(tile);
                     tile.SetColor(_lastTile.getColor());
                     _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
@@ -516,7 +516,7 @@ public class BoardManager : MonoBehaviour
             // delete other flow
             if (tile.IsTrail())
             {
-                Debug.Log("Delete");
+                //Debug.Log("Delete");
                 bool completeFlow = CompleteFlow(tile);
                 DeleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
 
@@ -559,7 +559,7 @@ public class BoardManager : MonoBehaviour
             aux.ActiveBackGround();
             g._next.ActiveBackGround();
             _flowCount++;
-            Debug.Log("FlowCount: " + _flowCount);
+            //Debug.Log("FlowCount: " + _flowCount);
             _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
         }
     }
@@ -612,7 +612,7 @@ public class BoardManager : MonoBehaviour
                         gh._next = t[1];
             }
             _flowCount--;
-            Debug.Log("FlowCount: " + _flowCount);
+            //Debug.Log("FlowCount: " + _flowCount);
             _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
         }
         if (!sameColor)

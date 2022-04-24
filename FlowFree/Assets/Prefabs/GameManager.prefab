@@ -43,14 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aec88322d813ba43bffffb3df08602c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cnv: {fileID: 0}
-  _cam: {fileID: 0}
-  _topPanel: {fileID: 0}
-  _bottomPanel: {fileID: 0}
   _levelManager: {fileID: 0}
   _levels:
   - {fileID: 11400000, guid: 9b12d61357e36524b9624c6059a820af, type: 2}
   - {fileID: 11400000, guid: 8b9204ffd0a884c449b0f4c7b663eeda, type: 2}
   - {fileID: 11400000, guid: 0c7e12c47176dd74c93cd0cfb478db01, type: 2}
-  _themesScriptObj: {fileID: 11400000, guid: 5f56adf2a3454c643bd998156842f82c, type: 2}
+  _themesScriptObj:
+  - {fileID: 11400000, guid: cba83aef64457274093684f3ad0c5817, type: 2}
+  - {fileID: 11400000, guid: 51c59c904a438c546826d3e66820bf2d, type: 2}
+  - {fileID: 11400000, guid: da5a75eb0acfa9d4e88c49b7f6ea7245, type: 2}
+  - {fileID: 11400000, guid: f805042c03d1020418f1fc87a0bdd1ad, type: 2}
   _debugging: 0

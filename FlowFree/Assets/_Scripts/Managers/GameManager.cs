@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     public LevelPackage[] _levels;                // Array of LevelPackages
 
     [Header("Themes")]
-    public Themes _themesScriptObj;               // scriptable object that contains theme info
+    //public Themes _themesScriptObj;               // scriptable object that contains theme info
+    public Colorway[] _themesScriptObj;
 
     [Header("Debugging")]
     public bool _debugging = false;               // Sets if debug mode is on, for avoiding some changes
@@ -364,17 +365,17 @@ public class GameManager : MonoBehaviour
 
     public Colorway GetTheme()
     {
-        return _themesScriptObj._themeArray[_player._themeIndex];
+        return _themesScriptObj[_player._themeIndex];
     }
 
     public Colorway GetThemeByNumber(int i)
     {
-        return _themesScriptObj._themeArray[i];
+        return _themesScriptObj[i];
     }
 
     public int GetNumberThemes()
     {
-        return _themesScriptObj._themeArray.Length;
+        return _themesScriptObj.Length;
     }
     #endregion getters
 

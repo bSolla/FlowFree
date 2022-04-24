@@ -127,13 +127,13 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseHints()
     {
-        GetInstance()._player._hints++;
+        _player._hints++;
         _levelManager.UpdateInfoUI(null, null, null, null);
     }
 
     public void DecreaseHints()
     {
-        GetInstance()._player._hints--;
+        _player._hints--;
         _levelManager.UpdateInfoUI(null, null, null, null);
     }
 
@@ -155,18 +155,18 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        if (GetInstance()._level < 149)
+        if (_level < 149)
         {
-            GetInstance()._level += 1;
+            _level += 1;
             LoadPlayScene();
         }
     }
 
     public void LoadPreviousLevel()
     {
-        if (GetInstance()._level > 0)
+        if (_level > 0)
         {
-            GetInstance()._level -= 1;
+            _level -= 1;
             LoadPlayScene();
         }
     }
@@ -204,7 +204,7 @@ public class GameManager : MonoBehaviour
     public void SetPackage(string p)
     {
         p = p.Replace(" ", String.Empty);   // prevention of spaces in the name
-        GetInstance()._package = p;
+        _package = p;
     } // SetPackage
 
     /// <summary>
@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
     public void SetLot(string l)
     {
         l = l.Replace(" ", String.Empty);   // prevention of spaces in the name
-        GetInstance()._lot = l;
+        _lot = l;
     }
 
     /// <summary>
@@ -225,7 +225,7 @@ public class GameManager : MonoBehaviour
     /// <param name="i"> (int) Level selected. </param>
     public void SetLevel(int i)
     {
-        GetInstance()._level = i;
+        _level = i;
     } // SetLevel
 
     /// <summary>
@@ -236,7 +236,7 @@ public class GameManager : MonoBehaviour
     /// <param name="mg"> (MainMenuManager) Current Main menu. </param>
     public void SetMainMenuManager(MainMenuManager mg)
     {
-        GetInstance()._mainMenu = mg;
+        _mainMenu = mg;
     } // SetMainMenuManager
 
     /// <summary>
@@ -271,7 +271,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (Scaling) Scaling instance stored in GM instance. </returns>
     public Scaling GetScaling()
     {
-        return GetInstance()._scalator;
+        return _scalator;
     } // GetScaling
 
     /// <summary>
@@ -282,7 +282,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (Canvas) Canvas access. </returns>
     public Canvas GetCanvas()
     {
-        return GetInstance()._cnv;
+        return _cnv;
     } // GetCanvas
 
     /// <summary>
@@ -293,7 +293,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (float) Panel height. </returns>
     public float GetTopPanelHeight()
     {
-        return GetInstance()._topPanel.rect.height;
+        return _topPanel.rect.height;
     } // GetTopPanelHeight
 
     /// <summary>
@@ -304,7 +304,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (float) Height of panel </returns>
     public float GetBottomPanelHeight()
     {
-        return GetInstance()._bottomPanel.rect.height;
+        return _bottomPanel.rect.height;
     } // GetTopPanelHeight
 
     /// <summary>
@@ -315,7 +315,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (Vector2) Reference resolution. </returns>
     public Vector2 GetReferenceResolution()
     {
-        return GetInstance()._scalingReferenceResolution;
+        return _scalingReferenceResolution;
     } // GetReferenceResolution
 
 
@@ -327,7 +327,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (int) Number of packages. </returns>
     public int GetNumPackages()
     {
-        return GetInstance()._levels.Length;
+        return _levels.Length;
     } // GetNumPackages
 
     public int GetNumLotsInPackage(LevelPackage levPack)
@@ -343,7 +343,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (string) Package name.</returns>
     public string GetPackageName()
     {
-        return GetInstance()._package;
+        return _package;
     } // GetPackageName
 
     /// <summary>
@@ -356,7 +356,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (LevelPackage) Package with data. </returns>
     public LevelPackage GetLevelPackage(int i)
     {
-        return GetInstance()._levels[i];
+        return _levels[i];
     } // GetPackage
 
 
@@ -372,11 +372,11 @@ public class GameManager : MonoBehaviour
     /// <returns> (LevelPackage) Selected LevelPackage. </returns>
     public LevelPackage GetLevelPackage()
     {
-        for (int i = 0; i < GetInstance()._levels.Length; i++)
+        for (int i = 0; i < _levels.Length; i++)
         {
-            if (GetInstance()._levels[i].name == _package)
+            if (_levels[i].name == _package)
             {
-                return GetInstance()._levels[i];
+                return _levels[i];
             } // if
         } // for
 
@@ -391,7 +391,7 @@ public class GameManager : MonoBehaviour
     /// <returns>(LevelLot) Selected Lot</returns>
     public LevelLot GetLevelLot()
     {
-        LevelPackage pack = GetInstance().GetLevelPackage();
+        LevelPackage pack = GetLevelPackage();
         for (int i = 0; i < pack._lotArray.Length; i++)
         {
             if (pack._lotArray[i].name == _lot)
@@ -410,7 +410,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (int) Current level. </returns>
     public int GetLevel()
     {
-        return GetInstance()._level;
+        return _level;
     } // GetLevel
 
     /// <summary>
@@ -432,7 +432,7 @@ public class GameManager : MonoBehaviour
     /// <returns> (PlayerData) Actual player data loaded. </returns>
     public PlayerData GetPlayerData()
     {
-        return GetInstance()._player;
+        return _player;
     } // GetPlayerData
 
 
@@ -480,7 +480,7 @@ public class GameManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         // Save player information
-        SaveLoadSystem.SavePlayerData(GetInstance()._player);
+        SaveLoadSystem.SavePlayerData(_player);
     } // OnApplicationQuit
 
     /// <summary>
@@ -495,7 +495,7 @@ public class GameManager : MonoBehaviour
         if (!focus)
         {
             // Save player information
-            SaveLoadSystem.SavePlayerData(GetInstance()._player);
+            SaveLoadSystem.SavePlayerData(_player);
         } // if
     } // OnApplicationFocus
 

@@ -18,10 +18,8 @@ public struct PlayerData
     /// <summary> 0 : not completed // 1 : completed // 2 : completed and perfect</summary>
     public Dictionary<string, int[]> _completedLevelsLot;    // Levels completed per lot
     public int _hints;                                       // Hints available
-    public int _totalLevelsCompleted;                        // Time played this match
     public bool _adsRemoved;                                 // if the player paid for no ads
     public int _themeIndex;                                  // current theme for the player
-    private int _hash;                                       // hash code 
     
 
     /// <summary>
@@ -39,57 +37,8 @@ public struct PlayerData
         _completedLevelsLot = completed;
         _hints = hints;
         _adsRemoved = removed;
-        _hash = 0;
-        _totalLevelsCompleted = 0;
         _themeIndex = theme;
-
-        GetTimePlayed();
     } // PlayerData
-
-    /// <summary>
-    /// 
-    /// Calculates the total number of levels completed
-    /// 
-    /// </summary>
-    /// <returns> (int) number of levels completed </returns>
-    public int GetTimePlayed()
-    {
-        _totalLevelsCompleted = 0;
-        foreach (var data in _completedLevelsLot)
-        {
-            for (int i = 0; i < 150; ++i)
-            {
-                if (data.Value[i] != 0)
-                    _totalLevelsCompleted++;
-            }
-        } // foreach
-
-        _totalLevelsCompleted += (_hints + Convert.ToInt32(_adsRemoved));
-
-        return _totalLevelsCompleted;
-    } // GetTimePlayed
-
-    /// <summary>
-    /// 
-    /// Give access to the hash. Consult only. 
-    /// 
-    /// </summary>
-    /// <returns> (int) Hash's actual value. </returns>
-    public int GetHash()
-    {
-        return _hash;
-    } // GetHash
-
-    /// <summary>
-    /// 
-    /// Used to set the new hash value after calculation. 
-    /// 
-    /// </summary>
-    /// <param name="h">(int) New hash's value. </param>
-    public void SetHash(int h)
-    {
-        _hash = h;
-    } // SetHash
 } // PlayerData
 
 
@@ -101,9 +50,6 @@ public struct PlayerData
 /// </summary>
 public class SaveLoadSystem : MonoBehaviour
 {
-    // Num packages
-    static private int _releaseDay = 171221; 
-
     /// <summary>
     /// 
     /// Creates new player data based on the packages that are 
@@ -132,29 +78,6 @@ public class SaveLoadSystem : MonoBehaviour
         return dat;
     } // NewPlayerData
 
-    /// <summary>
-    /// 
-    /// Creates a hash code based on the information provided. 
-    /// 
-    /// </summary>
-    /// <param name="b"> (BinaryFormatter) Formater to serialize. </param>
-    /// <param name="d"> (PlayerData) Data to encode. </param>
-    /// <returns></returns>
-    public static int Encrypt(BinaryFormatter b, PlayerData d)
-    {
-        // Create MemoryStream
-        MemoryStream ms = new MemoryStream();
-
-        // Serialize info in memoryStream
-        b.Serialize(ms, d);
-
-        // Seek 0 value
-        ms.Seek(0, SeekOrigin.Begin);
-
-        // Create and return hash code
-        byte[] bytes = new byte[ms.Length];
-        return ms.Read(bytes, 0, (int)ms.Length.GetHashCode());
-    } // Encrypt
 
     /// <summary>
     /// 
@@ -170,53 +93,13 @@ public class SaveLoadSystem : MonoBehaviour
         {
             // Initialize everything
             BinaryFormatter bf = new BinaryFormatter();
+
             FileStream f = File.Open(Application.persistentDataPath + "/vmFlowFree.dat", FileMode.Open);
             PlayerData playerData = (PlayerData)bf.Deserialize(f);
 
-            // Calculate checks
-            int totalLevelsComplete = playerData._totalLevelsCompleted;
-            int hash = playerData.GetHash();
-
-            playerData.SetHash(0);
-            int checkPlayer = _releaseDay + playerData._hints + Convert.ToInt32(playerData._adsRemoved);
-            foreach (var data in playerData._completedLevelsLot)
-            {
-                for (int i = 0; i < 150; ++i)
-                {
-                    if (data.Value[i] != 0)
-                        checkPlayer++;
-                }
-            } // foreach
-            int checkHash = Encrypt(bf, playerData);
             f.Close();
 
-            // If data is corrupted, create new data
-            if (hash == checkHash && totalLevelsComplete == checkPlayer)
-            {
-                // New packages
-                if (playerData._completedLevelsLot.Count < lots.Count)
-                {
-                    for (int i = 0; i < lots.Count; i++)
-                    {
-                        // Check if there is no ad
-                        if (lots[i] != "ad")
-                        {
-                            // Check if it is in dictionary
-                            if (!playerData._completedLevelsLot.ContainsKey(lots[i]))
-                            {
-                                // If not, add it to it
-                                playerData._completedLevelsLot.Add(lots[i], new int[150]);
-                            } // if
-                        } // if
-                    } // for
-                } // if
-
-                return playerData;
-            } // if
-            else
-            {
-                return NewPlayerData(lots);
-            } // else
+            return playerData;
         } // if
         else
         {
@@ -238,17 +121,6 @@ public class SaveLoadSystem : MonoBehaviour
         // Create the new player save file
         FileStream file = File.Create(Application.persistentDataPath + "/vmFlowFree.dat");
 
-        // Check data 
-        d._totalLevelsCompleted = _releaseDay + d.GetTimePlayed();
-
-        // Reset the hash for new codification
-        if (d.GetHash() != 0)
-        {
-            d.SetHash(0);
-        }
-
-        // Create new hash code and write info in the file
-        d.SetHash(Encrypt(bf, d));
         bf.Serialize(file, d);
 
         file.Close();

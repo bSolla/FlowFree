@@ -3552,6 +3552,7 @@ MonoBehaviour:
   _hintPanelDetailImg: {fileID: 1260897374}
   _hintCompleteHeaderImg: {fileID: 596170788}
   _hintCompleteDetailImg: {fileID: 986775830}
+  _paused: 0
 --- !u!4 &952382438
 Transform:
   m_ObjectHideFlags: 0
@@ -3820,6 +3821,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cede12d39785ebb47be657974cdf02a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cnv: {fileID: 215881590}
+  _cam: {fileID: 647323068}
+  _topPanel: {fileID: 1852959636}
+  _bottomPanel: {fileID: 1009019114}
   _sideMargin: 20
   _topMargin: 20
   _board: {fileID: 1169298045}

@@ -6,14 +6,6 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Resolution Configuration")]
-    public Canvas _cnv;                           // Canvas of the scene
-    public Camera _cam;                           // Camera of the scene
-
-    [Header("Canvas objects")]
-    public RectTransform _topPanel;              // Top panel of the canvas
-    public RectTransform _bottomPanel;           // Bottom panel of the canvas
-
     [Header("Levels")]
     public LevelManager _levelManager = null;     // LevelManager for level
     public LevelPackage[] _levels;                // Array of LevelPackages
@@ -28,10 +20,6 @@ public class GameManager : MonoBehaviour
     private string _package = "Rectangles";       // Sets game style
     private string _lot = "HourglassPack";        // Sets lot to use
     private int _level = 5;                       // Sets the level to be loaded
-
-    // SCALING DATA
-    private Vector2 _scalingReferenceResolution;  // Reference resolution for scaling
-    private Scaling _scalator;                    // Scaling object
 
     // GAME/SCENE MANAGEMENT
     private PlayerData _player;                   // Player data
@@ -73,13 +61,6 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            // Store canvas' scaling reference resolution
-            _scalingReferenceResolution = _cnv.GetComponent<CanvasScaler>().referenceResolution;
-
-            // Create scalator
-            Vector2 res = new Vector2(Screen.width, Screen.height);
-            _scalator = new Scaling(res, _scalingReferenceResolution, (int)_cam.orthographicSize);
-
             // Get Player information and store it
             _player = SaveLoadSystem.ReadPlayerData(lotNames);
             DontDestroyOnLoad(_instance);
@@ -87,10 +68,6 @@ public class GameManager : MonoBehaviour
         else if (_instance != this)
         {
             _instance._levelManager = _levelManager;
-            _instance._topPanel = _topPanel;
-            _instance._bottomPanel = _bottomPanel;
-            _instance._cam = _cam;
-            _instance._cnv = _cnv;
 
             Destroy(gameObject);
         } // else if
@@ -263,62 +240,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region getters
-    /// <summary>
-    /// 
-    /// Gives access to the scalator instance.
-    /// 
-    /// </summary>
-    /// <returns> (Scaling) Scaling instance stored in GM instance. </returns>
-    public Scaling GetScaling()
-    {
-        return _scalator;
-    } // GetScaling
-
-    /// <summary>
-    /// 
-    /// Gives access to the canvas stored in instance.
-    /// 
-    /// </summary>
-    /// <returns> (Canvas) Canvas access. </returns>
-    public Canvas GetCanvas()
-    {
-        return _cnv;
-    } // GetCanvas
-
-    /// <summary>
-    /// 
-    /// Returns the height of the top panel.
-    /// 
-    /// </summary>
-    /// <returns> (float) Panel height. </returns>
-    public float GetTopPanelHeight()
-    {
-        return _topPanel.rect.height;
-    } // GetTopPanelHeight
-
-    /// <summary>
-    /// 
-    /// Returns the height of the bottom panel in pixels.
-    /// 
-    /// </summary>
-    /// <returns> (float) Height of panel </returns>
-    public float GetBottomPanelHeight()
-    {
-        return _bottomPanel.rect.height;
-    } // GetTopPanelHeight
-
-    /// <summary>
-    /// 
-    /// Gives the reference resolution used when scaling things for later use. 
-    /// 
-    /// </summary>
-    /// <returns> (Vector2) Reference resolution. </returns>
-    public Vector2 GetReferenceResolution()
-    {
-        return _scalingReferenceResolution;
-    } // GetReferenceResolution
-
-
     /// <summary>
     /// 
     /// Gives the number of packages registered in the game.

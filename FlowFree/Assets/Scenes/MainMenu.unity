@@ -432,6 +432,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cef6d26e93ff5e0428270bc438e5a7ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cnv: {fileID: 2035810372}
+  _cam: {fileID: 901961458}
   _scrollContent: {fileID: 627198562}
   _packageArea: {fileID: 678389058}
   _packageSelectionPanel: {fileID: 1337426619}

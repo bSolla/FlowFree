@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("Resolution Configuration")]
+    public Canvas _cnv;                           // Canvas of the scene
+    public Camera _cam;                           // Camera of the scene
+
     [Header("Scene References")]
     public RectTransform _scrollContent = null;
     public VerticalLayoutGroup _packageArea = null;
@@ -24,6 +28,21 @@ public class MainMenuManager : MonoBehaviour
     public int _spaceButtons = 12;              // Space between buttons
 
     private bool _packagesCreated = false;
+    
+    // SCALING DATA
+    private Vector2 _scalingReferenceResolution;  // Reference resolution for scaling
+    private Scaling _scalator;                    // Scaling object
+
+
+    private void Awake()
+    {
+        // Store canvas' scaling reference resolution
+        _scalingReferenceResolution = _cnv.GetComponent<CanvasScaler>().referenceResolution;
+
+        // Create scalator
+        Vector2 res = new Vector2(Screen.width, Screen.height);
+        _scalator = new Scaling(res, _scalingReferenceResolution, (int)_cam.orthographicSize);
+    }
 
     /// <summary>
     /// Check for missing references and raise errors if they're missing

@@ -1,25 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour
 {
+    [Header("Resolution Configuration")]
+    public Canvas _cnv;                           // Canvas of the scene
+    public Camera _cam;                           // Camera of the scene
+
     [Header("Configuration")]
+    public RectTransform _topPanel;              // Top panel of the canvas
+    public RectTransform _bottomPanel;           // Bottom panel of the canvas
     public int _sideMargin;                     // Space to the sides
     public int _topMargin;                      // Space to the top
     public GameObject _board;                   // Board gameObject
     public Tile _tilePrefab;                    // Tile prefab to instantiate
     public GameObject _cursor;
     public GameObject _lastileIndicator;
-    
+
+    // SCALING DATA
+    private Vector2 _scalingReferenceResolution;  // Reference resolution for scaling
+    private Scaling _scalator;                    // Scaling object
+
     private Colorway _themeNow;
     private int _hintsUsed = 0;
     private Point[,] _hints;
     private int _realSize;
 
     // Calculate space remaining for the board
-    private float _topPanel;                    // Top panel in canvas
-    private float _bottomPanel;                 // Bottom panel in canvas
+    private float _topPanelSize;                    // Top panel in canvas
+    private float _bottomPanelSize;                 // Bottom panel in canvas
 
     private Tile[,] _tiles;                     // Map
     private Tile _lastTile = null;
@@ -50,6 +61,15 @@ public class BoardManager : MonoBehaviour
     // Space that the board will take
     private Vector2 _resolution;                // Space for the board
 
+    private void Awake()
+    {
+        // Store canvas' scaling reference resolution
+        _scalingReferenceResolution = _cnv.GetComponent<CanvasScaler>().referenceResolution;
+
+        // Create scalator
+        Vector2 res = new Vector2(Screen.width, Screen.height);
+        _scalator = new Scaling(res, _scalingReferenceResolution, (int)_cam.orthographicSize);
+    }
 
     // ----------------------------------------------
     // --------------- CUSTOM METHODS ---------------
@@ -196,7 +216,7 @@ public class BoardManager : MonoBehaviour
 
         // Scale tiles and Board
         Vector2 oScale = _tilePrefab.transform.localScale;
-        Vector2 nScale = GameManager.GetInstance().GetScaling().ResizeObjectScale(background.bounds.size * GameManager.GetInstance().GetScaling().TransformationFactor(), tam, oScale);
+        Vector2 nScale = _scalator.ResizeObjectScale(background.bounds.size * _scalator.TransformationFactor(), tam, oScale);
         gameObject.transform.localScale = nScale;
         _board.transform.localScale = nScale;
         float factor = nScale.x / oScale.x;
@@ -685,7 +705,7 @@ public class BoardManager : MonoBehaviour
     private Vector2 CalculateSize(SpriteRenderer sprite)
     {
         // Transform resolution to pixels 
-        Vector2 resolutionTemp = _resolution * GameManager.GetInstance().GetScaling().TransformationFactor();
+        Vector2 resolutionTemp = _resolution * _scalator.TransformationFactor();
 
         // Calculate how many space requires a Tile breadthways and upwards related to that resolution
         float tileSizeX = resolutionTemp.x / _tiles.GetLength(0);
@@ -715,20 +735,20 @@ public class BoardManager : MonoBehaviour
     private void CalculateSpace()
     {
         // Calculates the space of the top and bottom panels in pixels
-        _topPanel = GameManager.GetInstance().GetTopPanelHeight() * GameManager.GetInstance().GetCanvas().scaleFactor;
-        _bottomPanel = GameManager.GetInstance().GetBottomPanelHeight() * GameManager.GetInstance().GetCanvas().scaleFactor;
+        _topPanelSize = _topPanel.rect.height * _cnv.scaleFactor;
+        _bottomPanelSize = _bottomPanel.rect.height * _cnv.scaleFactor;
 
-        Vector2 actRes = GameManager.GetInstance().GetScaling().CurrentResolution();
+        Vector2 actRes = _scalator.CurrentResolution();
 
         // Calculates the available space in the current resolution 
-        float dispY = (actRes.y - (_bottomPanel + _topPanel)) - (2 * GameManager.GetInstance().GetScaling().ResizeY(_topMargin));
-        float dipsX = actRes.x - (2 * GameManager.GetInstance().GetScaling().ResizeX(_sideMargin));
+        float dispY = (actRes.y - (_bottomPanelSize + _topPanelSize)) - (2 * _scalator.ResizeY(_topMargin));
+        float dipsX = actRes.x - (2 * _scalator.ResizeX(_sideMargin));
 
         // Creates the available screen space for the game in pixels
         _resolution = new Vector2(dipsX, dispY);
 
         // Change resolution to Unity units to use it for positions
-        _resolution /= GameManager.GetInstance().GetScaling().TransformationFactor();
+        _resolution /= _scalator.TransformationFactor();
     } // CalculateSpace
 
     

@@ -103,6 +103,9 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void PlayLevel()
     {
+        // Set info
+        AdManager.GetInstance().ShowVideo();
+
         // Prepare board
         int level = GameManager.GetInstance().GetLevel();
         Map map = Map.FromLot(GameManager.GetInstance().GetLevelLot(), level);

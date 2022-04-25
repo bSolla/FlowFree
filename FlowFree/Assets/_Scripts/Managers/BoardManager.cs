@@ -222,7 +222,7 @@ public class BoardManager : MonoBehaviour
         float factor = nScale.x / oScale.x;
 
         // Relocate board
-        _board.transform.Translate(new Vector3((-(map._X - 1) / 2.0f) * factor, ((-(map._Y - 3) / 2.0f) * factor)));
+        _board.transform.Translate(new Vector3((-(map._X - 1f) / 2.0f) * factor, ((-(map._Y - 1.5f) / 2.0f) * factor))); 
     }
 
 

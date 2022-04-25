@@ -205,7 +205,6 @@ public class BoardManager : MonoBehaviour
             Point sol1 = solutions[flowNumber, flowed];
             while (solutions[flowNumber, flowed + 1].x != -1)
             {
-
                 flowed++;
             }
             Point sol2 = solutions[flowNumber, flowed];
@@ -750,6 +749,4 @@ public class BoardManager : MonoBehaviour
         // Change resolution to Unity units to use it for positions
         _resolution /= _scalator.TransformationFactor();
     } // CalculateSpace
-
-    
 }

@@ -17,6 +17,7 @@ public struct PlayerData
     public float _playerLevel;                               // Coins that the player has
     /// <summary> 0 : not completed // 1 : completed // 2 : completed and perfect</summary>
     public Dictionary<string, int[]> _completedLevelsLot;    // Levels completed per lot
+    public Dictionary<string, int[]> _numberOfMoves;         // Best number of moves used per board
     public int _hints;                                       // Hints available
     public bool _adsRemoved;                                 // if the player paid for no ads
     public int _themeIndex;                                  // current theme for the player
@@ -31,10 +32,12 @@ public struct PlayerData
     /// <param name="completed"> (Dictionary) levels completed per lot. </param>
     /// <param name="hints"> (int) Number hints available. </param>
     /// <param name="removed"> (bool) Ads removed flag. </param>
-    public PlayerData(float level, Dictionary<string, int[]> completed, int hints, bool removed, int theme)
+    public PlayerData(float level, Dictionary<string, int[]> completed, Dictionary<string, int[]> moves, 
+        int hints, bool removed, int theme)
     {
         _playerLevel = level;
         _completedLevelsLot = completed;
+        _numberOfMoves = moves;
         _hints = hints;
         _adsRemoved = removed;
         _themeIndex = theme;
@@ -61,6 +64,7 @@ public class SaveLoadSystem : MonoBehaviour
     public static PlayerData NewPlayerData(List<string> lots)
     {
         Dictionary<string, int[]> completed = new Dictionary<string, int[]>();
+        Dictionary<string, int[]> moves = new Dictionary<string, int[]>();
 
         for (int i = 0; i < lots.Count; i++)
         {
@@ -69,11 +73,11 @@ public class SaveLoadSystem : MonoBehaviour
                 int[] levels = new int[150];
 
                 completed.Add(lots[i], levels);
+                moves.Add(lots[i], levels);
             }
-                
         } // for
 
-        PlayerData dat = new PlayerData(0.0f, completed, 0, false, 0);
+        PlayerData dat = new PlayerData(0.0f, completed, moves, 0, false, 0);
 
         return dat;
     } // NewPlayerData
@@ -99,6 +103,7 @@ public class SaveLoadSystem : MonoBehaviour
 
             f.Close();
 
+            HealthCheck(ref playerData, lots);
             return playerData;
         } // if
         else
@@ -125,4 +130,46 @@ public class SaveLoadSystem : MonoBehaviour
 
         file.Close();
     } // SavePlayerData
+
+    /// <summary>
+    /// 
+    /// Makes sure the dictionaries inside playerData are not null. If they are, it
+    /// populates them with default values
+    /// 
+    /// </summary>
+    /// <param name="playerData">(PlayerData) struct that contains all player info</param>
+    /// <param name="lots">(List(string)) list with the names of the lots</param>
+    private static void HealthCheck (ref PlayerData playerData, List<string> lots)
+    {
+        bool newCompleted = (playerData._completedLevelsLot == null);
+        bool newMoves = (playerData._numberOfMoves == null);
+
+        if (newCompleted || newMoves)
+        {
+            Dictionary<string, int[]> completed = null;
+            if (newCompleted) 
+                completed = new Dictionary<string, int[]>();
+
+            Dictionary<string, int[]> moves = null;
+            if (newMoves)
+                moves = new Dictionary<string, int[]>();
+
+            for (int i = 0; i < lots.Count; i++)
+            {
+                if (lots[i] != "ad")
+                {
+                    int[] levels = new int[150];
+
+                    if(completed != null) completed.Add(lots[i], levels);
+                    if(moves != null) moves.Add(lots[i], levels);
+                }
+            } // for
+
+            if (newCompleted)
+                playerData._completedLevelsLot = completed;
+            if (newMoves)
+                playerData._numberOfMoves = moves;
+        }
+        
+    }
 }

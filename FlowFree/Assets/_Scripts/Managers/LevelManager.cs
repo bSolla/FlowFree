@@ -113,7 +113,8 @@ public class LevelManager : MonoBehaviour
         _boardManager.EmptyBoard();
         _boardManager.SetMap(map);
 
-        UpdateInfoUI("0", "0", "0", "0");
+        string bestMoves = GameManager.GetInstance().GetPlayerData()._numberOfMoves[GameManager.GetInstance().GetLevelLot()._lotName][level].ToString();
+        UpdateInfoUI("0", "0", bestMoves, "0");
     }
 
     /// <summary>
@@ -150,7 +151,10 @@ public class LevelManager : MonoBehaviour
     {
         _paused = true; // make sure no board input is processed
         int levelStatus = 0; // 0 means not completed
+        string lotName = GameManager.GetInstance().GetLevelLot()._lotName;
+        int levelNumber = GameManager.GetInstance().GetLevel();
 
+        // checks for perfects and saves completed levels if necessary
         if (isPerfect)
         {
             _perfectEndPanel.SetActive(true);
@@ -165,13 +169,22 @@ public class LevelManager : MonoBehaviour
 
             // only change save data if it comes from not being complete to avoid erasing perfect scores
             if (GameManager.GetInstance().GetPlayerData().
-            _completedLevelsLot[GameManager.GetInstance().GetLevelLot()._lotName][GameManager.GetInstance().GetLevel()] == 0)
+            _completedLevelsLot[lotName][levelNumber] == 0)
                 levelStatus = 1; // 1 means completed but not perfect
         }
 
         if (levelStatus > 0)
-            GameManager.GetInstance().GetPlayerData().
-                _completedLevelsLot[GameManager.GetInstance().GetLevelLot()._lotName][GameManager.GetInstance().GetLevel()] = levelStatus;
+        {
+            GameManager.GetInstance().GetPlayerData()._completedLevelsLot[lotName][levelNumber] = levelStatus;
+        }
+
+        // checks for updating the best number of moves
+        int minMoves = GameManager.GetInstance().GetPlayerData()._numberOfMoves[lotName][levelNumber];
+        if (minMoves == 0 || minMoves > moves)
+        {
+            GameManager.GetInstance().GetPlayerData()._numberOfMoves[lotName][levelNumber] = moves;
+            UpdateInfoUI(null, null, moves.ToString(), null);
+        }
     }
 
     public void HideEndPanel()
@@ -226,7 +239,10 @@ public class LevelManager : MonoBehaviour
         if (moves != null)
             _infoMoves.text = "moves: " + moves;
         if (best != null)
+        {
+            if (best == "0") best = "-";
             _infoBest.text = "best: " + best;
+        }
         if (pipe != null)
             _infoPipe.text = "pipe: " + pipe + "%";
         

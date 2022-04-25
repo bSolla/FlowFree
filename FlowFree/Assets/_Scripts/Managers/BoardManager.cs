@@ -105,7 +105,6 @@ public class BoardManager : MonoBehaviour
                 if (t[0].hasConection() && t[1].hasConection()) //and the flow is complete
                     completeFlow = true;
         }
-        //Debug.Log("Completed: " + completeFlow);
         return completeFlow;
     }
 
@@ -114,7 +113,7 @@ public class BoardManager : MonoBehaviour
     /// Complete a flow for the player if he have hints
     /// 
     /// </summary>
-    public void giveAHint()
+    public void GiveAHint()
     {
         if(_hintsUsed < _hints.GetLength(0))
         {
@@ -160,8 +159,8 @@ public class BoardManager : MonoBehaviour
         // Init board sizes and variables
         _tiles = new Tile[map._X, map._Y];
         _ghostTiles = new List<Ghost>();
-        _numberFlows = map.getFlowSolution().GetLength(0);
-        _hints = map.getFlowSolution();
+        _numberFlows = map.GetFlowSolution().GetLength(0);
+        _hints = map.GetFlowSolution();
         _flowPoints = new List<Tile[]>();
         // Calculate space available for board
         CalculateSpace();
@@ -183,7 +182,7 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        Point[,] solutions = map.getFlowSolution();
+        Point[,] solutions = map.GetFlowSolution();
         int flowed = 0;
 
         // Decorate the map
@@ -343,7 +342,7 @@ public class BoardManager : MonoBehaviour
     /// calculate and update the value of the pipe
     /// 
     /// </summary>
-    private void calculatePipe()
+    private void CalculatePipe()
     {
         float tilesWithFlow = 0;
         foreach (Tile[] t in _flowPoints)
@@ -395,7 +394,7 @@ public class BoardManager : MonoBehaviour
             ProcessNewClick(tile);
             // ongoing click
             ProcessOngoingClick(tile, x, y);
-            calculatePipe();
+            CalculatePipe();
         }
     }
 
@@ -426,7 +425,6 @@ public class BoardManager : MonoBehaviour
                                 {
                                     if (CompleteFlow(b._next))
                                         _flowCount--;
-                                    //Debug.Log("FlowCount: " + _flowCount);
                                     _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
 
                                     b._next.TrailDeletion(ref tileList, true);
@@ -437,7 +435,6 @@ public class BoardManager : MonoBehaviour
                                     if (CompleteFlow(b._back))
                                     {
                                         _flowCount--;
-                                        //Debug.Log("FlowCount: " + _flowCount);
                                         _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
                                     }
 
@@ -455,7 +452,6 @@ public class BoardManager : MonoBehaviour
                     if (tile._next.IsBall())
                     {
                         _flowCount--;
-                        //Debug.Log("FlowCount: " + _flowCount);
                         _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
                     }
                     List<Tile> tileList = new List<Tile>(); // list of tiles deleted
@@ -511,7 +507,6 @@ public class BoardManager : MonoBehaviour
                 if (!tile.hasConection())
                 {
                     _flowCount++;
-                    //Debug.Log("FlowCount: " + _flowCount);
                     _lastTile.SetNextTile(tile);
                     tile.SetColor(_lastTile.getColor());
                     _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
@@ -531,7 +526,6 @@ public class BoardManager : MonoBehaviour
             // delete other flow
             if (tile.IsTrail())
             {
-                //Debug.Log("Delete");
                 bool completeFlow = CompleteFlow(tile);
                 DeleteTrails(tile, tile.getColor() == _lastTile.getColor(), completeFlow);
 
@@ -574,7 +568,6 @@ public class BoardManager : MonoBehaviour
             aux.ActiveBackGround();
             g._next.ActiveBackGround();
             _flowCount++;
-            //Debug.Log("FlowCount: " + _flowCount);
             _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
         }
     }
@@ -627,7 +620,6 @@ public class BoardManager : MonoBehaviour
                         gh._next = t[1];
             }
             _flowCount--;
-            //Debug.Log("FlowCount: " + _flowCount);
             _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
         }
         if (!sameColor)

@@ -11,11 +11,11 @@ public class GameManager : MonoBehaviour
     public LevelPackage[] _levels;                // Array of LevelPackages
 
     [Header("Themes")]
-    //public Themes _themesScriptObj;               // scriptable object that contains theme info
     public Colorway[] _themesScriptObj;
 
-    [Header("Debugging")]
-    public bool _debugging = false;               // Sets if debug mode is on, for avoiding some changes
+    [Header("Scene names")]
+    public string _mainMenuName = "MainMenu";
+    public string _playSceneName = "PlayScene";
 
     // LEVEL DATA
     private string _package = "Rectangles";       // Sets game style
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
     public void AdEnded()
     {
         // MainMenu
-        if (SceneManager.GetActiveScene().buildIndex == 1)
+        if (SceneManager.GetActiveScene().name == _mainMenuName)
         {
             _levelManager.AdCompleted();
         } // if
@@ -122,13 +122,13 @@ public class GameManager : MonoBehaviour
 
     public void LoadPlayScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(_playSceneName);
     }
 
     public void LoadMainMenu()
     {
         _reloadPanels = true;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(_mainMenuName);
     }
 
     public void LoadNextLevel()

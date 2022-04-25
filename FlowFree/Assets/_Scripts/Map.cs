@@ -67,12 +67,12 @@ public class Map
     public int _X, _Y;
     private Point[,] _solutions;
 
-    public Point[,] getFlowSolution()
+    public Point[,] GetFlowSolution()
     {
         return _solutions;
     }
 
-    public int flowNumber()
+    public int FlowNumber()
     {
         return _solutions.GetLength(0);
     }
@@ -92,7 +92,7 @@ public class Map
 
         // hint info
         _solutions = s;
-        //------------------------------------------------DEBUG------------------------------------------------
+
         int flowed = 0;
         Point sol;
         // Add colors from themes
@@ -114,7 +114,7 @@ public class Map
             _tileInfoMatrix[_solutions[flowNumber, flowed].x, _solutions[flowNumber, flowed].y].ballColor = colorFlow;
             flowed = 0;
         }
-        //------------------------------------------------DEBUG------------------------------------------------
+
         // wall info
         foreach (Wall wall in w)        
         {
@@ -149,14 +149,14 @@ public class Map
         LotMap readenMap = new LotMap();
 
         //Nos saltamos el nivel dentro del paquete y el 0 reservado
-        int jump = 3;
+        //int jump = 3;
         String[] posInfo;
         if (basicInfo[0].Contains(":"))
         {
             posInfo = basicInfo[0].Split(':', '+', 'B');
             readenMap.width = int.Parse(posInfo[0]);
             readenMap.height = int.Parse(posInfo[1]);
-            jump = 5;
+            //jump = 5;
         }
         else readenMap.width = readenMap.height = int.Parse(basicInfo[0]);
 

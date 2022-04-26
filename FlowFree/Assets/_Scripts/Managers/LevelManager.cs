@@ -63,6 +63,8 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
+        _paused = true;
+
         if (_boardManager == null)
         {
             Debug.LogError("Board Manager reference not set");
@@ -78,17 +80,13 @@ public class LevelManager : MonoBehaviour
         PrepareUI();
 
         // set callbacks
-        _nextLevelButton.onClick.AddListener(GameManager.GetInstance().LoadNextLevel);
-        _reloadButton.onClick.AddListener(GameManager.GetInstance().LoadPlayScene);
-        _prevLevelButton.onClick.AddListener(GameManager.GetInstance().LoadPreviousLevel);
-        _backToMenuButton.onClick.AddListener(GameManager.GetInstance().LoadMainMenu);
-        _endNextButton.onClick.AddListener(GameManager.GetInstance().LoadNextLevel);
-        _perfectEndNextButton.onClick.AddListener(GameManager.GetInstance().LoadNextLevel);
         _hintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
         _endHintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
         _hintEarnedButton.onClick.AddListener(GameManager.GetInstance().IncreaseHints);
 
         PlayLevel();
+
+        _paused = false;
     } // Start
 
 
@@ -262,4 +260,44 @@ public class LevelManager : MonoBehaviour
     {
         _hintsMessagePanel.SetActive(true);
     } // AdCompleted
+
+    /// <summary>
+    /// 
+    /// Used by UI buttons to increase level
+    /// 
+    /// </summary>
+    public void NextLevelCallback()
+    {
+        GameManager.GetInstance().LoadNextLevel();
+    }
+
+    /// <summary>
+    /// 
+    /// Used by UI buttons to reload the scene
+    /// 
+    /// </summary>
+    public void ReloadLevelCallback()
+    {
+        GameManager.GetInstance().LoadPlayScene();
+    }
+
+    /// <summary>
+    /// 
+    /// Used by UI buttons to load the previous level
+    /// 
+    /// </summary>
+    public void PreviousLevelCallback()
+    {
+        GameManager.GetInstance().LoadPreviousLevel();
+    }
+
+    /// <summary>
+    /// 
+    /// Used by UI buttons to load the main menu
+    /// 
+    /// </summary>
+    public void LoadMainMenuCallback()
+    {
+        GameManager.GetInstance().LoadMainMenu();
+    }
 }

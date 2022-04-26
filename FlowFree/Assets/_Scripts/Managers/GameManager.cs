@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
         if (_level < 149)
         {
             _level += 1;
-            LoadPlayScene();
+            SceneManager.LoadScene(_playSceneName);
         }
     }
 

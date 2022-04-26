@@ -480,6 +480,8 @@ public class BoardManager : MonoBehaviour
             //Are u trying to pass through THE CURSED HOLLOWS CORRIDOR, or a empty tile... yep... u cant go trough empties tiles
             if (!tile.gameObject.activeSelf) return;
 
+            if (_lastTile == null) return;
+
             //The next tile is really next to the last?
             if (Mathf.Abs(x - _lastTile.GetPosition().x) +
                 Mathf.Abs(y - _lastTile.GetPosition().y) > 1) return;

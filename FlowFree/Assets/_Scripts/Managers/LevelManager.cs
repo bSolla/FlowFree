@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
     public Text _levelText;                       // Text with the level
     public GameObject _hintsMessagePanel;         // Panel that gives hint feedback
     public ThemeSelection _themeSelectionPanel;   // Used for changing color of some texts
+    public Image _perfectMarker;                  // Image that shows up when a level has been perfected
 
     [Header("Info UI")]
     public Text _infoFlows;
@@ -219,6 +220,10 @@ public class LevelManager : MonoBehaviour
             _nextLevelButton.interactable = false;
 
         _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
+
+        // activates the perfect marker if the level has been perfected before
+        _perfectMarker.gameObject.SetActive(GameManager.GetInstance().GetPlayerData().
+            _completedLevelsLot[GameManager.GetInstance().GetLevelLot()._lotName][GameManager.GetInstance().GetLevel()] == 2);
     }
 
 

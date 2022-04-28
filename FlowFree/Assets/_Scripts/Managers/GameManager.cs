@@ -91,28 +91,22 @@ public class GameManager : MonoBehaviour
 
     /// <summary>
     /// 
-    /// Function called when a rewarded ad ended successfully.
+    /// Increases the number of hints in player data
     /// 
     /// </summary>
-    public void AdEnded()
-    {
-        // MainMenu
-        if (SceneManager.GetActiveScene().name == _mainMenuName)
-        {
-            _levelManager.AdCompleted();
-        } // if
-    }
-
-    public void IncreaseHints()
+    public void IncreasePlayerHints()
     {
         _player._hints++;
-        _levelManager.UpdateInfoUI(null, null, null, null);
     }
 
-    public void DecreaseHints()
+    /// <summary>
+    ///  
+    /// Decreases the number of hints in player data
+    /// 
+    /// </summary>
+    public void DecreasePlayerHints()
     {
         _player._hints--;
-        _levelManager.UpdateInfoUI(null, null, null, null);
     }
 
     public void ReceiveInput(InputManager.InputType it, Vector2 pos)

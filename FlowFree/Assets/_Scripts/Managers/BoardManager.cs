@@ -140,8 +140,9 @@ public class BoardManager : MonoBehaviour
                 _tiles[x, y].enableHint();
                 fakePos = new Vector2((x * _board.transform.localScale.x) + _board.transform.position.x, (y * _board.transform.localScale.y) + _board.transform.position.y);
                 ProcessMovement(fakePos);
+                
                 _hintsUsed++;
-                GameManager.GetInstance().DecreaseHints();
+                _levelManager.UseUpHint();
             } // if (hints > 0)
         }
     }

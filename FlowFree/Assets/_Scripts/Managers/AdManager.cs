@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.Events;
 
 /// <summary>
 /// 
@@ -10,6 +11,9 @@ using UnityEngine.Advertisements;
 /// </summary>
 public class AdManager : MonoBehaviour, IUnityAdsListener
 {
+    [Header ("Callbacks for when rewarded ads end")]
+    public UnityEvent _rewardedAdFinished;          // add any callbacks necessary in the unity inspector in the scene
+
     // Singleton instance
     private static AdManager _instance;
 
@@ -38,6 +42,9 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         // If instance already exists, destroy current GameObject
         else
         {
+            // keep event callbacks from the new scene's ad manager
+            _instance._rewardedAdFinished = _rewardedAdFinished;
+
             Destroy(this.gameObject);
         } // else
     } // Awake
@@ -86,7 +93,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     /// Function that shows an ad in video form. 
     /// 
     /// </summary>
-    public void ShowVideo()
+    public void ShowInterstitialVideo()
     {
         if (!GameManager.GetInstance().GetPlayerData()._adsRemoved)
         {
@@ -94,10 +101,6 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
             {
                 Advertisement.Show(_placementVideo);
             } // if
-            else
-            {
-                //Debug.Log("Rewarded video is not ready at the moment! Try again later!");
-            } // else
         } // if
     } // ShowVideo
 
@@ -112,10 +115,6 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         {
             Advertisement.Show(_placementIdRewardedVideo);
         } // if
-        else
-        {
-            //Debug.Log("Rewarded video is not ready at the moment! Try again later!");
-        } // else
     } // ShowRewardedVideo
 
     /// <summary>
@@ -131,7 +130,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         {
             if (res == ShowResult.Finished || res == ShowResult.Skipped)
             {
-                GameManager.GetInstance().AdEnded();
+                _rewardedAdFinished.Invoke();
             } // if
             else if (res == ShowResult.Failed)
             {

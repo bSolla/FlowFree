@@ -83,7 +83,6 @@ public class LevelManager : MonoBehaviour
         // set callbacks
         _hintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
         _endHintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
-        _hintEarnedButton.onClick.AddListener(GameManager.GetInstance().IncreaseHints);
 
         PlayLevel();
 
@@ -103,7 +102,7 @@ public class LevelManager : MonoBehaviour
     public void PlayLevel()
     {
         // Set info
-        AdManager.GetInstance().ShowVideo();
+        AdManager.GetInstance().ShowInterstitialVideo();
 
         // Prepare board
         int level = GameManager.GetInstance().GetLevel();
@@ -152,6 +151,7 @@ public class LevelManager : MonoBehaviour
     public void ShowEndPanel(bool isPerfect, int moves)
     {
         _paused = true; // make sure no board input is processed
+
         int levelStatus = 0; // 0 means not completed
         string lotName = GameManager.GetInstance().GetLevelLot()._lotName;
         int levelNumber = GameManager.GetInstance().GetLevel();
@@ -304,5 +304,40 @@ public class LevelManager : MonoBehaviour
     public void LoadMainMenuCallback()
     {
         GameManager.GetInstance().LoadMainMenu();
+    }
+
+    /// <summary>
+    /// 
+    /// Used by play scene objects to increase player hints
+    /// 
+    /// </summary>
+    public void IncreaseHints()
+    {
+        GameManager.GetInstance().IncreasePlayerHints();
+        UpdateInfoUI(null, null, null, null);
+    }
+
+    /// <summary>
+    /// 
+    /// Used by the board manager when the player uses up a hint
+    /// 
+    /// </summary>
+    public void UseUpHint()
+    {
+        GameManager.GetInstance().DecreasePlayerHints();
+        UpdateInfoUI(null, null, null, null);
+    }
+
+
+    public void ClaimHintCallback(GameObject claimPanel)
+    {
+        if (!_perfectEndPanel.active) // doesn't unpause if the perfect end panel is active (in case of free hint from that panel)
+        {
+            _paused = false;
+        }
+
+        claimPanel.SetActive(false);
+
+        IncreaseHints();
     }
 }

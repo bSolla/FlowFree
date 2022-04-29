@@ -41,12 +41,14 @@ public class BoardManager : MonoBehaviour
         public Tile _back;
         public Tile _next;
         public Color _color;
-        public Ghost(List<Tile> t, Tile b, Tile n, Color c)
+        public bool _forward;   //direction of the ghost's path
+        public Ghost(List<Tile> t, Tile b, Tile n, Color c, bool f)
         {
             _tileList = t;
             _back = b;
             _next = n;
             _color = c;
+            _forward = f;
         }
     }
     private List<Ghost> _ghostTiles;
@@ -539,7 +541,43 @@ public class BoardManager : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// 
+    /// Make flow with the data stored in our ghost struct
+    /// 
+    /// </summary>
+    /// <param name="g">(Ghost) tiles that will be revive</param>
+    private void ReviveTrailsForward(Ghost g)
+    {
+        Tile aux = g._tileList[0];
+        aux.SetColor(g._color);
+        aux.SetNextTile(g._next);
+        g._next.SetBackTile(aux);
+        g._next.ActiveBackGround();
+        aux.ActiveBackGround();
+        aux._next = g._next; 
+        g._tileList.Remove(aux);
 
+        foreach (Tile t in g._tileList)
+        {
+            aux.SetBackTile(t);
+            t.SetNextTile(aux);     //new
+            aux.ActiveBackGround();
+            aux = t;
+            aux.SetColor(g._color);
+            aux.ActiveBackGround();
+            //tileList.Remove(aux);
+        }
+        if (g._back != null)
+        {
+            aux.SetBackTile(g._back);
+            g._back.SetNextTile(aux); //new
+            aux.ActiveBackGround();
+            g._back.ActiveBackGround();
+            _flowCount++;
+            _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
+        }
+    }
 
     /// <summary>
     /// 
@@ -547,7 +585,7 @@ public class BoardManager : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="g">(Ghost) tiles that will be revive</param>
-    private void ReviveTrails(Ghost g)
+    private void ReviveTrailsBackwards(Ghost g)
     {
         Tile aux = g._tileList[0];
         aux.SetColor(g._color);
@@ -593,7 +631,7 @@ public class BoardManager : MonoBehaviour
         Ghost gh;
         if (!direction)
         {
-            gh =  new Ghost (tileList, tile._next, null, tile.getColor());
+            gh =  new Ghost (tileList,null , tile._next, tile.getColor(), direction);
             if (tile._next != null)
             {
                 tile._next._back = null;
@@ -602,7 +640,7 @@ public class BoardManager : MonoBehaviour
         }
         else
         {
-            gh = new Ghost(tileList, tile._back, null, tile.getColor());
+            gh = new Ghost(tileList, tile._back, null, tile.getColor(), direction);
             if (tile._back != null)
             {
                 tile._back._next = null;
@@ -618,10 +656,18 @@ public class BoardManager : MonoBehaviour
             foreach (Tile[] t in _flowPoints)
             {
                 if (t[0].getColor() == gh._color)  // if the color is the same
-                    if (!t[0].hasConection()) //and the flow is complete
-                        gh._next = t[0];
-                else if(!t[1].hasConection())
-                        gh._next = t[1];
+                    if (!t[0].hasConection())
+                    { //and the flow is complete
+                        if(direction)
+                            gh._next = t[0];
+                        else gh._back = t[0];
+                    }
+                    else if (!t[1].hasConection())
+                    {
+                        if (direction)
+                            gh._next = t[1];
+                        else gh._back = t[1];
+                    }
             }
             _flowCount--;
             _levelManager.UpdateInfoUI(_flowCount.ToString(), null, null, null);
@@ -640,7 +686,9 @@ public class BoardManager : MonoBehaviour
 
                     if (g._tileList[0] == t)
                     {   // has found a ghost tile in the list of tiles deleted
-                        ReviveTrails(g);   //Revive all the tiles in the list g
+                        if (g._forward)
+                            ReviveTrailsBackwards(g);   //Revive all the tiles in the list g
+                        else ReviveTrailsForward(g);
                         toRemove.Add(g);
                        // _ghostTiles.Remove(g);  // Remove the list of tiles ghost from the ghost list
                     }

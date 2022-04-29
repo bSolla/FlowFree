@@ -34,7 +34,18 @@ public class BoardManager : MonoBehaviour
 
     private Tile[,] _tiles;                     // Map
     private Tile _lastTile = null;
-    
+
+    // used for board creation in play scene
+    public class TileInfo
+    {
+        public bool wallDown = false,
+                    wallEast = false;
+        public bool uroboros = false;
+        public bool empty = false;
+        public Color ballColor = default;
+        public Point next = default;
+    }
+
     struct Ghost
     {
         public List<Tile> _tileList;
@@ -158,12 +169,13 @@ public class BoardManager : MonoBehaviour
     /// <param name="map"> (Map) Map to read the data. </param>
     public void SetMap(Map map)
     {
+        // Fill the tiles with the info that maps give us
+        fillMap(map.width, map.height, map.walls, map.empties, map.solutions);
         _hintsUsed = 0;
         // Init board sizes and variables
-        _tiles = new Tile[map._X, map._Y];
+        _tiles = new Tile[_X, _Y];
         _ghostTiles = new List<Ghost>();
-        _numberFlows = map.GetFlowSolution().GetLength(0);
-        _hints = map.GetFlowSolution();
+        _numberFlows = _hints.GetLength(0);
         _flowPoints = new List<Tile[]>();
         // Calculate space available for board
         CalculateSpace();
@@ -175,23 +187,23 @@ public class BoardManager : MonoBehaviour
         Vector2 tam = CalculateSize(background);
 
         // Instantiate tiles
-        for (int x = 0; x < map._X; x++)
+        for (int x = 0; x < _X; x++)
         {
-            for (int y = 0; y < map._Y; y++)
+            for (int y = 0; y < _Y; y++)
             {
                 _tiles[x, y] = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, _board.transform);
-                SetTile(map._tileInfoMatrix[x, y], _tiles[x, y], x, y);
+                SetTile(_tileInfoMatrix[x, y], _tiles[x, y], x, y);
                 _tiles[x, y].setWallColor(GameManager.GetInstance().GetPackageColor());
             }
         }
 
-        Point[,] solutions = map.GetFlowSolution();
+        //Point[,] solutions = map.GetFlowSolution();
         int flowed = 0;
 
         // Decorate the map
-        for (int x = 0; x < map._X; x++)
+        for (int x = 0; x < _X; x++)
         {
-            for (int y = 0; y < map._Y; y++)
+            for (int y = 0; y < _Y; y++)
             {
                 if (!_tiles[x, y].gameObject.activeSelf)
                 {
@@ -204,12 +216,12 @@ public class BoardManager : MonoBehaviour
         }
         for (int flowNumber = 0; flowNumber < _numberFlows; flowNumber++)
         {
-            Point sol1 = solutions[flowNumber, flowed];
-            while (solutions[flowNumber, flowed + 1].x != -1)
+            Point sol1 = _hints[flowNumber, flowed];
+            while (_hints[flowNumber, flowed + 1].x != -1)
             {
                 flowed++;
             }
-            Point sol2 = solutions[flowNumber, flowed];
+            Point sol2 = _hints[flowNumber, flowed];
             Tile[] auxT = { _tiles[sol1.x, sol1.y], _tiles[sol2.x, sol2.y] };
             _flowPoints.Add(auxT);
             flowed = 0;
@@ -223,9 +235,8 @@ public class BoardManager : MonoBehaviour
         float factor = nScale.x / oScale.x;
 
         // Relocate board
-        _board.transform.Translate(new Vector3((-(map._X - 1f) / 2.0f) * factor, ((-(map._Y - 1.5f) / 2.0f) * factor))); 
+        _board.transform.Translate(new Vector3((-(_X - 1f) / 2.0f) * factor, ((-(_Y - 1.5f) / 2.0f) * factor))); 
     }
-
 
     /// <summary>
     /// 
@@ -274,6 +285,64 @@ public class BoardManager : MonoBehaviour
     }
 
     // ------------------ PRIVATE -------------------
+
+    /// <summary>
+    /// 
+    /// Transform the parsed info into a tablet properties
+    /// 
+    /// </summary>
+    public int _X, _Y;
+    public TileInfo[,] _tileInfoMatrix;
+    private void fillMap(int c, int r, Wall[] w, Point[] e, Point[,] s)
+    {
+        // make tile matrix
+
+        _X = c; _Y = r;
+        _tileInfoMatrix = new TileInfo[_X, _Y]; //one extra col & row to draw the bottom and right walls of the map
+        for (int col = 0; col < c; ++col)
+        {
+            for (int row = 0; row < r; ++row)
+            {
+                _tileInfoMatrix[col, row] = new TileInfo();
+            } // for
+        } // for
+
+        // hint info
+        _hints = s;
+
+        int flowed = 0;
+        Point sol;
+        // Add colors from themes
+        Colorway theme = GameManager.GetInstance().GetTheme();
+        Color colorFlow;
+        for (int flowNumber = 0; flowNumber < _hints.GetLength(0); flowNumber++)
+        {
+            colorFlow = (flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
+            _tileInfoMatrix[_hints[flowNumber, flowed].x, _hints[flowNumber, flowed].y].uroboros = true;
+
+            while (_hints[flowNumber, flowed + 1].x != -1)
+            {
+                sol = _hints[flowNumber, flowed];
+                _tileInfoMatrix[sol.x, sol.y].next.x = _hints[flowNumber, flowed + 1].x;
+                _tileInfoMatrix[sol.x, sol.y].next.y = _hints[flowNumber, flowed + 1].y;
+                _tileInfoMatrix[sol.x, sol.y].ballColor = colorFlow;
+                flowed++;
+            }
+            _tileInfoMatrix[_hints[flowNumber, flowed].x, _hints[flowNumber, flowed].y].uroboros = true;
+            _tileInfoMatrix[_hints[flowNumber, flowed].x, _hints[flowNumber, flowed].y].ballColor = colorFlow;
+            flowed = 0;
+        }
+
+        // wall info
+        foreach (Wall wall in w)
+        {
+            _tileInfoMatrix[wall.pos.x, wall.pos.y].wallDown = wall.s;
+            _tileInfoMatrix[wall.pos.x, wall.pos.y].wallEast = wall.e;
+        }
+        // other info (bridges and other stuff)
+        foreach (Point empty in e) _tileInfoMatrix[empty.x, empty.y].empty = true;
+    }
+
     /// <summary>
     /// 
     /// Do the necesary logic for finish the touch cicle

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +11,7 @@ public class ThemeSelection : MonoBehaviour
     public VerticalLayoutGroup _themeArea = null;
     public GameObject _settingsPanel = null;
     public GameObject _optionsPanel = null;
-    public LevelManager _levelManager = null;
+    public InputManager _inputManager = null;
 
     [Header("Color changing texts")]
     public Text _textFlow = null;
@@ -26,17 +24,6 @@ public class ThemeSelection : MonoBehaviour
 
     private void Start()
     {
-        if (_themeObjectPrefab == null) Debug.LogError("Missing prefab in Theme Selection panel");
-        if (_themeArea == null) Debug.LogError("Missing vertical scroll area refernece in theme selection panel");
-        if (_settingsPanel == null) Debug.LogError("missing settings panel reference in theme selection panel");
-        if (_optionsPanel == null) Debug.LogWarning("missing options panel reference in theme selection panel");
-        if (_levelManager == null) Debug.LogWarning("missing level manager reference in theme selection panel");
-        if (_textFlow == null) Debug.LogWarning("missing reference to the Flow text in theme selection panel");
-        if (_textLevels == null) Debug.LogWarning("missing reference to the Level selector text in theme selection panel");
-        if (_textSettings == null) Debug.LogError("missing reference to the Settings text object in the theme selection panel");
-        if (_textThemeName == null) Debug.LogError("missing reference to the Theme name text object in the theme selection panel");
-        if (_textThemeHeader == null) Debug.LogError("missing reference to the theme panel header object");
-
         CreateThemeSelection();
     }
 
@@ -50,7 +37,7 @@ public class ThemeSelection : MonoBehaviour
             for (int i = 0; i < nThemes; ++i)
             {
                 theme = Instantiate(_themeObjectPrefab, _themeArea.transform);
-                theme.Init(GameManager.GetInstance().GetThemeByNumber(i), i, _settingsPanel, this, _optionsPanel, _levelManager);
+                theme.Init(GameManager.GetInstance().GetThemeByNumber(i), i, _settingsPanel, this, _optionsPanel, _inputManager);
                 theme._buttonComponent.onClick.AddListener(theme.ThemeChange);
             }
 

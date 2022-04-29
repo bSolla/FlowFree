@@ -14,9 +14,9 @@ public class ThemeObject : MonoBehaviour
     private GameObject _settingsPanelReference;
     private ThemeSelection _themesPanelReference;
     private GameObject _optionsPanelReference;
-    private LevelManager _levelManager;
+    private InputManager _inputManager;
 
-    public void Init(Colorway theme, int idx, GameObject setPanel, ThemeSelection themPanel, GameObject optPanel, LevelManager lm)
+    public void Init(Colorway theme, int idx, GameObject setPanel, ThemeSelection themPanel, GameObject optPanel, InputManager im)
     {
         _themeName.text = theme._name;
         _themeName.color = theme._nameColor;
@@ -29,7 +29,7 @@ public class ThemeObject : MonoBehaviour
         _themesPanelReference = themPanel;
         _optionsPanelReference = optPanel;
 
-        _levelManager = lm;
+        _inputManager = im;
 
         for (int i = 0; i < _dotImages.Length; ++i)
         {
@@ -48,8 +48,8 @@ public class ThemeObject : MonoBehaviour
         _themesPanelReference.gameObject.SetActive(false);
         if (_optionsPanelReference != null)
             _optionsPanelReference.SetActive(false);
-        if (_levelManager != null)
-            _levelManager.SetPause(false);
+        if (_inputManager != null)
+            _inputManager.SetPause(false);
 
         _themesPanelReference.ChangeTextColors(GameManager.GetInstance().GetThemeByNumber(_themeIndex));
     }

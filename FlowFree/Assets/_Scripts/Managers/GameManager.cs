@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     private PlayerData _player;                   // Player data
     private MainMenuManager _mainMenu;            // MainMenuManager to change things and update data
     private int _lastScene;                       // Last scene to return to it if necessary
-    private bool _reloadPanels = false;
+    private bool _comingFromPlayScene = false;
 
     #region Singleton
     /// <summary>
@@ -109,11 +109,6 @@ public class GameManager : MonoBehaviour
         _player._hints--;
     }
 
-    public void ReceiveInput(InputManager.InputType it, Vector2 pos)
-    {
-        _levelManager.ReceiveInput(it, pos);
-    }
-
     public void LoadPlayScene()
     {
         SceneManager.LoadScene(_playSceneName);
@@ -121,7 +116,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        _reloadPanels = true;
+        _comingFromPlayScene = true;
         SceneManager.LoadScene(_mainMenuName);
     }
 
@@ -149,21 +144,6 @@ public class GameManager : MonoBehaviour
     /// calls the level manager so it shows the end panel.
     /// 
     /// </summary>
-    public void LevelCompleted()
-    {
-        //_level++;
-        //if (_level < GameManager.GetInstance().GetLevelPackage().levels.Length)
-        //{
-        //    if (GetInstance()._player._completedLevelsPackage[_package] <= _level)
-        //        GetInstance()._player._completedLevelsPackage[_package]++;
-        //    _levelManager.ShowEndMenu();
-        //}
-        //else
-        //{
-        //    _levelManager.ShowFinalMenu();
-        //}
-
-    } // LevelCompleted
 
     #region Setters
 
@@ -217,9 +197,9 @@ public class GameManager : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="val">(bool) wether or not to reload the panels</param>
-    public void SetReloadPanels(bool val)
+    public void SetComingFromPlayScene(bool val)
     {
-        _reloadPanels = val;
+        _comingFromPlayScene = val;
     }
 
     /// <summary>
@@ -351,10 +331,16 @@ public class GameManager : MonoBehaviour
         return _player;
     } // GetPlayerData
 
-
-    public bool GetReloadPanels()
+    /// <summary>
+    /// 
+    /// Used by the menu to know if it should display the initial menu or the level
+    /// selection menu
+    /// 
+    /// </summary>
+    /// <returns>(bool) _comingFromPlayScene</returns>
+    public bool AreWeComingFromPlayScene()
     {
-        return _reloadPanels;
+        return _comingFromPlayScene;
     }
 
     public Colorway GetTheme()
@@ -374,19 +360,6 @@ public class GameManager : MonoBehaviour
     #endregion getters
 
     #region AppLifeManagement
-    /// <summary>
-    /// 
-    /// Eventhough it's not an applifemanagement method, here are all
-    /// the methods that interact with external data. This method opens
-    /// a browser window with the provided link.
-    /// 
-    /// </summary>
-    /// <param name="link"> (string) Link. </param>
-    public void OpenLink(string link)
-    {
-        Application.OpenURL(link);
-    } // OpenLink
-
     /// <summary>
     /// 
     /// Function that will manage the close of the app, saving the player's current status. Not

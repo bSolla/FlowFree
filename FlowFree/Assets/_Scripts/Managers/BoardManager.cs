@@ -239,7 +239,7 @@ public class BoardManager : MonoBehaviour
         _board.transform.position = new Vector3(0, 0, 0);
     } // EmptyBoard
 
-
+    
     /// <summary>
     /// 
     /// Receives the input and processes it.
@@ -298,8 +298,9 @@ public class BoardManager : MonoBehaviour
         if (_flowCount == _numberFlows && !_boardComplete)
         {
             _boardComplete = true;
-            _levelManager.SetPause(true);
-            _levelManager.ShowEndPanel((_numberMoves == _numberFlows), _numberMoves);
+            //_levelManager.SetPause(true);
+            //_levelManager.ShowEndPanel((_numberMoves == _numberFlows), _numberMoves);
+            _levelManager.LevelCompleted(_numberFlows == _numberMoves, _numberMoves);
         }
         else _boardComplete = false;
         _lastTile = null;

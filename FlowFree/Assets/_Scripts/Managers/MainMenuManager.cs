@@ -56,10 +56,10 @@ public class MainMenuManager : MonoBehaviour
         if (_packageSelectionPanel == null) Debug.LogError("package selection panel reference not set in main menu manager");
 
         GameManager.GetInstance().SetMainMenuManager(this);
-        if(GameManager.GetInstance().GetReloadPanels())
+        if(GameManager.GetInstance().AreWeComingFromPlayScene())
         {
             ComingFromPlayScene();
-            GameManager.GetInstance().SetReloadPanels(false);
+            GameManager.GetInstance().SetComingFromPlayScene(false);
         }
 
         _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());

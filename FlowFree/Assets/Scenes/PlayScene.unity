@@ -502,7 +502,7 @@ PrefabInstance:
     - target: {fileID: 1295313020489495401, guid: 3fb67de280144fd48ba13c49f30acbbe,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1295313020489495401, guid: 3fb67de280144fd48ba13c49f30acbbe,
         type: 3}
@@ -697,7 +697,7 @@ RectTransform:
   - {fileID: 1804945403}
   - {fileID: 860905125}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1593,7 +1593,7 @@ Transform:
   m_LocalScale: {x: 1.5, y: 1.54, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &481642215
 GameObject:
@@ -2077,8 +2077,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 952382437}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+      - m_Target: {fileID: 578605765}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
         m_MethodName: SetPause
         m_Mode: 6
         m_Arguments:
@@ -2156,6 +2156,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f3f8b38cc2d7ed47896477590e94310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inputReceived:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 995628277}
+        m_TargetAssemblyTypeName: BoardManager, Assembly-CSharp
+        m_MethodName: ReceiveInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &578605766
 Transform:
   m_ObjectHideFlags: 0
@@ -2168,7 +2183,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &583141505
 GameObject:
@@ -2540,8 +2555,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 952382437}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+      - m_Target: {fileID: 578605765}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
         m_MethodName: SetPause
         m_Mode: 6
         m_Arguments:
@@ -2776,7 +2791,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &735305377
 GameObject:
@@ -3006,8 +3021,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 952382437}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+      - m_Target: {fileID: 578605765}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
         m_MethodName: SetPause
         m_Mode: 6
         m_Arguments:
@@ -3292,8 +3307,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 952382437}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+      - m_Target: {fileID: 578605765}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
         m_MethodName: SetPause
         m_Mode: 6
         m_Arguments:
@@ -3565,7 +3580,21 @@ MonoBehaviour:
   _hintPanelDetailImg: {fileID: 1260897374}
   _hintCompleteHeaderImg: {fileID: 596170788}
   _hintCompleteDetailImg: {fileID: 986775830}
-  _paused: 0
+  _pauseEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 578605765}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: SetPause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &952382438
 Transform:
   m_ObjectHideFlags: 0
@@ -3578,7 +3607,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &968545705
 GameObject:
@@ -3858,7 +3887,7 @@ Transform:
   m_Children:
   - {fileID: 1169298046}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1004462995
 GameObject:
@@ -4468,6 +4497,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1764054969571468121, guid: eec1443a46f164a4595dfcf93b042b67,
+        type: 3}
+      propertyPath: _inputManager
+      value: 
+      objectReference: {fileID: 578605765}
     - target: {fileID: 1764054969571468121, guid: eec1443a46f164a4595dfcf93b042b67,
         type: 3}
       propertyPath: _levelManager
@@ -7455,8 +7489,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 952382437}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+      - m_Target: {fileID: 578605765}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
         m_MethodName: SetPause
         m_Mode: 6
         m_Arguments:
@@ -9114,7 +9148,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2069574180
 GameObject:
@@ -9191,49 +9225,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2069574180}
   m_CullTransparentMesh: 1
---- !u!1 &2078451968
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2078451970}
-  - component: {fileID: 2078451969}
-  m_Layer: 0
-  m_Name: reader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &2078451969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2078451968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd518b73e2328bc47a51dc7ac69a302e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &2078451970
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2078451968}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5704651, y: 0.38879615, z: -0.18224818}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2094434999
 GameObject:
   m_ObjectHideFlags: 0
@@ -9428,7 +9419,7 @@ PrefabInstance:
     - target: {fileID: 1445006272236235322, guid: 1ada7ab1b13eceb4597f49955469af31,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1445006272236235322, guid: 1ada7ab1b13eceb4597f49955469af31,
         type: 3}
@@ -9502,7 +9493,7 @@ PrefabInstance:
     - target: {fileID: 823415510490094626, guid: db93dcf4b3b68db48a0a731cb9bb88dd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 823415510490094626, guid: db93dcf4b3b68db48a0a731cb9bb88dd,
         type: 3}

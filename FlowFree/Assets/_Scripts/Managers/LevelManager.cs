@@ -1,7 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+
+/// <summary>
+/// 
+/// Event class used to send input info to the level manager
+/// 
+/// </summary>
+[System.Serializable]
+public class PauseEvent : UnityEvent<bool>
+{
+}
 
 public class LevelManager : MonoBehaviour
 {
@@ -56,7 +65,10 @@ public class LevelManager : MonoBehaviour
     public Image _hintCompleteHeaderImg;
     public Image _hintCompleteDetailImg;
 
-    public bool _paused = false;                 // Pause flag for Input control
+    [Header("Pause event callbacks")]
+    public PauseEvent _pauseEvents;
+
+    //public bool _paused = false;                 // Pause flag for Input control
     const string MOVES_MSG = "you completed the level in ";
     // ----------------------------------------------
     // --------------- UNITY METHODS ----------------
@@ -64,8 +76,6 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        _paused = true;
-
         if (_boardManager == null)
         {
             Debug.LogError("Board Manager reference not set");
@@ -85,8 +95,6 @@ public class LevelManager : MonoBehaviour
         _endHintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
 
         PlayLevel();
-
-        _paused = false;
     } // Start
 
 
@@ -120,26 +128,6 @@ public class LevelManager : MonoBehaviour
 
     /// <summary>
     /// 
-    /// Receive new Input and process it. 
-    /// 
-    /// </summary>
-    /// <param name="it"> (InputType) Type of new input. </param>
-    public void ReceiveInput(InputManager.InputType it, Vector2 pos)
-    {
-        if (!_paused)
-        {
-            _boardManager.ReceiveInput(it, pos);
-        } // if
-    } // ReceiveInput
-
-
-    public void SetPause(bool isPaused)
-    {
-        _paused = isPaused;
-    }
-
-    /// <summary>
-    /// 
     /// Shows the right end panel depending of how the level was completed
     /// (perfect or not), and uses the game manager to save that info into
     /// the player data
@@ -150,7 +138,7 @@ public class LevelManager : MonoBehaviour
     /// <param name="moves">(int) number of moves</param>
     public void ShowEndPanel(bool isPerfect, int moves)
     {
-        _paused = true; // make sure no board input is processed
+        _pauseEvents.Invoke(true);
 
         int levelStatus = 0; // 0 means not completed
         string lotName = GameManager.GetInstance().GetLevelLot()._lotName;
@@ -329,15 +317,26 @@ public class LevelManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 
+    /// Used by buttons on the Claim Hint panel, it makes sure to increase the hints and perform all other necessary tasks
+    /// 
+    /// </summary>
+    /// <param name="claimPanel">(GameObject) reference to the claim hint panel, to deactivate it</param>
     public void ClaimHintCallback(GameObject claimPanel)
     {
         if (!_perfectEndPanel.active) // doesn't unpause if the perfect end panel is active (in case of free hint from that panel)
         {
-            _paused = false;
+            _pauseEvents.Invoke(false);
         }
 
         claimPanel.SetActive(false);
 
         IncreaseHints();
+    }
+
+    public void LevelCompleted(bool isPerfect, int moves)
+    {
+        ShowEndPanel(isPerfect, moves);
     }
 }

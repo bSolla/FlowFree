@@ -415,6 +415,13 @@ public class BoardManager : MonoBehaviour
             _ghostTiles.Clear();
             if (tile.IsBall() || tile.IsTrail())
             {
+                Tile aux = tile;
+                while(aux != null)
+                {
+                    aux.DesactivateBackGround();
+                    aux = aux._back;
+                }
+
                 //are you pressing other init?
                 if (tile.IsBall())
                 {

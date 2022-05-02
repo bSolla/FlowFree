@@ -108,11 +108,13 @@ public class GameManager : MonoBehaviour
                 _instance._player._numberOfMoves[_instance._levelLot._lotName][_instance._levelNumber], 
                 (int)_instance._player._completedLevelsLot[_instance._levelLot._lotName][_instance._levelNumber]);
 
+            
             _instance._levelManager.PlayLevel();
         }
         else if (_instance._mainMenuManager != null)
         {
-            _instance._mainMenuManager.Init(_instance._themesScriptObj.Length, _instance._levels, _instance._player._completedLevelsLot);
+            _instance._mainMenuManager.Init(_instance._themesScriptObj.Length, _instance._levelLot, _instance.GetLevelPackage(),
+                _instance._levels, _instance._player._completedLevelsLot);
         }
     }
 

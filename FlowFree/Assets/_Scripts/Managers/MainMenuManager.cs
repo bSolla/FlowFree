@@ -35,6 +35,8 @@ public class MainMenuManager : MonoBehaviour
 
 
     // gameplay data
+    private LevelPackage _currentLevelPackage;
+    private LevelLot _currentLevelLot;
     private LevelPackage[] _levelPackages;
     private Dictionary<string, PlayerData.CompletedStatus[]> _completionStatusLots;
     private int _nThemes;
@@ -61,9 +63,11 @@ public class MainMenuManager : MonoBehaviour
         if (_packageSelectionPanel == null) Debug.LogError("package selection panel reference not set in main menu manager");
     }
 
-    public void Init(int nThemes, LevelPackage[] levelPackages, Dictionary<string, PlayerData.CompletedStatus[]> completionStatusLots)
+    public void Init(int nThemes, LevelLot currentLot, LevelPackage currentPackage, LevelPackage[] levelPackages, Dictionary<string, PlayerData.CompletedStatus[]> completionStatusLots)
     {
         _nThemes = nThemes;
+        _currentLevelLot = currentLot;
+        _currentLevelPackage = currentPackage;
         _levelPackages = levelPackages;
         _completionStatusLots = completionStatusLots;
 
@@ -95,6 +99,11 @@ public class MainMenuManager : MonoBehaviour
     {
         _packageSelectionPanel.SetActive(true);
         CreatePackageSelectionObjects();
+
+        _levelSelectionPanel.gameObject.SetActive(true);
+        _levelSelectionPanel.SetLotData(_currentLevelPackage._packageColor, _currentLevelLot._lotName,
+            _currentLevelPackage._packageName, _completionStatusLots[_currentLevelLot._lotName]);
+        _levelSelectionPanel.CreateLevelButtons();
     }
 
     /// <summary>

@@ -15,7 +15,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     public UnityEvent _rewardedAdFinished;          // add any callbacks necessary in the unity inspector in the scene
 
     // Singleton instance
-    private static AdManager _instance;
+    private static AdManager _instance = null;
 
     // Different game ID's for different platforms
 #if UNITY_ANDROID
@@ -77,7 +77,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     /// <returns> (WaitForSeconds) Seconds between ads. </returns>
     IEnumerator ShowBannerWhenInitialized(BannerPosition pos)
     {
-        if (!GameManager.GetInstance().GetPlayerData()._adsRemoved)
+        if (!GameManager.GetInstance().AdsRemoved())
         {
             while (!Advertisement.isInitialized)
             {
@@ -95,7 +95,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     /// </summary>
     public void ShowInterstitialVideo()
     {
-        if (!GameManager.GetInstance().GetPlayerData()._adsRemoved)
+        if (!GameManager.GetInstance().AdsRemoved())
         {
             if (Advertisement.IsReady(_placementVideo))
             {

@@ -68,8 +68,15 @@ public class LevelManager : MonoBehaviour
     [Header("Pause event callbacks")]
     public PauseEvent _pauseEvents;
 
-    //public bool _paused = false;                 // Pause flag for Input control
     const string MOVES_MSG = "you completed the level in ";
+
+    // level info
+    int _level;
+    LevelLot _levelLot;
+    Color _packageColor;
+    int _bestMoves;
+    int _completionStatus;
+
     // ----------------------------------------------
     // --------------- UNITY METHODS ----------------
     // ----------------------------------------------
@@ -80,27 +87,40 @@ public class LevelManager : MonoBehaviour
         {
             Debug.LogError("Board Manager reference not set");
         } // if
-        else
-        {
-            _boardManager.Init(this);
-        } // else
     } // Awake
 
-    private void Start()
-    {
-        PrepareUI();
+    //private void Start()
+    //{
+    //    PrepareUI();
 
-        // set callbacks
-        _hintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
-        _endHintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
+    //    // set callbacks
+    //    _hintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
+    //    _endHintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
 
-        PlayLevel();
-    } // Start
+    //    PlayLevel();
+    //} // Start
 
 
     // ----------------------------------------------
     // --------------- CUSTOM METHODS ---------------
     // ----------------------------------------------
+
+    public void PrepareLevel(int lvl, LevelLot levelLot, Color pkgColor, int nMoves, int completionStatus)
+    {
+        _level = lvl;
+        _levelLot = levelLot;
+        _packageColor = pkgColor;
+        _bestMoves = nMoves;
+        _completionStatus = completionStatus;
+
+        _boardManager.Init(this, _packageColor);
+
+        PrepareUI();
+
+        // set callbacks
+        _hintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
+        _endHintButton.onClick.AddListener(AdManager.GetInstance().ShowRewardedVideo);
+    }
 
     /// <summary>
     /// 
@@ -113,17 +133,16 @@ public class LevelManager : MonoBehaviour
         AdManager.GetInstance().ShowInterstitialVideo();
 
         // Prepare board
-        int level = GameManager.GetInstance().GetLevel();
-        Map map = Map.FromLot(GameManager.GetInstance().GetLevelLot(), level);
+        Map map = Map.FromLot(_levelLot, _level);
 
-        _levelText.text = "level " + (level + 1).ToString() ;
-        _levelText.color = GameManager.GetInstance().GetPackageColor();
+        _levelText.text = "level " + (_level + 1).ToString() ;
+        _levelText.color = _packageColor;
 
         _boardManager.EmptyBoard();
         _boardManager.SetMap(map);
 
-        string bestMoves = GameManager.GetInstance().GetPlayerData()._numberOfMoves[GameManager.GetInstance().GetLevelLot()._lotName][level].ToString();
-        UpdateInfoUI("0", "0", bestMoves, "0");
+        //string bestMoves = GameManager.GetInstance().GetPlayerData()._numberOfMoves[GameManager.GetInstance().GetLevelLot()._lotName][level].ToString();
+        UpdateInfoUI("0", "0", _bestMoves.ToString(), "0");
     }
 
     /// <summary>
@@ -141,8 +160,7 @@ public class LevelManager : MonoBehaviour
         _pauseEvents.Invoke(true);
 
         int levelStatus = 0; // 0 means not completed
-        string lotName = GameManager.GetInstance().GetLevelLot()._lotName;
-        int levelNumber = GameManager.GetInstance().GetLevel();
+        string lotName = _levelLot._lotName;
 
         // checks for perfects and saves completed levels if necessary
         if (isPerfect)
@@ -158,21 +176,19 @@ public class LevelManager : MonoBehaviour
             _endPanelMovesText.text = MOVES_MSG + moves + " moves";
 
             // only change save data if it comes from not being complete to avoid erasing perfect scores
-            if (GameManager.GetInstance().GetPlayerData().
-            _completedLevelsLot[lotName][levelNumber] == 0)
+            if (_completionStatus == 0)
                 levelStatus = 1; // 1 means completed but not perfect
         }
 
         if (levelStatus > 0)
         {
-            GameManager.GetInstance().GetPlayerData()._completedLevelsLot[lotName][levelNumber] = levelStatus;
+            GameManager.GetInstance().SetCompletionStatus(levelStatus);
         }
 
         // checks for updating the best number of moves
-        int minMoves = GameManager.GetInstance().GetPlayerData()._numberOfMoves[lotName][levelNumber];
-        if (minMoves == 0 || minMoves > moves)
+        if (_bestMoves == 0 || _bestMoves > moves)
         {
-            GameManager.GetInstance().GetPlayerData()._numberOfMoves[lotName][levelNumber] = moves;
+            GameManager.GetInstance().SetBestMoves(moves);
             UpdateInfoUI(null, null, moves.ToString(), null);
         }
     }
@@ -185,10 +201,8 @@ public class LevelManager : MonoBehaviour
 
     private void PrepareUI()
     {
-        Color packageColor = GameManager.GetInstance().GetPackageColor();
-        
-        _endPanelHeaderImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelHeaderImg.color.a);
-        _endPanelDetailImg.color = new Color(packageColor.r, packageColor.g, packageColor.b, _endPanelDetailImg.color.a);
+        _endPanelHeaderImg.color = new Color(_packageColor.r, _packageColor.g, _packageColor.b, _endPanelHeaderImg.color.a);
+        _endPanelDetailImg.color = new Color(_packageColor.r, _packageColor.g, _packageColor.b, _endPanelDetailImg.color.a);
         _perfectEndHeaderImg.color = _endPanelHeaderImg.color;
         _perfectEndDetailImg.color = _endPanelDetailImg.color;
 
@@ -202,16 +216,17 @@ public class LevelManager : MonoBehaviour
         _hintCompleteDetailImg.color = _endPanelDetailImg.color;
 
 
-        if (GameManager.GetInstance().GetLevel() == 0)
+        if (_level == 0)
             _prevLevelButton.interactable = false;
-        else if (GameManager.GetInstance().GetLevel() == 149)
+        else if (_level == 149)
             _nextLevelButton.interactable = false;
 
         _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
 
         // activates the perfect marker if the level has been perfected before
-        _perfectMarker.gameObject.SetActive(GameManager.GetInstance().GetPlayerData().
-            _completedLevelsLot[GameManager.GetInstance().GetLevelLot()._lotName][GameManager.GetInstance().GetLevel()] == 2);
+        //_perfectMarker.gameObject.SetActive(GameManager.GetInstance().GetPlayerData().
+        //    _completedLevelsLot[GameManager.GetInstance().GetLevelLot()._lotName][GameManager.GetInstance().GetLevel()] == 2);
+        _perfectMarker.gameObject.SetActive(_completionStatus == 2);
     }
 
 
@@ -240,7 +255,7 @@ public class LevelManager : MonoBehaviour
         if (pipe != null)
             _infoPipe.text = "pipe: " + pipe + "%";
         
-        _infoHints.text = "x" + GameManager.GetInstance().GetPlayerData()._hints;
+        _infoHints.text = "x" + GameManager.GetInstance().GetHintNumber();
     }
 
 

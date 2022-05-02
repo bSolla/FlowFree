@@ -70,6 +70,7 @@ public class BoardManager : MonoBehaviour
     private bool _boardComplete = false;
 
     private LevelManager _levelManager;         // LevelManager
+    private Color _packageColor;
 
     // Space that the board will take
     private Vector2 _resolution;                // Space for the board
@@ -96,9 +97,10 @@ public class BoardManager : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="levelManager"> (LevelManager) Manager of the level. </param>
-    public void Init(LevelManager levelManager)
+    public void Init(LevelManager levelManager, Color pkgColor)
     {
         _levelManager = levelManager;
+        _packageColor = pkgColor;
     } // Init
 
 
@@ -130,7 +132,7 @@ public class BoardManager : MonoBehaviour
     {
         if(_hintsUsed < _hints.GetLength(0))
         {
-            if(GameManager.GetInstance().GetPlayerData()._hints > 0)
+            if(GameManager.GetInstance().GetHintNumber() > 0)
             {
                 int flowed = 1;
                 int x, y;
@@ -193,7 +195,7 @@ public class BoardManager : MonoBehaviour
             {
                 _tiles[x, y] = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, _board.transform);
                 SetTile(_tileInfoMatrix[x, y], _tiles[x, y], x, y);
-                _tiles[x, y].setWallColor(GameManager.GetInstance().GetPackageColor());
+                _tiles[x, y].setWallColor(_packageColor);
             }
         }
 
@@ -369,8 +371,6 @@ public class BoardManager : MonoBehaviour
         if (_flowCount == _numberFlows && !_boardComplete)
         {
             _boardComplete = true;
-            //_levelManager.SetPause(true);
-            //_levelManager.ShowEndPanel((_numberMoves == _numberFlows), _numberMoves);
             _levelManager.LevelCompleted(_numberFlows == _numberMoves, _numberMoves);
         }
         else _boardComplete = false;

@@ -13,10 +13,12 @@ using UnityEngine;
 [System.Serializable]
 public struct PlayerData
 {
+    public enum CompletedStatus { NOT, COMPLETED, PERFECT};
+
     // Player's information 
     public float _playerLevel;                               // Coins that the player has
     /// <summary> 0 : not completed // 1 : completed // 2 : completed and perfect</summary>
-    public Dictionary<string, int[]> _completedLevelsLot;    // Levels completed per lot
+    public Dictionary<string, CompletedStatus[]> _completedLevelsLot;    // Levels completed per lot
     public Dictionary<string, int[]> _numberOfMoves;         // Best number of moves used per board
     public int _hints;                                       // Hints available
     public bool _adsRemoved;                                 // if the player paid for no ads
@@ -32,7 +34,7 @@ public struct PlayerData
     /// <param name="completed"> (Dictionary) levels completed per lot. </param>
     /// <param name="hints"> (int) Number hints available. </param>
     /// <param name="removed"> (bool) Ads removed flag. </param>
-    public PlayerData(float level, Dictionary<string, int[]> completed, Dictionary<string, int[]> moves, 
+    public PlayerData(float level, Dictionary<string, CompletedStatus[]> completed, Dictionary<string, int[]> moves, 
         int hints, bool removed, int theme)
     {
         _playerLevel = level;
@@ -63,17 +65,18 @@ public class SaveLoadSystem : MonoBehaviour
     /// <returns> (PlayerData) New player data. </returns>
     public static PlayerData NewPlayerData(List<string> lots)
     {
-        Dictionary<string, int[]> completed = new Dictionary<string, int[]>();
+        Dictionary<string, PlayerData.CompletedStatus[]> completed = new Dictionary<string, PlayerData.CompletedStatus[]>();
         Dictionary<string, int[]> moves = new Dictionary<string, int[]>();
 
         for (int i = 0; i < lots.Count; i++)
         {
             if (lots[i] != "ad")
             {
-                int[] levels = new int[150];
+                int[] movs = new int[150];
+                PlayerData.CompletedStatus[] stat = new PlayerData.CompletedStatus[150];
 
-                completed.Add(lots[i], levels);
-                moves.Add(lots[i], levels);
+                completed.Add(lots[i], stat);
+                moves.Add(lots[i], movs);
             }
         } // for
 
@@ -125,6 +128,7 @@ public class SaveLoadSystem : MonoBehaviour
 
         // Create the new player save file
         FileStream file = File.Create(Application.persistentDataPath + "/vmFlowFree.dat");
+        //Debug.Log(Application.persistentDataPath + "/vmFlowFree.dat");
 
         bf.Serialize(file, d);
 
@@ -146,9 +150,9 @@ public class SaveLoadSystem : MonoBehaviour
 
         if (newCompleted || newMoves)
         {
-            Dictionary<string, int[]> completed = null;
+            Dictionary<string, PlayerData.CompletedStatus[]> completed = null;
             if (newCompleted) 
-                completed = new Dictionary<string, int[]>();
+                completed = new Dictionary<string, PlayerData.CompletedStatus[]>();
 
             Dictionary<string, int[]> moves = null;
             if (newMoves)
@@ -158,10 +162,11 @@ public class SaveLoadSystem : MonoBehaviour
             {
                 if (lots[i] != "ad")
                 {
-                    int[] levels = new int[150];
+                    int[] movs = new int[150];
+                    PlayerData.CompletedStatus[] stat = new PlayerData.CompletedStatus[150];
 
-                    if(completed != null) completed.Add(lots[i], levels);
-                    if(moves != null) moves.Add(lots[i], levels);
+                    if (completed != null) completed.Add(lots[i], stat);
+                    if(moves != null) moves.Add(lots[i], movs);
                 }
             } // for
 

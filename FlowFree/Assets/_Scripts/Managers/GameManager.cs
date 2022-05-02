@@ -6,8 +6,11 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Scene Managers")]
+    public MainMenuManager _mainMenuManager = null;      // manager found in MainMenuScene
+    public LevelManager _levelManager = null;     // manager found in PlayScene
+
     [Header("Levels")]
-    public LevelManager _levelManager = null;     // LevelManager for level
     public LevelPackage[] _levels;                // Array of LevelPackages
 
     [Header("Themes")]
@@ -19,13 +22,12 @@ public class GameManager : MonoBehaviour
 
     // LEVEL DATA
     private string _package = "Rectangles";       // Sets game style
-    private string _lot = "HourglassPack";        // Sets lot to use
-    private int _level = 5;                       // Sets the level to be loaded
+    private string _lotName = "HourglassPack";        // Sets lot to use
+    private LevelLot _levelLot;
+    private int _levelNumber = 5;                       // Sets the level to be loaded
 
     // GAME/SCENE MANAGEMENT
     private PlayerData _player;                   // Player data
-    private MainMenuManager _mainMenu;            // MainMenuManager to change things and update data
-    private int _lastScene;                       // Last scene to return to it if necessary
     private bool _comingFromPlayScene = false;
 
     #region Singleton
@@ -38,14 +40,14 @@ public class GameManager : MonoBehaviour
 
     /// <summary>
     /// 
-    /// Awake function of GameManager. Checks if another instance of this GameObject exists and 
+    /// Start function of GameManager. Checks if another instance of this GameObject exists and 
     /// if not, initializes all required atributes and values of the GameManager, creating a new
-    /// one. 
+    /// one. Has to be Start instead of Awake to guarantee the ad manager has already been initialized
     /// 
     /// If the GameManager already exists, destroy this gameObject. 
     /// 
     /// </summary>
-    private void Awake()
+    private void Start()
     {
         // If GameManager is not created and initialized...
         if (_instance == null)
@@ -65,13 +67,20 @@ public class GameManager : MonoBehaviour
             // Get Player information and store it
             _player = SaveLoadSystem.ReadPlayerData(lotNames);
             DontDestroyOnLoad(_instance);
+
+            _instance.SceneSetup();
         } // if
         else if (_instance != this)
         {
             _instance._levelManager = _levelManager;
+            _instance._mainMenuManager = _mainMenuManager;
+
+            _instance.SceneSetup();
 
             Destroy(gameObject);
         } // else if
+
+        
     } // Awake
 
 
@@ -88,6 +97,24 @@ public class GameManager : MonoBehaviour
     } // GetInstance
 
     #endregion
+
+    private void SceneSetup()
+    {
+        if (_instance._levelManager != null)
+        {
+            _levelLot = GetLevelLot();
+
+            _instance._levelManager.PrepareLevel(_instance._levelNumber, _instance._levelLot, _instance.GetLevelPackage()._packageColor,
+                _instance._player._numberOfMoves[_instance._levelLot._lotName][_instance._levelNumber], 
+                (int)_instance._player._completedLevelsLot[_instance._levelLot._lotName][_instance._levelNumber]);
+
+            _instance._levelManager.PlayLevel();
+        }
+        else if (_instance._mainMenuManager != null)
+        {
+            _instance._mainMenuManager.Init(_instance._themesScriptObj.Length, _instance._levels, _instance._player._completedLevelsLot);
+        }
+    }
 
     /// <summary>
     /// 
@@ -122,18 +149,18 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        if (_level < 149)
+        if (_levelNumber < 149)
         {
-            _level += 1;
+            _levelNumber += 1;
             SceneManager.LoadScene(_playSceneName);
         }
     }
 
     public void LoadPreviousLevel()
     {
-        if (_level > 0)
+        if (_levelNumber > 0)
         {
-            _level -= 1;
+            _levelNumber -= 1;
             LoadPlayScene();
         }
     }
@@ -166,7 +193,7 @@ public class GameManager : MonoBehaviour
     public void SetLot(string l)
     {
         l = l.Replace(" ", String.Empty);   // prevention of spaces in the name
-        _lot = l;
+        _lotName = l;
     }
 
     /// <summary>
@@ -177,19 +204,8 @@ public class GameManager : MonoBehaviour
     /// <param name="i"> (int) Level selected. </param>
     public void SetLevel(int i)
     {
-        _level = i;
+        _levelNumber = i;
     } // SetLevel
-
-    /// <summary>
-    /// 
-    /// Sets the MainMenuManager.
-    /// 
-    /// </summary>
-    /// <param name="mg"> (MainMenuManager) Current Main menu. </param>
-    public void SetMainMenuManager(MainMenuManager mg)
-    {
-        _mainMenu = mg;
-    } // SetMainMenuManager
 
     /// <summary>
     /// 
@@ -212,49 +228,25 @@ public class GameManager : MonoBehaviour
     {
         _player._themeIndex = index;
     }
+
+    public void SetCompletionStatus(int status)
+    {
+        PlayerData.CompletedStatus s = (PlayerData.CompletedStatus)status;
+        _player._completedLevelsLot[_levelLot._lotName][_levelNumber] = s;
+    }
+
+    public void SetBestMoves(int nMoves)
+    {
+        _player._numberOfMoves[_levelLot._lotName][_levelNumber] = nMoves;
+    }
     #endregion
 
     #region getters
-    /// <summary>
-    /// 
-    /// Gives the number of packages registered in the game.
-    /// 
-    /// </summary>
-    /// <returns> (int) Number of packages. </returns>
-    public int GetNumPackages()
-    {
-        return _levels.Length;
-    } // GetNumPackages
 
-    public int GetNumLotsInPackage(LevelPackage levPack)
+    private int GetNumLotsInPackage(LevelPackage levPack)
     {
         return levPack._lotArray.Length;
     }
-
-    /// <summary>
-    /// 
-    /// Get the name of the current package selected.
-    /// 
-    /// </summary>
-    /// <returns> (string) Package name.</returns>
-    public string GetPackageName()
-    {
-        return _package;
-    } // GetPackageName
-
-    /// <summary>
-    /// 
-    /// Gives access to a level package selected
-    /// by number, necessary for button instantiation.
-    /// 
-    /// </summary>
-    /// <param name="i"> (int) Package to access. </param>
-    /// <returns> (LevelPackage) Package with data. </returns>
-    public LevelPackage GetLevelPackage(int i)
-    {
-        return _levels[i];
-    } // GetPackage
-
 
     /// <summary>
     /// 
@@ -266,7 +258,7 @@ public class GameManager : MonoBehaviour
     /// 
     /// </summary>
     /// <returns> (LevelPackage) Selected LevelPackage. </returns>
-    public LevelPackage GetLevelPackage()
+    private LevelPackage GetLevelPackage()
     {
         for (int i = 0; i < _levels.Length; i++)
         {
@@ -285,12 +277,12 @@ public class GameManager : MonoBehaviour
     /// the game manager. If it can't find it, returns null
     /// </summary>
     /// <returns>(LevelLot) Selected Lot</returns>
-    public LevelLot GetLevelLot()
+    private LevelLot GetLevelLot()
     {
         LevelPackage pack = GetLevelPackage();
         for (int i = 0; i < pack._lotArray.Length; i++)
         {
-            if (pack._lotArray[i].name == _lot)
+            if (pack._lotArray[i].name == _lotName)
             {
                 return pack._lotArray[i];
             } // if
@@ -298,26 +290,6 @@ public class GameManager : MonoBehaviour
 
         return null;
     }
-    /// <summary>
-    /// 
-    /// Gives access to the actual level selected.
-    /// 
-    /// </summary>
-    /// <returns> (int) Current level. </returns>
-    public int GetLevel()
-    {
-        return _level;
-    } // GetLevel
-
-    /// <summary>
-    /// Gets the color of the current package
-    /// </summary>
-    /// <returns>(Color) color of the current package</returns>
-    public Color GetPackageColor()
-    {
-        return GetLevelPackage()._packageColor;
-    }
-
 
     /// <summary>
     /// 
@@ -326,10 +298,15 @@ public class GameManager : MonoBehaviour
     /// 
     /// </summary>
     /// <returns> (PlayerData) Actual player data loaded. </returns>
-    public PlayerData GetPlayerData()
+    private PlayerData GetPlayerData()
     {
         return _player;
     } // GetPlayerData
+
+    public int GetHintNumber()
+    {
+        return _player._hints;
+    }
 
     /// <summary>
     /// 
@@ -343,6 +320,11 @@ public class GameManager : MonoBehaviour
         return _comingFromPlayScene;
     }
 
+    public bool AdsRemoved()
+    {
+        return _player._adsRemoved;
+    }
+
     public Colorway GetTheme()
     {
         return _themesScriptObj[_player._themeIndex];
@@ -351,11 +333,6 @@ public class GameManager : MonoBehaviour
     public Colorway GetThemeByNumber(int i)
     {
         return _themesScriptObj[i];
-    }
-
-    public int GetNumberThemes()
-    {
-        return _themesScriptObj.Length;
     }
     #endregion getters
 

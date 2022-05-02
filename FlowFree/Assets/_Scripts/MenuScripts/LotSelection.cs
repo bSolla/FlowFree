@@ -11,7 +11,7 @@ public class LotSelection : MonoBehaviour
 
     private LevelSelection _levelSelectionPanel;
     private string _packageName;
-    private int[] _completedLevelsMarkers;
+    private PlayerData.CompletedStatus[] _completedLevelsMarkers;
 
     private void Start()
     {
@@ -26,13 +26,13 @@ public class LotSelection : MonoBehaviour
         _buttonComponent.onClick.AddListener(ButtonTask);
     }
 
-    public void SetLotData(string packageName, string lotName, Color lotColor) 
+    public void SetLotData(string packageName, string lotName, PlayerData.CompletedStatus[] completionStatus, Color lotColor) 
     {
         _packageName = packageName;
         _lotName.text = lotName;
         _lotName.color = lotColor;
         
-        _completedLevelsMarkers = GameManager.GetInstance().GetPlayerData()._completedLevelsLot[lotName];
+        _completedLevelsMarkers = completionStatus;
         int nCompleted = 0;
         for (int i = 0; i < _completedLevelsMarkers.Length; ++i)
         {

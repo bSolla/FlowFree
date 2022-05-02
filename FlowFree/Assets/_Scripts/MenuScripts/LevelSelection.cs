@@ -19,7 +19,7 @@ public class LevelSelection : MonoBehaviour
     private int _nLevels = 150;
     private const int LEVELS_PER_GROUP = 30;
     private string _packageName;
-    private int[] _completedLevelsMarkers;
+    private PlayerData.CompletedStatus[] _completedLevelsMarkers;
 
     void Start()
     {
@@ -28,7 +28,7 @@ public class LevelSelection : MonoBehaviour
         if (_lotName == null) Debug.LogError("lot name object reference not set in level selection object");
     }
 
-    public void SetLotData(Color c, string lotName, string packageName, int[] completedLevelsMarkers)
+    public void SetLotData(Color c, string lotName, string packageName, PlayerData.CompletedStatus[] completedLevelsMarkers)
     {
         _lotColor = c;
 
@@ -74,8 +74,8 @@ public class LevelSelection : MonoBehaviour
         // send info to game manager
 
         GameManager.GetInstance().SetLevel(level - 1);
-        GameManager.GetInstance().SetLot(_lotName.text);
         GameManager.GetInstance().SetPackage(_packageName);
+        GameManager.GetInstance().SetLot(_lotName.text);
 
         GameManager.GetInstance().LoadPlayScene();
     }

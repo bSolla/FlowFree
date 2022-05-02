@@ -22,17 +22,11 @@ public class ThemeSelection : MonoBehaviour
 
     private bool _alreadyCreated = false;
 
-    private void Start()
-    {
-        CreateThemeSelection();
-    }
-
-    public void CreateThemeSelection()
+    public void CreateThemeSelection(int nThemes)
     {
         if (!_alreadyCreated)
         {
             ThemeObject theme;
-            int nThemes = GameManager.GetInstance().GetNumberThemes();
 
             for (int i = 0; i < nThemes; ++i)
             {

@@ -35,7 +35,7 @@ public class LevelGroup : MonoBehaviour
         }
     }
 
-    public void SetButtonNumbers(int from, int[] _completedLevelsMarkers)
+    public void SetButtonNumbers(int from, PlayerData.CompletedStatus[] _completedLevelsMarkers)
     {
         _levelHeader.text = from.ToString() + " - " + (from + 29).ToString();
 
@@ -43,13 +43,13 @@ public class LevelGroup : MonoBehaviour
         for (int i = 0; i < 30; ++i) // each level group is a collection of 30 buttons
         {
             _buttonText[i].text = (from + i).ToString();
-            if (_completedLevelsMarkers[from + i - 1] == 1) // completed
+            if (_completedLevelsMarkers[from + i - 1] == PlayerData.CompletedStatus.COMPLETED) // completed
             {
                 completedImage= Instantiate(new GameObject(), _buttons[i].transform);
                 completedImage.AddComponent<Image>();
                 completedImage.GetComponent<Image>().sprite = _completedSprite;
             }
-            else if (_completedLevelsMarkers[from + i - 1] == 2) // perfect 
+            else if (_completedLevelsMarkers[from + i - 1] == PlayerData.CompletedStatus.PERFECT) // perfect 
             {
                 completedImage = Instantiate(new GameObject(), _buttons[i].transform);
                 completedImage.AddComponent<Image>();

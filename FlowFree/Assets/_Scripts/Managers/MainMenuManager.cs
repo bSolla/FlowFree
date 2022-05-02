@@ -34,6 +34,11 @@ public class MainMenuManager : MonoBehaviour
     private Scaling _scalator;                    // Scaling object
 
 
+    // gameplay data
+    private LevelPackage[] _levelPackages;
+    private Dictionary<string, PlayerData.CompletedStatus[]> _completionStatusLots;
+    private int _nThemes;
+
     private void Awake()
     {
         // Store canvas' scaling reference resolution
@@ -54,15 +59,23 @@ public class MainMenuManager : MonoBehaviour
         if (_packageUIPrefab == null) Debug.LogError("Package UI prefab not set in main menu manager");
         if (_levelSelectionPanel == null) Debug.LogError("level selection panel reference not set in main menu manager");
         if (_packageSelectionPanel == null) Debug.LogError("package selection panel reference not set in main menu manager");
+    }
 
-        GameManager.GetInstance().SetMainMenuManager(this);
-        if(GameManager.GetInstance().AreWeComingFromPlayScene())
+    public void Init(int nThemes, LevelPackage[] levelPackages, Dictionary<string, PlayerData.CompletedStatus[]> completionStatusLots)
+    {
+        _nThemes = nThemes;
+        _levelPackages = levelPackages;
+        _completionStatusLots = completionStatusLots;
+
+        _themeSelectionPanel.CreateThemeSelection(_nThemes);
+        _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
+
+        // determines wther to load the main menu from the start or from the level selection panel
+        if (GameManager.GetInstance().AreWeComingFromPlayScene())
         {
             ComingFromPlayScene();
             GameManager.GetInstance().SetComingFromPlayScene(false);
         }
-
-        _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
     }
 
     public void CreatePackageSelectionObjects()
@@ -70,7 +83,7 @@ public class MainMenuManager : MonoBehaviour
         if (!_packagesCreated)
         {
             // Create and instantiate buttons
-            int nButtons = GameManager.GetInstance().GetNumPackages();
+            int nButtons = _levelPackages.Length;
 
             InstantiateButtons(nButtons);
            
@@ -118,14 +131,14 @@ public class MainMenuManager : MonoBehaviour
     /// <param name="packageNumber"> (int) Current package. </param>
     void SetButton(GameObject b, int packageNumber)
     {
-        LevelPackage lp = GameManager.GetInstance().GetLevelPackage(packageNumber);
+        LevelPackage lp = _levelPackages[packageNumber];
         PackageSelection package = b.GetComponent<PackageSelection>();
         
         package.SetSelectionPanelReference(_levelSelectionPanel);
-        package.SetPackageName(lp.name);
+        package.SetPackageName(lp._packageName);
         package.SetPackageColor(lp._packageColor);
         
-        package.SetLots(lp, _packageArea);
+        package.SetLots(lp, _packageArea, _completionStatusLots);
     } // SetButton
 
     

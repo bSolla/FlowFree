@@ -52,7 +52,7 @@ public class PackageSelection : MonoBehaviour
         _lineDetail.color = color;
     }
 
-    public void SetLots(LevelPackage package, VerticalLayoutGroup verticalLayout)
+    public void SetLots(LevelPackage package, VerticalLayoutGroup verticalLayout, Dictionary<string, PlayerData.CompletedStatus[]> completionStatus)
     {
         LotSelection lot;
 
@@ -60,7 +60,7 @@ public class PackageSelection : MonoBehaviour
         {
             lot = Instantiate(_lotSelectionPrefab, verticalLayout.transform);
 
-            lot.SetLotData(package._packageName, package._lotArray[i]._lotName, package._packageColor);
+            lot.SetLotData(package._packageName, package._lotArray[i]._lotName, completionStatus[package._lotArray[i]._lotName], package._packageColor);
             lot.SetButtonCall(_levelSelectionPanel);
         }
     }

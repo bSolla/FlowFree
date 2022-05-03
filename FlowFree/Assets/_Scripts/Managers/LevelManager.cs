@@ -74,6 +74,7 @@ public class LevelManager : MonoBehaviour
     int _level;
     LevelLot _levelLot;
     Color _packageColor;
+    int _nThemes;
     int _bestMoves;
     int _completionStatus;
 
@@ -105,11 +106,12 @@ public class LevelManager : MonoBehaviour
     // --------------- CUSTOM METHODS ---------------
     // ----------------------------------------------
 
-    public void PrepareLevel(int lvl, LevelLot levelLot, Color pkgColor, int nMoves, int completionStatus)
+    public void PrepareLevel(int lvl, LevelLot levelLot, Color pkgColor, int nThemes, int nMoves, int completionStatus)
     {
         _level = lvl;
         _levelLot = levelLot;
         _packageColor = pkgColor;
+        _nThemes = nThemes;
         _bestMoves = nMoves;
         _completionStatus = completionStatus;
 
@@ -221,6 +223,7 @@ public class LevelManager : MonoBehaviour
         else if (_level == 149)
             _nextLevelButton.interactable = false;
 
+        _themeSelectionPanel.CreateThemeSelection(_nThemes);
         _themeSelectionPanel.ChangeTextColors(GameManager.GetInstance().GetTheme());
 
         // activates the perfect marker if the level has been perfected before

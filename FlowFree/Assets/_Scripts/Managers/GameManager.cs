@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
             _levelLot = GetLevelLot();
 
             _instance._levelManager.PrepareLevel(_instance._levelNumber, _instance._levelLot, _instance.GetLevelPackage()._packageColor,
-                _instance._player._numberOfMoves[_instance._levelLot._lotName][_instance._levelNumber], 
+                _instance._themesScriptObj.Length, _instance._player._numberOfMoves[_instance._levelLot._lotName][_instance._levelNumber], 
                 (int)_instance._player._completedLevelsLot[_instance._levelLot._lotName][_instance._levelNumber]);
 
             

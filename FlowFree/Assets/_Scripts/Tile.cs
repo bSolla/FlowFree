@@ -214,24 +214,35 @@ public class Tile : MonoBehaviour
         _trailWest.GetComponent<SpriteRenderer>().color = c;
         _trailNorth.GetComponent<SpriteRenderer>().color = c;
         _trailSouth.GetComponent<SpriteRenderer>().color = c;
-
         _ball.GetComponent<SpriteRenderer>().color = c;
+    }
+
+    public bool backgroundActive()
+    {
+        return  _gridBackground.GetComponent<SpriteRenderer>().color.r > 0.0 ||
+                _gridBackground.GetComponent<SpriteRenderer>().color.g > 0.0 ||
+                _gridBackground.GetComponent<SpriteRenderer>().color.b > 0.0;
+    }
+
+    /// <summary> Change the background decoration </summary>
+    public void ChangeBackGroundColor(Color c)
+    {
+        c.a = 0.3f;
+        _gridBackground.GetComponent<SpriteRenderer>().color = c;
     }
 
     /// <summary> Active the background decoration </summary>
     public void ActiveBackGround()
     {
         Color c = _color;
-        c.a = 0.3f;
-        _gridBackground.GetComponent<SpriteRenderer>().color = c;
+        ChangeBackGroundColor(c);
     }
 
     /// <summary> Desactivate the background decoration </summary>
     public void DesactivateBackGround()
     {
         Color c = Color.black;
-        c.a = 0.3f;
-        _gridBackground.GetComponent<SpriteRenderer>().color = c;
+        ChangeBackGroundColor(c);
     }
 
     /// <summary> Change the color from the walls </summary>

@@ -33,6 +33,7 @@ public class BoardManager : MonoBehaviour
     private float _bottomPanelSize;                 // Bottom panel in canvas
 
     private Tile[,] _tiles;                     // Map
+
     private Tile _lastTile = null;
 
     // used for board creation in play scene
@@ -62,6 +63,7 @@ public class BoardManager : MonoBehaviour
             _forward = f;
         }
     }
+
     private List<Ghost> _ghostTiles;
     private int _numberFlows;
     private int _flowCount;
@@ -352,6 +354,17 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     private void ProcessEndOfTouch()
     {
+        if (_ghostTiles.Count > 0)
+        {
+
+            foreach (Ghost g in _ghostTiles)
+            {
+                foreach (Tile t in g._tileList)
+                {
+                    t.DesactivateBackGround();
+                }
+            }
+        }
         if (_lastTile != null)
         {
             _numberMoves++;
@@ -376,6 +389,7 @@ public class BoardManager : MonoBehaviour
         else _boardComplete = false;
         _lastTile = null;
         _cursor.SetActive(false);
+
     }
     
     /// <summary>
@@ -395,13 +409,23 @@ public class BoardManager : MonoBehaviour
             Color auxColor = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
             foreach (Tile b in t)
             {
-                b.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
+                Color c = (flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor;
+
+                if (_lastileIndicator.activeSelf)
+                    if (_lastileIndicator.GetComponent<SpriteRenderer>().color == b.getColor()) 
+                        _lastileIndicator.GetComponent<SpriteRenderer>().color = c;
+
+                b.SetColor(c);
+                if(b.backgroundActive()) b.ChangeBackGroundColor(c);
                 n = b._next;
                 while (n != null)
                 {
-                    n.SetColor((flowNumber < theme._arrayColors.Length) ? theme._arrayColors[flowNumber] : auxColor);
+                    n.SetColor(c);
+                    n.ChangeBackGroundColor(c);
                     n = n._next;
                 }
+
+
                 if (aux)
                     flowNumber++;
                 else
@@ -707,7 +731,7 @@ public class BoardManager : MonoBehaviour
         Ghost gh;
         if (!direction)
         {
-            gh =  new Ghost (tileList,null , tile._next, tile.getColor(), direction);
+            gh =  new Ghost (tileList, null , tile._next, tile.getColor(), direction);
             if (tile._next != null)
             {
                 tile._next._back = null;
@@ -761,7 +785,8 @@ public class BoardManager : MonoBehaviour
                 {
 
                     if (g._tileList[0] == t)
-                    {   // has found a ghost tile in the list of tiles deleted
+                    {
+                        // has found a ghost tile in the list of tiles deleted
                         if (g._forward)
                             ReviveTrailsBackwards(g);   //Revive all the tiles in the list g
                         else ReviveTrailsForward(g);
@@ -773,6 +798,14 @@ public class BoardManager : MonoBehaviour
                 {
                     _ghostTiles.Remove(rm); // Remove the list of tiles ghost from the ghost list
                 }
+            }
+        }
+        foreach (Ghost g in _ghostTiles)
+        {
+            foreach(Tile t in g._tileList)
+            {
+                t.ChangeBackGroundColor(g._color);
+                //t.SetColor(Color.black);
             }
         }
     }

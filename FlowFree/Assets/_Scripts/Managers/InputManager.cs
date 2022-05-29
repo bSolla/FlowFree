@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
         if (!_paused)
         {
             // if we're in editor, use PC input
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
             if (Input.GetMouseButtonDown(0))
             {
                 _pressing = true;
@@ -52,28 +52,28 @@ public class InputManager : MonoBehaviour
                 _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
                 _inputReceived.Invoke(InputType.MOVEMENT, _touchPos);
             }
-#else
+#elif UNITY_ANDROID
+            if (Input.touchCount == 1) // user is touching the screen 
+            {
+                Touch touch = Input.GetTouch(0); // get the touch
 
-        if (Input.touchCount == 1) // user is touching the screen 
-        {
-            Touch touch = Input.GetTouch(0); // get the touch
-            
-            _touchPos = touch.position;
-            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved) //check for the first touch
-            {
-                _pressing = true;
+                _touchPos = touch.position;
+                if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved) //check for the first touch
+                {
+                    _pressing = true;
+                } // if
+                else if (touch.phase == TouchPhase.Ended)
+                {
+                    _inputReceived.Invoke(InputType.NONE, _touchPos);
+                    _pressing = false;
+                }
+                if (_pressing)
+                {
+                    Vector3 worldPosition = Camera.main.ScreenToWorldPoint(_touchPos);
+                    _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
+                    _inputReceived.Invoke(InputType.MOVEMENT, _touchPos);
+                }
             } // if
-            else if (touch.phase == TouchPhase.Ended) {
-                _inputReceived.Invoke(InputType.NONE, _touchPos);
-                _pressing = false;
-            }
-            if (_pressing)
-            {
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(_touchPos);
-                _touchPos = new Vector2(worldPosition.x, worldPosition.y); // save touch 
-                _inputReceived.Invoke(InputType.MOVEMENT, _touchPos);
-            }
-        } // if
 #endif
         }
     } // Update
